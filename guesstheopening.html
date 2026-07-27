@@ -701,6 +701,7 @@
                     <i class="fas fa-arrow-left"></i> Torna indietro
                 </a>
                 <span><i class="fas fa-music"></i> Opening Quiz</span>
+                <span><i class="fas fa-database"></i> <span id="totalOpenings">0</span> opening</span>
             </div>
         </div>
     </nav>
@@ -830,34 +831,28 @@
     ============================================================ -->
     <script>
         // ============================================================
-        // DATABASE OPENING (con copertine anime)
+        // DATABASE OPENING - 200+ ANIME
         // ============================================================
         const OPENING_DB = [
+            // ===== ANNI '90 =====
             {
-                anime: "Attack on Titan",
-                videoId: "8OkpRK2_gVs",
-                cover: "https://anilist.co/img/header/16498.jpg",
+                anime: "Neon Genesis Evangelion",
+                videoId: "o6wtDPVkKqI",
+                cover: "https://anilist.co/img/header/30.jpg",
                 start: 0,
                 duration: 30
             },
             {
-                anime: "Demon Slayer",
-                videoId: "pmanD_s7G3U",
-                cover: "https://anilist.co/img/header/101922.jpg",
+                anime: "Cowboy Bebop",
+                videoId: "T6zDfxZ4NcE",
+                cover: "https://anilist.co/img/header/23.jpg",
                 start: 0,
                 duration: 30
             },
             {
-                anime: "Naruto",
-                videoId: "MvH9eu7xg3g",
-                cover: "https://anilist.co/img/header/20.jpg",
-                start: 0,
-                duration: 30
-            },
-            {
-                anime: "One Piece",
-                videoId: "Xa2bpzAe6Sk",
-                cover: "https://anilist.co/img/header/21.jpg",
+                anime: "Sailor Moon",
+                videoId: "GvM1dT3FjXM",
+                cover: "https://anilist.co/img/header/530.jpg",
                 start: 0,
                 duration: 30
             },
@@ -869,9 +864,79 @@
                 duration: 30
             },
             {
+                anime: "Yu Yu Hakusho",
+                videoId: "eJZ4mUe2nF8",
+                cover: "https://anilist.co/img/header/392.jpg",
+                start: 0,
+                duration: 30
+            },
+            {
+                anime: "Rurouni Kenshin",
+                videoId: "d7TZ5RiFnYY",
+                cover: "https://anilist.co/img/header/99.jpg",
+                start: 0,
+                duration: 30
+            },
+            {
+                anime: "Berserk (1997)",
+                videoId: "dXtNHvArh-c",
+                cover: "https://anilist.co/img/header/75.jpg",
+                start: 0,
+                duration: 30
+            },
+            {
+                anime: "Trigun",
+                videoId: "NzHe4U5c5Oc",
+                cover: "https://anilist.co/img/header/6.jpg",
+                start: 0,
+                duration: 30
+            },
+            {
+                anime: "Serial Experiments Lain",
+                videoId: "fYd_4G0yRmw",
+                cover: "https://anilist.co/img/header/237.jpg",
+                start: 0,
+                duration: 30
+            },
+            {
+                anime: "The Melancholy of Haruhi Suzumiya",
+                videoId: "y4Bl6BHXqUg",
+                cover: "https://anilist.co/img/header/1195.jpg",
+                start: 0,
+                duration: 30
+            },
+            {
+                anime: "Samurai Champloo",
+                videoId: "P3P4gfL-CWg",
+                cover: "https://anilist.co/img/header/184.jpg",
+                start: 0,
+                duration: 30
+            },
+            {
+                anime: "Gurren Lagann",
+                videoId: "BmQ9Fl4PJ18",
+                cover: "https://anilist.co/img/header/2338.jpg",
+                start: 0,
+                duration: 30
+            },
+            {
                 anime: "Death Note",
                 videoId: "L_vyPLzBB2o",
                 cover: "https://anilist.co/img/header/1535.jpg",
+                start: 0,
+                duration: 30
+            },
+            {
+                anime: "Code Geass",
+                videoId: "pDmXKQh0Jzo",
+                cover: "https://anilist.co/img/header/1575.jpg",
+                start: 0,
+                duration: 30
+            },
+            {
+                anime: "Soul Eater",
+                videoId: "WMK_xzkYM8s",
+                cover: "https://anilist.co/img/header/4571.jpg",
                 start: 0,
                 duration: 30
             },
@@ -883,9 +948,100 @@
                 duration: 30
             },
             {
+                anime: "Steins;Gate",
+                videoId: "AJSrsTkD0E0",
+                cover: "https://anilist.co/img/header/9253.jpg",
+                start: 0,
+                duration: 30
+            },
+            {
+                anime: "Durarara!!",
+                videoId: "ChRRzEnXtNI",
+                cover: "https://anilist.co/img/header/6551.jpg",
+                start: 0,
+                duration: 30
+            },
+            {
+                anime: "Angel Beats!",
+                videoId: "go2XQOdCipA",
+                cover: "https://anilist.co/img/header/8364.jpg",
+                start: 0,
+                duration: 30
+            },
+            {
+                anime: "The World God Only Knows",
+                videoId: "xMywdkgny00",
+                cover: "https://anilist.co/img/header/8518.jpg",
+                start: 0,
+                duration: 30
+            },
+            {
+                anime: "Gintama",
+                videoId: "IikPdzg0JpM",
+                cover: "https://anilist.co/img/header/918.jpg",
+                start: 0,
+                duration: 30
+            },
+            {
+                anime: "Fate/Zero",
+                videoId: "LhB2Y9Y7cK8",
+                cover: "https://anilist.co/img/header/10087.jpg",
+                start: 0,
+                duration: 30
+            },
+            {
+                anime: "Attack on Titan",
+                videoId: "8OkpRK2_gVs",
+                cover: "https://anilist.co/img/header/16498.jpg",
+                start: 0,
+                duration: 30
+            },
+            {
+                anime: "Kill la Kill",
+                videoId: "XtbV2YzDZfU",
+                cover: "https://anilist.co/img/header/18679.jpg",
+                start: 0,
+                duration: 30
+            },
+            {
                 anime: "Tokyo Ghoul",
                 videoId: "50VWOB1S2KM",
                 cover: "https://anilist.co/img/header/20605.jpg",
+                start: 0,
+                duration: 30
+            },
+            {
+                anime: "Parasyte -the maxim-",
+                videoId: "oWcCss11pTA",
+                cover: "https://anilist.co/img/header/20700.jpg",
+                start: 0,
+                duration: 30
+            },
+            {
+                anime: "Noragami",
+                videoId: "Ql4wZY-S0ZI",
+                cover: "https://anilist.co/img/header/20599.jpg",
+                start: 0,
+                duration: 30
+            },
+            {
+                anime: "Your Lie in April",
+                videoId: "pTjH-u8iA5Y",
+                cover: "https://anilist.co/img/header/21014.jpg",
+                start: 0,
+                duration: 30
+            },
+            {
+                anime: "Death Parade",
+                videoId: "Tv1BlpxC9Cc",
+                cover: "https://anilist.co/img/header/21133.jpg",
+                start: 0,
+                duration: 30
+            },
+            {
+                anime: "One Punch Man",
+                videoId: "hRl9Acs16HE",
+                cover: "https://anilist.co/img/header/30276.jpg",
                 start: 0,
                 duration: 30
             },
@@ -897,6 +1053,76 @@
                 duration: 30
             },
             {
+                anime: "Re:Zero",
+                videoId: "L0o3qvWEj40",
+                cover: "https://anilist.co/img/header/31240.jpg",
+                start: 0,
+                duration: 30
+            },
+            {
+                anime: "Erased",
+                videoId: "BTBJ2F57Ptk",
+                cover: "https://anilist.co/img/header/21475.jpg",
+                start: 0,
+                duration: 30
+            },
+            {
+                anime: "Mob Psycho 100",
+                videoId: "mJ9N8PYzK7M",
+                cover: "https://anilist.co/img/header/100424.jpg",
+                start: 0,
+                duration: 30
+            },
+            {
+                anime: "Vinland Saga",
+                videoId: "o0anfI8m-G0",
+                cover: "https://anilist.co/img/header/37521.jpg",
+                start: 0,
+                duration: 30
+            },
+            {
+                anime: "Demon Slayer",
+                videoId: "pmanD_s7G3U",
+                cover: "https://anilist.co/img/header/101922.jpg",
+                start: 0,
+                duration: 30
+            },
+            {
+                anime: "Dr. Stone",
+                videoId: "jI4bJtSgZAs",
+                cover: "https://anilist.co/img/header/38691.jpg",
+                start: 0,
+                duration: 30
+            },
+            {
+                anime: "Fire Force",
+                videoId: "YzD_0hzYz0I",
+                cover: "https://anilist.co/img/header/38671.jpg",
+                start: 0,
+                duration: 30
+            },
+            {
+                anime: "The Promised Neverland",
+                videoId: "jJzSqI0p1WQ",
+                cover: "https://anilist.co/img/header/37732.jpg",
+                start: 0,
+                duration: 30
+            },
+            {
+                anime: "Dororo (2019)",
+                videoId: "7dyQkGqHcf8",
+                cover: "https://anilist.co/img/header/100448.jpg",
+                start: 0,
+                duration: 30
+            },
+            {
+                anime: "Beastars",
+                videoId: "wzG1M9O_RJQ",
+                cover: "https://anilist.co/img/header/106265.jpg",
+                start: 0,
+                duration: 30
+            },
+            {
                 anime: "Jujutsu Kaisen",
                 videoId: "H5ahmWcG1ko",
                 cover: "https://anilist.co/img/header/113415.jpg",
@@ -904,37 +1130,454 @@
                 duration: 30
             },
             {
-                anime: "Neon Genesis Evangelion",
-                videoId: "Z9LkLb-7tXo",
-                cover: "https://anilist.co/img/header/30.jpg",
+                anime: "Chainsaw Man",
+                videoId: "dfl7A8R5pYk",
+                cover: "https://anilist.co/img/header/127244.jpg",
                 start: 0,
                 duration: 30
             },
             {
-                anime: "Cowboy Bebop",
-                videoId: "el8A3VHnlG8",
-                cover: "https://anilist.co/img/header/23.jpg",
+                anime: "Spy x Family",
+                videoId: "3lTLefquL4g",
+                cover: "https://anilist.co/img/header/130970.jpg",
                 start: 0,
                 duration: 30
             },
             {
-                anime: "Sword Art Online",
+                anime: "Call of the Night",
+                videoId: "2ZSpkCnH1H4",
+                cover: "https://anilist.co/img/header/137419.jpg",
+                start: 0,
+                duration: 30
+            },
+            {
+                anime: "Ranking of Kings",
+                videoId: "p99d6XZ6hZ0",
+                cover: "https://anilist.co/img/header/121636.jpg",
+                start: 0,
+                duration: 30
+            },
+            {
+                anime: "Made in Abyss",
+                videoId: "3I8M6nOG2aQ",
+                cover: "https://anilist.co/img/header/97980.jpg",
+                start: 0,
+                duration: 30
+            },
+            {
+                anime: "Haikyu!!",
+                videoId: "j40BPwsxPQM",
+                cover: "https://anilist.co/img/header/21000.jpg",
+                start: 0,
+                duration: 30
+            },
+
+            // ===== NARUTO SERIES =====
+            {
+                anime: "Naruto - Haruka Kanata",
+                videoId: "MvH9eu7xg3g",
+                cover: "https://anilist.co/img/header/20.jpg",
+                start: 0,
+                duration: 30
+            },
+            {
+                anime: "Naruto Shippuden - Hero's Come Back",
+                videoId: "9hH30p7qV0M",
+                cover: "https://anilist.co/img/header/1735.jpg",
+                start: 0,
+                duration: 30
+            },
+            {
+                anime: "Naruto Shippuden - Blue Bird",
+                videoId: "e5S6hXhI9C8",
+                cover: "https://anilist.co/img/header/1735.jpg",
+                start: 0,
+                duration: 30
+            },
+            {
+                anime: "Naruto Shippuden - Sign",
+                videoId: "lfaVgYd1Da8",
+                cover: "https://anilist.co/img/header/1735.jpg",
+                start: 0,
+                duration: 30
+            },
+            {
+                anime: "Naruto Shippuden - Silhouette",
+                videoId: "5l2ex6N6UeE",
+                cover: "https://anilist.co/img/header/1735.jpg",
+                start: 0,
+                duration: 30
+            },
+
+            // ===== ONE PIECE =====
+            {
+                anime: "One Piece - We Are!",
+                videoId: "Xa2bpzAe6Sk",
+                cover: "https://anilist.co/img/header/21.jpg",
+                start: 0,
+                duration: 30
+            },
+            {
+                anime: "One Piece - Share the World",
+                videoId: "Uw9aCBTv-fE",
+                cover: "https://anilist.co/img/header/21.jpg",
+                start: 0,
+                duration: 30
+            },
+            {
+                anime: "One Piece - Fight Together",
+                videoId: "EJmXjCJ8H7k",
+                cover: "https://anilist.co/img/header/21.jpg",
+                start: 0,
+                duration: 30
+            },
+            {
+                anime: "One Piece - Hope",
+                videoId: "tU6DLU_JvOU",
+                cover: "https://anilist.co/img/header/21.jpg",
+                start: 0,
+                duration: 30
+            },
+            {
+                anime: "One Piece - Over the Top",
+                videoId: "ZNgTp4vVgNs",
+                cover: "https://anilist.co/img/header/21.jpg",
+                start: 0,
+                duration: 30
+            },
+
+            // ===== BLEACH =====
+            {
+                anime: "Bleach - *~Asterisk~",
+                videoId: "G7vXmVoFqlY",
+                cover: "https://anilist.co/img/header/22.jpg",
+                start: 0,
+                duration: 30
+            },
+            {
+                anime: "Bleach - D-tecnoLife",
+                videoId: "uCHQYH4n4zU",
+                cover: "https://anilist.co/img/header/22.jpg",
+                start: 0,
+                duration: 30
+            },
+            {
+                anime: "Bleach - Ichirin no Hana",
+                videoId: "MMJz67a1EdI",
+                cover: "https://anilist.co/img/header/22.jpg",
+                start: 0,
+                duration: 30
+            },
+            {
+                anime: "Bleach - Rolling Star",
+                videoId: "tNQcZRtzUJA",
+                cover: "https://anilist.co/img/header/22.jpg",
+                start: 0,
+                duration: 30
+            },
+            {
+                anime: "Bleach - Ranbu no Melody",
+                videoId: "bXbZkXjRgQg",
+                cover: "https://anilist.co/img/header/22.jpg",
+                start: 0,
+                duration: 30
+            },
+
+            // ===== HUNTER X HUNTER =====
+            {
+                anime: "Hunter x Hunter - Departure!",
+                videoId: "wMTmz1F5gqQ",
+                cover: "https://anilist.co/img/header/11061.jpg",
+                start: 0,
+                duration: 30
+            },
+            {
+                anime: "Hunter x Hunter - Departure! (ver. 2)",
+                videoId: "PKiOr0hJmB0",
+                cover: "https://anilist.co/img/header/11061.jpg",
+                start: 0,
+                duration: 30
+            },
+
+            // ===== SWORD ART ONLINE =====
+            {
+                anime: "Sword Art Online - Crossing Field",
                 videoId: "A3k6vj2-F9Y",
                 cover: "https://anilist.co/img/header/11757.jpg",
                 start: 0,
                 duration: 30
             },
             {
-                anime: "Hunter x Hunter",
-                videoId: "wMTmz1F5gqQ",
-                cover: "https://anilist.co/img/header/1535.jpg",
+                anime: "Sword Art Online - Innocence",
+                videoId: "MBS2FmbRZxk",
+                cover: "https://anilist.co/img/header/11757.jpg",
                 start: 0,
                 duration: 30
             },
             {
-                anime: "Bleach",
-                videoId: "G7vXmVoFqlY",
-                cover: "https://anilist.co/img/header/22.jpg",
+                anime: "Sword Art Online - Courage",
+                videoId: "A3k6vj2-F9Y",
+                cover: "https://anilist.co/img/header/11757.jpg",
+                start: 0,
+                duration: 30
+            },
+
+            // ===== JOJO'S BIZARRE ADVENTURE =====
+            {
+                anime: "JoJo - Sono Chi no Sadame",
+                videoId: "yXoWgOWTdAM",
+                cover: "https://anilist.co/img/header/14719.jpg",
+                start: 0,
+                duration: 30
+            },
+            {
+                anime: "JoJo - Bloody Stream",
+                videoId: "vW6Y6wN9uHw",
+                cover: "https://anilist.co/img/header/14719.jpg",
+                start: 0,
+                duration: 30
+            },
+            {
+                anime: "JoJo - Stand Proud",
+                videoId: "Y2IEKB6NlFI",
+                cover: "https://anilist.co/img/header/14719.jpg",
+                start: 0,
+                duration: 30
+            },
+            {
+                anime: "JoJo - Great Days",
+                videoId: "Z0i-34WMPDM",
+                cover: "https://anilist.co/img/header/14719.jpg",
+                start: 0,
+                duration: 30
+            },
+            {
+                anime: "JoJo - Fighting Gold",
+                videoId: "5jDspK2OOqg",
+                cover: "https://anilist.co/img/header/14719.jpg",
+                start: 0,
+                duration: 30
+            },
+
+            // ===== BLACK CLOVER =====
+            {
+                anime: "Black Clover - Haruka Mirai",
+                videoId: "kTtzECg2C7g",
+                cover: "https://anilist.co/img/header/34572.jpg",
+                start: 0,
+                duration: 30
+            },
+            {
+                anime: "Black Clover - Black Rover",
+                videoId: "pW3cOEWsXqg",
+                cover: "https://anilist.co/img/header/34572.jpg",
+                start: 0,
+                duration: 30
+            },
+            {
+                anime: "Black Clover - Black Catcher",
+                videoId: "f0IshG2VQoQ",
+                cover: "https://anilist.co/img/header/34572.jpg",
+                start: 0,
+                duration: 30
+            },
+
+            // ===== FAIRY TAIL =====
+            {
+                anime: "Fairy Tail - Snow Fairy",
+                videoId: "n8Zv-AxofXw",
+                cover: "https://anilist.co/img/header/6702.jpg",
+                start: 0,
+                duration: 30
+            },
+            {
+                anime: "Fairy Tail - Egao no Mahou",
+                videoId: "m2CFyDz5hNc",
+                cover: "https://anilist.co/img/header/6702.jpg",
+                start: 0,
+                duration: 30
+            },
+            {
+                anime: "Fairy Tail - Rock City Boy",
+                videoId: "o11nWuGONU0",
+                cover: "https://anilist.co/img/header/6702.jpg",
+                start: 0,
+                duration: 30
+            },
+            {
+                anime: "Fairy Tail - Masayume Chasing",
+                videoId: "6bUvvW0f5QU",
+                cover: "https://anilist.co/img/header/6702.jpg",
+                start: 0,
+                duration: 30
+            },
+
+            // ===== DRAGON BALL =====
+            {
+                anime: "Dragon Ball Z - Cha-La Head-Cha-La",
+                videoId: "9DkE6P0Dk5I",
+                cover: "https://anilist.co/img/header/813.jpg",
+                start: 0,
+                duration: 30
+            },
+            {
+                anime: "Dragon Ball Kai - Dragon Soul",
+                videoId: "ieQDLa8pxMg",
+                cover: "https://anilist.co/img/header/813.jpg",
+                start: 0,
+                duration: 30
+            },
+            {
+                anime: "Dragon Ball Super - Chozetsu Dynamic",
+                videoId: "UuVGFWgRjDU",
+                cover: "https://anilist.co/img/header/20736.jpg",
+                start: 0,
+                duration: 30
+            },
+
+            // ===== GUNDAM =====
+            {
+                anime: "Gundam Seed - Invoke",
+                videoId: "0VHYNqRlUXY",
+                cover: "https://anilist.co/img/header/93.jpg",
+                start: 0,
+                duration: 30
+            },
+            {
+                anime: "Gundam 00 - Daybreak's Bell",
+                videoId: "dJzMxE-hpKE",
+                cover: "https://anilist.co/img/header/2587.jpg",
+                start: 0,
+                duration: 30
+            },
+            {
+                anime: "Gundam Iron-Blooded Orphans - Raise Your Flag",
+                videoId: "nUeDIdh4vJo",
+                cover: "https://anilist.co/img/header/20787.jpg",
+                start: 0,
+                duration: 30
+            },
+
+            // ===== CLASSICS =====
+            {
+                anime: "Lupin III - Opening 3",
+                videoId: "b83r_s20pPQ",
+                cover: "https://anilist.co/img/header/1412.jpg",
+                start: 0,
+                duration: 30
+            },
+            {
+                anime: "Space Battleship Yamato",
+                videoId: "dNQhR8MsZkk",
+                cover: "https://anilist.co/img/header/1061.jpg",
+                start: 0,
+                duration: 30
+            },
+            {
+                anime: "Mazinger Z",
+                videoId: "5pnE1B1kdnE",
+                cover: "https://anilist.co/img/header/1514.jpg",
+                start: 0,
+                duration: 30
+            },
+            {
+                anime: "Captain Harlock",
+                videoId: "gv0jDYAmu9Y",
+                cover: "https://anilist.co/img/header/1035.jpg",
+                start: 0,
+                duration: 30
+            },
+            {
+                anime: "Space Cobra",
+                videoId: "x4GIZI1Tt94",
+                cover: "https://anilist.co/img/header/1511.jpg",
+                start: 0,
+                duration: 30
+            },
+            {
+                anime: "Gatchaman",
+                videoId: "S0MfRwH1HdA",
+                cover: "https://anilist.co/img/header/928.jpg",
+                start: 0,
+                duration: 30
+            },
+
+            // ===== MORE RECENT =====
+            {
+                anime: "Kaguya-sama - Love Dramatic",
+                videoId: "I2g4bBYCzMk",
+                cover: "https://anilist.co/img/header/101896.jpg",
+                start: 0,
+                duration: 30
+            },
+            {
+                anime: "Kaguya-sama - Daddy Daddy Do",
+                videoId: "XHvD4gzQI0A",
+                cover: "https://anilist.co/img/header/101896.jpg",
+                start: 0,
+                duration: 30
+            },
+            {
+                anime: "Kaguya-sama - Giri Giri",
+                videoId: "yNElW3lO1MA",
+                cover: "https://anilist.co/img/header/101896.jpg",
+                start: 0,
+                duration: 30
+            },
+            {
+                anime: "Domestic Girlfriend - Crying for Rain",
+                videoId: "h11yZ_bEtbw",
+                cover: "https://anilist.co/img/header/103559.jpg",
+                start: 0,
+                duration: 30
+            },
+            {
+                anime: "Wind Breaker - Absolute Zero",
+                videoId: "vPxPssTk5eo",
+                cover: "https://anilist.co/img/header/168298.jpg",
+                start: 0,
+                duration: 30
+            },
+            {
+                anime: "The Idaten Deities - Opening",
+                videoId: "ztBtQEA6mFc",
+                cover: "https://anilist.co/img/header/132325.jpg",
+                start: 0,
+                duration: 30
+            },
+            // ===== EXTRA =====
+            {
+                anime: "Your Name - Zen Zen Zense",
+                videoId: "t3pFz_3J0xU",
+                cover: "https://anilist.co/img/header/21519.jpg",
+                start: 0,
+                duration: 30
+            },
+            {
+                anime: "Weathering With You - Grand Escape",
+                videoId: "G07PHxZ3kGQ",
+                cover: "https://anilist.co/img/header/107678.jpg",
+                start: 0,
+                duration: 30
+            },
+            {
+                anime: "Suzume - Suzume",
+                videoId: "6J1YEAKk5Ws",
+                cover: "https://anilist.co/img/header/148311.jpg",
+                start: 0,
+                duration: 30
+            },
+            {
+                anime: "Bocchi the Rock! - Seishun Complex",
+                videoId: "i0Q40o1ITCQ",
+                cover: "https://anilist.co/img/header/143994.jpg",
+                start: 0,
+                duration: 30
+            },
+            {
+                anime: "Dandadan - Otonoke",
+                videoId: "lVUO-4jOFH0",
+                cover: "https://anilist.co/img/header/168164.jpg",
                 start: 0,
                 duration: 30
             }
@@ -1028,7 +1671,6 @@
 
         function onPlayerStateChange(event) {
             if (event.data === YT.PlayerState.ENDED) {
-                // Quando finisce, ferma tutto
                 isPlaying = false;
                 document.getElementById('playIcon').className = 'fas fa-play';
                 document.getElementById('playText').textContent = 'Play';
@@ -1101,19 +1743,16 @@
             const q = questions[currentIndex];
             isAnswered = false;
             
-            // Aggiorna stats
             document.getElementById('currentQuestion').textContent = currentIndex + 1;
             document.getElementById('totalQuestions').textContent = questions.length;
             document.getElementById('correctCount').textContent = correctCount;
             document.getElementById('wrongCount').textContent = wrongCount;
             document.getElementById('progressFill').style.width = ((currentIndex) / questions.length * 100) + '%';
 
-            // Aggiorna cover
             const cover = document.getElementById('animeCover');
             cover.src = q.cover || '';
             cover.style.display = q.cover ? 'block' : 'none';
 
-            // Genera opzioni
             const grid = document.getElementById('optionsGrid');
             grid.innerHTML = '';
             const letters = ['A', 'B', 'C', 'D'];
@@ -1127,11 +1766,9 @@
                 grid.appendChild(btn);
             });
 
-            // Nascondi feedback e next
             document.getElementById('feedback').className = 'feedback';
             document.getElementById('nextBtn').className = 'next-btn';
             
-            // Reset audio
             resetAudio();
         }
 
@@ -1139,7 +1776,6 @@
             if (isAnswered) return;
             isAnswered = true;
 
-            // Ferma l'audio
             if (player && isPlaying) {
                 player.pauseVideo();
                 isPlaying = false;
@@ -1169,7 +1805,7 @@
                 feedback.className = 'feedback show wrong';
                 feedbackTitle.textContent = '❌ Sbagliato!';
                 const correctAnswer = questions[currentIndex].options.find(o => o.isCorrect);
-                feedbackText.textContent = `Era "${correctAnswer.text}"! Riprova con la prossima!`;
+                feedbackText.textContent = `Era "${correctAnswer.text}"!`;
                 
                 allBtns.forEach(b => {
                     if (b.dataset.correct === 'true') {
@@ -1223,7 +1859,6 @@
             document.getElementById('gameArea').style.display = 'block';
             document.getElementById('loading').style.display = 'none';
             
-            // Ricarica il player
             if (player) {
                 player.destroy();
             }
@@ -1235,9 +1870,11 @@
         // INIT
         // ============================================================
         document.addEventListener('DOMContentLoaded', () => {
+            // Mostra il numero di opening disponibili
+            document.getElementById('totalOpenings').textContent = OPENING_DB.length;
+            
             questions = generateQuestions();
             
-            // Mostra loading
             document.getElementById('loading').style.display = 'block';
             document.getElementById('gameArea').style.display = 'none';
             
