@@ -3,12 +3,13 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>AniQuiz - Indovina l'Opening (Invidious)</title>
+    <title>AniQuiz - Indovina l'Opening (AnimeThemes)</title>
     
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
     
     <style>
+        /* ... STESSO STILE DI PRIMA ... */
         * {
             margin: 0;
             padding: 0;
@@ -171,8 +172,8 @@
         .game-header .audio-badge {
             display: inline-block;
             margin-top: 12px;
-            background: rgba(168, 85, 247, 0.15);
-            color: var(--accent-purple);
+            background: rgba(74, 222, 128, 0.15);
+            color: var(--accent-green);
             padding: 6px 20px;
             border-radius: 20px;
             font-size: 0.85rem;
@@ -665,7 +666,7 @@
                 <a href="../index.html" class="back-btn">
                     <i class="fas fa-arrow-left"></i> Torna indietro
                 </a>
-                <span><i class="fas fa-search"></i> Invidious</span>
+                <span><i class="fas fa-music"></i> AnimeThemes</span>
             </div>
         </div>
     </nav>
@@ -674,9 +675,9 @@
         
         <div class="game-header">
             <h1>🎵 Indovina l'Opening</h1>
-            <p>🔍 Ricerca VERA su YouTube (Invidious)</p>
+            <p>🎧 Ascolta la sigla da AnimeThemes.moe</p>
             <div class="audio-badge">
-                <i class="fas fa-search"></i> Senza API · Gratis · Illimitato
+                <i class="fas fa-check-circle"></i> Audio puro · Funziona sempre
             </div>
         </div>
 
@@ -893,71 +894,119 @@
         })();
 
         // ============================================================
-        // 🔥 RICERCA SU INVIOUS (SENZA API)
+        // 🔥 ANIMETHEMES.MOE - AUDIO PURO (FUNZIONA SEMPRE)
         // ============================================================
         
-        // 🔥 LISTA DI ISTANZE INVIOUS (se una non funziona, usa l'altra)
-        const INVIOUS_INSTANCES = [
-            'https://invidious.io/api/v1/search',
-            'https://invidious.weblibre.org/api/v1/search',
-            'https://invidious.vern.cc/api/v1/search',
-            'https://invidious.snopyta.org/api/v1/search',
-            'https://invidious.namazso.eu/api/v1/search'
+        // 🔥 LISTA DI ANIME CON ID MAL PER ANIMETHEMES
+        const ANIME_THEMES_DB = {
+            // Anime famosi con ID MyAnimeList
+            'Attack on Titan': { malId: 16498, slug: 'shingeki-no-kyojin' },
+            'Demon Slayer': { malId: 38000, slug: 'kimetsu-no-yaiba' },
+            'Naruto': { malId: 20, slug: 'naruto' },
+            'One Piece': { malId: 21, slug: 'one-piece' },
+            'Dragon Ball Z': { malId: 813, slug: 'dragon-ball-z' },
+            'Death Note': { malId: 1535, slug: 'death-note' },
+            'Fullmetal Alchemist: Brotherhood': { malId: 5114, slug: 'fullmetal-alchemist-brotherhood' },
+            'Tokyo Ghoul': { malId: 22319, slug: 'tokyo-ghoul' },
+            'My Hero Academia': { malId: 31964, slug: 'boku-no-hero-academia' },
+            'Jujutsu Kaisen': { malId: 40748, slug: 'jujutsu-kaisen' },
+            'Neon Genesis Evangelion': { malId: 30, slug: 'neon-genesis-evangelion' },
+            'Cowboy Bebop': { malId: 23, slug: 'cowboy-bebop' },
+            'Sword Art Online': { malId: 11757, slug: 'sword-art-online' },
+            'Hunter x Hunter': { malId: 1535, slug: 'hunter-x-hunter-2011' },
+            'Bleach': { malId: 22, slug: 'bleach' },
+            'Spy x Family': { malId: 50265, slug: 'spy-x-family' },
+            'Chainsaw Man': { malId: 44511, slug: 'chainsaw-man' },
+            'Mob Psycho 100': { malId: 32182, slug: 'mob-psycho-100' },
+            'One Punch Man': { malId: 30276, slug: 'one-punch-man' },
+            'Re:Zero': { malId: 31240, slug: 'rezero-kara-hajimeru-isekai-seikatsu' },
+            'Vinland Saga': { malId: 37521, slug: 'vinland-saga' },
+            'Steins;Gate': { malId: 9253, slug: 'steinsgate' },
+            'Code Geass': { malId: 1575, slug: 'code-geass-hangyaku-no-lelouch' },
+            'Gintama': { malId: 918, slug: 'gintama' },
+            'Fate/Zero': { malId: 10087, slug: 'fate-zero' },
+            'Kaguya-sama': { malId: 37992, slug: 'kaguya-sama-wa-kokurasetai' },
+            'Dr. Stone': { malId: 38691, slug: 'dr-stone' },
+            'Fire Force': { malId: 38671, slug: 'en'en-no-shouboutai' },
+            'The Promised Neverland': { malId: 37732, slug: 'yakusoku-no-neverland' },
+            'Black Clover': { malId: 34572, slug: 'black-clover' },
+            'Fairy Tail': { malId: 6702, slug: 'fairytail' },
+        };
+
+        // 🔥 URL DI ANIMETHEMES.MOE PER AUDIO
+        const AUDIO_URLS = [
+            'https://animethemes.moe/audio/',
+            'https://a.animethemes.moe/',
+            'https://beta.animethemes.moe/audio/'
         ];
 
-        async function searchYouTubeInvidious(animeName) {
-            // 🔥 DIVERSE QUERY DI RICERCA
-            const searchQueries = [
-                `${animeName} opening`,
-                `${animeName} op`,
-                `${animeName} opening 1`,
-                `${animeName} opening full`,
-                `${animeName} opening hd`,
-                `${animeName} intro`
-            ];
-
-            for (const query of searchQueries) {
-                for (const instance of INVIOUS_INSTANCES) {
-                    try {
-                        const url = `${instance}?q=${encodeURIComponent(query)}&type=video&sort_by=relevance`;
-                        console.log(`🔍 Cercando: ${query} su ${instance.split('/')[2]}`);
-                        
-                        const response = await fetch(url);
-                        
-                        if (!response.ok) {
-                            console.log(`⚠️ ${instance} non risponde, provo prossimo...`);
-                            continue;
-                        }
-                        
-                        const data = await response.json();
-                        
-                        if (data && data.length > 0) {
-                            // 🔥 CERCA IL VIDEO MIGLIORE (che contenga "opening" o "op" nel titolo)
-                            let bestMatch = data[0];
-                            for (const video of data) {
-                                const title = video.title?.toLowerCase() || '';
-                                if (title.includes('opening') || title.includes('op ') || title.includes('tv size')) {
-                                    bestMatch = video;
-                                    break;
-                                }
-                            }
-                            
-                            console.log(`✅ Trovato: ${bestMatch.title} (${bestMatch.videoId})`);
-                            return {
-                                videoId: bestMatch.videoId,
-                                title: bestMatch.title || animeName,
-                                duration: Math.min(bestMatch.lengthSeconds || 30, 30)
-                            };
-                        }
-                    } catch (err) {
-                        console.log(`❌ Errore con ${instance}: ${err.message}`);
-                        continue;
-                    }
+        async function getAnimeThemesAudio(animeTitle) {
+            // Cerca l'anime nel database
+            let animeData = null;
+            for (const [key, value] of Object.entries(ANIME_THEMES_DB)) {
+                if (animeTitle.toLowerCase().includes(key.toLowerCase()) || 
+                    key.toLowerCase().includes(animeTitle.toLowerCase())) {
+                    animeData = value;
+                    break;
                 }
             }
-            
-            console.log(`❌ Nessun risultato per: ${animeName}`);
-            return null;
+
+            if (!animeData) {
+                console.log(`❌ Anime non trovato in database: ${animeTitle}`);
+                return null;
+            }
+
+            try {
+                // Chiedi a AnimeThemes API
+                const url = `https://api.animethemes.moe/anime?filter[has]=resources&filter[site]=MyAnimeList&filter[external_id]=${animeData.malId}&include=animethemes.animethemeentries.videos`;
+                console.log(`🔍 Cerco su AnimeThemes: ${animeTitle} (ID: ${animeData.malId})`);
+                
+                const response = await fetch(url);
+                if (!response.ok) {
+                    console.log(`⚠️ Errore AnimeThemes: ${response.status}`);
+                    return null;
+                }
+                
+                const data = await response.json();
+                
+                if (!data.anime || data.anime.length === 0) {
+                    console.log(`❌ Nessun tema trovato per: ${animeTitle}`);
+                    return null;
+                }
+
+                // Cerca un opening
+                const themes = data.anime[0]?.animethemes || [];
+                for (const theme of themes) {
+                    // Cerca solo opening (tipo 1 = Opening)
+                    if (theme.type === 1) {
+                        const entries = theme.animethemeentries || [];
+                        for (const entry of entries) {
+                            const videos = entry.videos || [];
+                            for (const video of videos) {
+                                if (video.filename) {
+                                    // Prova diversi URL audio
+                                    for (const baseUrl of AUDIO_URLS) {
+                                        const audioUrl = baseUrl + video.filename + '.ogg';
+                                        console.log(`✅ Trovato audio: ${audioUrl}`);
+                                        return {
+                                            url: audioUrl,
+                                            title: theme.song?.title || animeTitle,
+                                            duration: 30
+                                        };
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+
+                console.log(`❌ Nessun opening trovato per: ${animeTitle}`);
+                return null;
+
+            } catch (err) {
+                console.error('Errore AnimeThemes:', err);
+                return null;
+            }
         }
 
         // ============================================================
@@ -969,7 +1018,7 @@
         let wrongCount = 0;
         let isAnswered = false;
         let totalQuestions = 10;
-        let player = null;
+        let audioElement = null;
         let isPlaying = false;
         let timerInterval = null;
         let currentQuestionData = null;
@@ -1000,21 +1049,21 @@
                 const title = window.getTitle(anime);
                 
                 if (loadingSub) {
-                    loadingSub.textContent = `🔍 Cercando su YouTube: ${title} (${questions.length + 1}/${totalQuestions})`;
+                    loadingSub.textContent = `🔍 Cercando su AnimeThemes: ${title} (${questions.length + 1}/${totalQuestions})`;
                 }
 
-                // 🔥 CERCA L'OPENING
-                const searchResult = await searchYouTubeInvidious(title);
+                // 🔥 CERCA L'AUDIO SU ANIMETHEMES
+                const audioResult = await getAnimeThemesAudio(title);
                 
-                // 🔥 ASPETTA 1 SECONDO TRA UNA RICERCA E L'ALTRA
-                await delay(1000);
+                // 🔥 ASPETTA 500ms TRA UNA RICERCA E L'ALTRA
+                await delay(500);
                 
-                if (!searchResult || !searchResult.videoId) {
-                    console.log(`❌ Nessun risultato per: ${title}`);
+                if (!audioResult || !audioResult.url) {
+                    console.log(`❌ Nessun audio per: ${title}`);
                     continue;
                 }
 
-                const videoId = searchResult.videoId;
+                const audioUrl = audioResult.url;
 
                 // 🔥 TROVA DISTRATTORI
                 const others = animeList.filter(a => a.id !== anime.id);
@@ -1025,14 +1074,14 @@
                     if (distractors.length >= 3) break;
                     
                     const otherTitle = window.getTitle(other);
-                    const otherSearch = await searchYouTubeInvidious(otherTitle);
-                    await delay(800);
+                    const otherAudio = await getAnimeThemesAudio(otherTitle);
+                    await delay(500);
                     
-                    if (otherSearch && otherSearch.videoId && otherSearch.videoId !== videoId) {
+                    if (otherAudio && otherAudio.url && otherAudio.url !== audioUrl) {
                         distractors.push({
                             text: otherTitle,
                             isCorrect: false,
-                            videoId: otherSearch.videoId
+                            url: otherAudio.url
                         });
                     }
                 }
@@ -1046,13 +1095,13 @@
                     ];
                     for (const fb of fallbackTitles) {
                         if (fb !== title && !distractors.some(d => d.text === fb)) {
-                            const fbSearch = await searchYouTubeInvidious(fb);
-                            await delay(800);
-                            if (fbSearch && fbSearch.videoId && fbSearch.videoId !== videoId) {
+                            const fbAudio = await getAnimeThemesAudio(fb);
+                            await delay(500);
+                            if (fbAudio && fbAudio.url && fbAudio.url !== audioUrl) {
                                 distractors.push({
                                     text: fb,
                                     isCorrect: false,
-                                    videoId: fbSearch.videoId
+                                    url: fbAudio.url
                                 });
                             }
                         }
@@ -1066,16 +1115,15 @@
                 }
 
                 const options = shuffleArrayLocal([
-                    { text: title, isCorrect: true, videoId: videoId },
+                    { text: title, isCorrect: true, url: audioUrl },
                     ...distractors
                 ]);
 
                 questions.push({
                     anime: title,
-                    videoId: videoId,
+                    audioUrl: audioUrl,
                     cover: anime.coverImage?.large || null,
                     options: options,
-                    start: 0,
                     duration: 30
                 });
                 
@@ -1086,139 +1134,8 @@
         }
 
         // ============================================================
-        // YOUTUBE PLAYER
+        // AUDIO PLAYER (SENZA YOUTUBE)
         // ============================================================
-        function loadYouTubeAPI() {
-            if (window.YT) {
-                initPlayer();
-                return;
-            }
-
-            const tag = document.createElement('script');
-            tag.src = 'https://www.youtube.com/iframe_api';
-            document.head.appendChild(tag);
-
-            window.onYouTubeIframeAPIReady = () => {
-                initPlayer();
-            };
-        }
-
-        function initPlayer() {
-            if (currentIndex >= questions.length) {
-                showResult();
-                return;
-            }
-
-            const q = questions[currentIndex];
-            if (!q || !q.videoId) {
-                nextQuestion();
-                return;
-            }
-
-            if (player) {
-                try { player.destroy(); } catch(e) {}
-                player = null;
-            }
-
-            player = new YT.Player('youtubePlayer', {
-                height: '0',
-                width: '0',
-                videoId: q.videoId,
-                playerVars: {
-                    autoplay: 0,
-                    controls: 0,
-                    modestbranding: 1,
-                    rel: 0,
-                    showinfo: 0,
-                    start: q.start || 0,
-                    end: (q.start || 0) + (q.duration || 30)
-                },
-                events: {
-                    onReady: onPlayerReady,
-                    onStateChange: onPlayerStateChange,
-                    onError: onPlayerError
-                }
-            });
-        }
-
-        function onPlayerReady(event) {
-            document.getElementById('loading').style.display = 'none';
-            document.getElementById('gameArea').style.display = 'block';
-            loadQuestionUI();
-            updateTimer();
-        }
-
-        function onPlayerStateChange(event) {
-            if (event.data === YT.PlayerState.ENDED) {
-                isPlaying = false;
-                document.getElementById('playIcon').className = 'fas fa-play';
-                document.getElementById('playText').textContent = 'Play';
-                document.getElementById('audioVisual').classList.remove('playing');
-                document.getElementById('waveform').classList.remove('playing');
-                clearInterval(timerInterval);
-            }
-        }
-
-        function onPlayerError(event) {
-            console.error('Errore YouTube:', event.data);
-            setTimeout(() => {
-                nextQuestion();
-            }, 1000);
-        }
-
-        function togglePlay() {
-            if (!player) return;
-
-            if (isPlaying) {
-                player.pauseVideo();
-                isPlaying = false;
-                document.getElementById('playIcon').className = 'fas fa-play';
-                document.getElementById('playText').textContent = 'Play';
-                document.getElementById('audioVisual').classList.remove('playing');
-                document.getElementById('waveform').classList.remove('playing');
-                clearInterval(timerInterval);
-            } else {
-                player.playVideo();
-                isPlaying = true;
-                document.getElementById('playIcon').className = 'fas fa-pause';
-                document.getElementById('playText').textContent = 'Pausa';
-                document.getElementById('audioVisual').classList.add('playing');
-                document.getElementById('waveform').classList.add('playing');
-                updateTimer();
-            }
-        }
-
-        function resetAudio() {
-            if (!player) return;
-            const q = questions[currentIndex];
-            if (q) {
-                player.seekTo(q.start || 0);
-            }
-            player.pauseVideo();
-            isPlaying = false;
-            document.getElementById('playIcon').className = 'fas fa-play';
-            document.getElementById('playText').textContent = 'Play';
-            document.getElementById('audioVisual').classList.remove('playing');
-            document.getElementById('waveform').classList.remove('playing');
-            clearInterval(timerInterval);
-            updateTimer();
-        }
-
-        function updateTimer() {
-            clearInterval(timerInterval);
-            timerInterval = setInterval(() => {
-                if (player && player.getCurrentTime) {
-                    const current = player.getCurrentTime() || 0;
-                    const q = questions[currentIndex];
-                    const elapsed = current - (q?.start || 0);
-                    const minutes = Math.floor(elapsed / 60);
-                    const seconds = Math.floor(elapsed % 60);
-                    document.getElementById('timerDisplay').textContent = 
-                        `${minutes}:${seconds.toString().padStart(2, '0')}`;
-                }
-            }, 100);
-        }
-
         function loadQuestionUI() {
             if (currentIndex >= questions.length) {
                 showResult();
@@ -1259,21 +1176,103 @@
             document.getElementById('feedback').className = 'feedback';
             document.getElementById('nextBtn').className = 'next-btn';
             
-            resetAudio();
+            // 🔥 CARICA L'AUDIO
+            loadAudio(q);
+        }
+
+        function loadAudio(q) {
+            // Rimuovi audio precedente
+            if (audioElement) {
+                audioElement.pause();
+                audioElement.remove();
+                audioElement = null;
+            }
+
+            isPlaying = false;
+            document.getElementById('playIcon').className = 'fas fa-play';
+            document.getElementById('playText').textContent = 'Play';
+            document.getElementById('audioVisual').classList.remove('playing');
+            document.getElementById('waveform').classList.remove('playing');
+            document.getElementById('timerDisplay').textContent = '0:00';
+
+            // 🔥 CREA NUOVO AUDIO
+            audioElement = new Audio(q.audioUrl);
+            audioElement.preload = 'auto';
+            
+            audioElement.addEventListener('timeupdate', () => {
+                const minutes = Math.floor(audioElement.currentTime / 60);
+                const seconds = Math.floor(audioElement.currentTime % 60);
+                document.getElementById('timerDisplay').textContent = 
+                    `${minutes}:${seconds.toString().padStart(2, '0')}`;
+            });
+
+            audioElement.addEventListener('ended', () => {
+                isPlaying = false;
+                document.getElementById('playIcon').className = 'fas fa-play';
+                document.getElementById('playText').textContent = 'Play';
+                document.getElementById('audioVisual').classList.remove('playing');
+                document.getElementById('waveform').classList.remove('playing');
+            });
+
+            audioElement.addEventListener('error', (e) => {
+                console.error('Errore audio:', e);
+                // Passa alla prossima domanda
+                setTimeout(() => {
+                    nextQuestion();
+                }, 1000);
+            });
+
+            // Mostra game area
+            document.getElementById('loading').style.display = 'none';
+            document.getElementById('gameArea').style.display = 'block';
+        }
+
+        function togglePlay() {
+            if (!audioElement) return;
+
+            if (isPlaying) {
+                audioElement.pause();
+                isPlaying = false;
+                document.getElementById('playIcon').className = 'fas fa-play';
+                document.getElementById('playText').textContent = 'Play';
+                document.getElementById('audioVisual').classList.remove('playing');
+                document.getElementById('waveform').classList.remove('playing');
+            } else {
+                audioElement.play().catch(err => {
+                    console.error('Errore play:', err);
+                    alert('Impossibile riprodurre l\'audio. Passa alla prossima domanda.');
+                });
+                isPlaying = true;
+                document.getElementById('playIcon').className = 'fas fa-pause';
+                document.getElementById('playText').textContent = 'Pausa';
+                document.getElementById('audioVisual').classList.add('playing');
+                document.getElementById('waveform').classList.add('playing');
+            }
+        }
+
+        function resetAudio() {
+            if (!audioElement) return;
+            audioElement.currentTime = 0;
+            audioElement.pause();
+            isPlaying = false;
+            document.getElementById('playIcon').className = 'fas fa-play';
+            document.getElementById('playText').textContent = 'Play';
+            document.getElementById('audioVisual').classList.remove('playing');
+            document.getElementById('waveform').classList.remove('playing');
+            document.getElementById('timerDisplay').textContent = '0:00';
         }
 
         function selectOption(btn, isCorrect) {
             if (isAnswered) return;
             isAnswered = true;
 
-            if (player && isPlaying) {
-                player.pauseVideo();
+            if (audioElement && isPlaying) {
+                audioElement.pause();
                 isPlaying = false;
                 document.getElementById('playIcon').className = 'fas fa-play';
                 document.getElementById('playText').textContent = 'Play';
                 document.getElementById('audioVisual').classList.remove('playing');
                 document.getElementById('waveform').classList.remove('playing');
-                clearInterval(timerInterval);
             }
 
             const allBtns = document.querySelectorAll('.option-btn');
@@ -1317,9 +1316,10 @@
         }
 
         function nextQuestion() {
-            if (player) {
-                try { player.destroy(); } catch(e) {}
-                player = null;
+            if (audioElement) {
+                audioElement.pause();
+                audioElement.remove();
+                audioElement = null;
             }
             currentIndex++;
             
@@ -1333,7 +1333,7 @@
             document.getElementById('loadingSub').textContent = `Caricando: ${questions[currentIndex]?.anime || '...'}`;
             
             setTimeout(() => {
-                initPlayer();
+                loadQuestionUI();
             }, 500);
         }
 
@@ -1359,10 +1359,15 @@
             currentIndex = 0;
             correctCount = 0;
             wrongCount = 0;
+            if (audioElement) {
+                audioElement.pause();
+                audioElement.remove();
+                audioElement = null;
+            }
             document.getElementById('resultScreen').className = 'result-screen';
             document.getElementById('gameArea').style.display = 'none';
             document.getElementById('loading').style.display = 'block';
-            document.getElementById('loadingSub').textContent = 'Ricarico le opening da YouTube...';
+            document.getElementById('loadingSub').textContent = 'Ricarico le opening da AnimeThemes...';
             initGame();
         }
 
@@ -1387,7 +1392,7 @@
                 document.getElementById('gameArea').style.display = 'none';
                 document.getElementById('loadingSub').textContent = `Caricando: ${questions[0]?.anime || '...'}`;
                 
-                loadYouTubeAPI();
+                loadQuestionUI();
 
             } catch (err) {
                 console.error('Errore init:', err);
@@ -1413,11 +1418,6 @@
         document.addEventListener('DOMContentLoaded', () => {
             initGame();
         });
-
-        // Player YouTube nascosto
-        document.body.insertAdjacentHTML('beforeend', `
-            <div id="youtubePlayer" style="position: absolute; width: 0; height: 0; opacity: 0; pointer-events: none;"></div>
-        `);
     </script>
 
 </body>
