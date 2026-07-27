@@ -366,16 +366,6 @@
             box-shadow: 0 0 30px rgba(168, 85, 247, 0.3);
         }
 
-        .audio-controls button.danger {
-            background: linear-gradient(135deg, var(--accent-red), #dc2626);
-            border: none;
-        }
-
-        .audio-controls button.danger:hover {
-            transform: scale(1.05);
-            box-shadow: 0 0 30px rgba(248, 113, 113, 0.3);
-        }
-
         .timer {
             font-size: 0.9rem;
             color: var(--text-secondary);
@@ -805,9 +795,10 @@
                 return arr;
             }
 
-            function getTitle(media) {
+            // 🔥 RENDO getTitle GLOBALE
+            window.getTitle = function(media) {
                 return media.title.english || media.title.romaji || media.title.native || 'Sconosciuto';
-            }
+            };
 
             function getImage(media) {
                 return media.coverImage?.large || null;
@@ -909,95 +900,61 @@
         // ============================================================
         // YOUTUBE SEARCH - Cerca l'opening su YouTube
         // ============================================================
-        async function searchYouTubeOpening(animeName) {
-            // Cerca "animeName opening" su YouTube
-            const searchQuery = encodeURIComponent(`${animeName} opening`);
-            
-            // Usiamo l'API di YouTube senza chiave (solo per embedding)
-            // Nota: questo è un workaround, non funzionerà sempre
-            try {
-                // Prova con un embed diretto cercando il video
-                const response = await fetch(
-                    `https://www.youtube.com/results?search_query=${searchQuery}`
-                );
-                
-                // Non possiamo fare scraping diretto, ma possiamo usare un approccio alternativo
-                // Creiamo un link diretto a YouTube con la ricerca
-                const youtubeUrl = `https://www.youtube.com/results?search_query=${searchQuery}`;
-                
-                // Usiamo un iframe per mostrare la ricerca, ma per l'audio usiamo un workaround
-                // Carichiamo il primo risultato usando l'embed
-                const videoId = await getFirstVideoId(animeName);
-                return videoId;
-            } catch (err) {
-                console.error('Errore ricerca YouTube:', err);
-                return null;
-            }
-        }
+        const FALLBACK_VIDEOS = {
+            'Attack on Titan': '8OkpRK2_gVs',
+            'Demon Slayer': 'pmanD_s7G3U',
+            'Naruto': 'MvH9eu7xg3g',
+            'One Piece': 'Xa2bpzAe6Sk',
+            'Dragon Ball Z': '9DkE6P0Dk5I',
+            'Death Note': 'L_vyPLzBB2o',
+            'Fullmetal Alchemist': 'WAkWQsh1Ghc',
+            'Tokyo Ghoul': '50VWOB1S2KM',
+            'My Hero Academia': 'P4MIXh6CrO0',
+            'Jujutsu Kaisen': 'H5ahmWcG1ko',
+            'Neon Genesis Evangelion': 'Z9LkLb-7tXo',
+            'Cowboy Bebop': 'el8A3VHnlG8',
+            'Sword Art Online': 'A3k6vj2-F9Y',
+            'Hunter x Hunter': 'wMTmz1F5gqQ',
+            'Bleach': 'G7vXmVoFqlY',
+            'Spy x Family': '3lTLefquL4g',
+            'Chainsaw Man': 'dfl7A8R5pYk',
+            'Mob Psycho 100': 'mJ9N8PYzK7M',
+            'One Punch Man': 'hRl9Acs16HE',
+            'Re:Zero': 'L0o3qvWEj40',
+            'Vinland Saga': 'o0anfI8m-G0',
+            'Steins;Gate': 'AJSrsTkD0E0',
+            'Code Geass': 'pDmXKQh0Jzo',
+            'Gintama': 'IikPdzg0JpM',
+            'Fate/Zero': 'LhB2Y9Y7cK8',
+            'Kaguya-sama': 'I2g4bBYCzMk',
+            'Dr. Stone': 'jI4bJtSgZAs',
+            'Fire Force': 'YzD_0hzYz0I',
+            'The Promised Neverland': 'jJzSqI0p1WQ',
+            'Black Clover': 'kTtzECg2C7g',
+            'Fairy Tail': 'n8Zv-AxofXw',
+            'Boruto': 'iWXjA8qIXXA',
+            'Dragon Ball Super': 'UuVGFWgRjDU',
+            'Pokémon': 'bUYJ08hZmCM',
+            'Yu-Gi-Oh!': 'xzGhSXZWk7Y',
+            'Sailor Moon': 'QPsg6T1EYYA',
+            'Saint Seiya': 'H-ZhDTT4_IA',
+            'Inuyasha': 'PGN-9SfLsnM',
+            'Rurouni Kenshin': 'FZ0pm1jOADg',
+            'Trigun': 'jzgSMSF5f_8',
+            'Hellsing': '3bCBT2xI8T4',
+            'Black Lagoon': 'Pp0MvkigcKI',
+            'Ghost in the Shell': 'vNj9yP7zYtI',
+            'Akira': 'nQ6P9CwR9a8',
+            'Your Name': 't3pFz_3J0xU'
+        };
 
-        // Funzione per ottenere l'ID del primo video
         function getFirstVideoId(animeName) {
-            // Mappa di fallback per anime popolari
-            const fallbackIds = {
-                'Attack on Titan': '8OkpRK2_gVs',
-                'Demon Slayer': 'pmanD_s7G3U',
-                'Naruto': 'MvH9eu7xg3g',
-                'One Piece': 'Xa2bpzAe6Sk',
-                'Dragon Ball Z': '9DkE6P0Dk5I',
-                'Death Note': 'L_vyPLzBB2o',
-                'Fullmetal Alchemist': 'WAkWQsh1Ghc',
-                'Tokyo Ghoul': '50VWOB1S2KM',
-                'My Hero Academia': 'P4MIXh6CrO0',
-                'Jujutsu Kaisen': 'H5ahmWcG1ko',
-                'Neon Genesis Evangelion': 'Z9LkLb-7tXo',
-                'Cowboy Bebop': 'el8A3VHnlG8',
-                'Sword Art Online': 'A3k6vj2-F9Y',
-                'Hunter x Hunter': 'wMTmz1F5gqQ',
-                'Bleach': 'G7vXmVoFqlY',
-                'Spy x Family': '3lTLefquL4g',
-                'Chainsaw Man': 'dfl7A8R5pYk',
-                'Mob Psycho 100': 'mJ9N8PYzK7M',
-                'One Punch Man': 'hRl9Acs16HE',
-                'Re:Zero': 'L0o3qvWEj40',
-                'Vinland Saga': 'o0anfI8m-G0',
-                'Steins;Gate': 'AJSrsTkD0E0',
-                'Code Geass': 'pDmXKQh0Jzo',
-                'Gintama': 'IikPdzg0JpM',
-                'Fate/Zero': 'LhB2Y9Y7cK8',
-                'Monogatari': 'KxXvWcH3SfQ',
-                'Kaguya-sama': 'I2g4bBYCzMk',
-                'Dr. Stone': 'jI4bJtSgZAs',
-                'Fire Force': 'YzD_0hzYz0I',
-                'The Promised Neverland': 'jJzSqI0p1WQ',
-                'Black Clover': 'kTtzECg2C7g',
-                'Fairy Tail': 'n8Zv-AxofXw',
-                'Boruto': 'iWXjA8qIXXA',
-                'Dragon Ball Super': 'UuVGFWgRjDU',
-                'Pokémon': 'bUYJ08hZmCM',
-                'Yu-Gi-Oh!': 'xzGhSXZWk7Y',
-                'Sailor Moon': 'QPsg6T1EYYA',
-                'Saint Seiya': 'H-ZhDTT4_IA',
-                'Inuyasha': 'PGN-9SfLsnM',
-                'Ranma ½': 'dQxZ_5pZ7jY',
-                'Rurouni Kenshin': 'FZ0pm1jOADg',
-                'Trigun': 'jzgSMSF5f_8',
-                'Hellsing': '3bCBT2xI8T4',
-                'Black Lagoon': 'Pp0MvkigcKI',
-                'Ghost in the Shell': 'vNj9yP7zYtI',
-                'Akira': 'nQ6P9CwR9a8',
-                'Studio Ghibli': 'E2X-csXqw6I',
-                'Your Name': 't3pFz_3J0xU'
-            };
-
-            // Cerca il titolo nella mappa di fallback
-            for (const [key, value] of Object.entries(fallbackIds)) {
+            for (const [key, value] of Object.entries(FALLBACK_VIDEOS)) {
                 if (animeName.toLowerCase().includes(key.toLowerCase()) || 
                     key.toLowerCase().includes(animeName.toLowerCase())) {
                     return value;
                 }
             }
-
-            // Se non trovato, usa un ID generico (Attack on Titan come fallback)
             return '8OkpRK2_gVs';
         }
 
@@ -1023,10 +980,6 @@
             return arr;
         }
 
-        function pickRandomLocal(arr) {
-            return arr[Math.floor(Math.random() * arr.length)];
-        }
-
         async function generateQuestionsFromAnime(animeList) {
             const questions = [];
             const shuffled = shuffleArrayLocal([...animeList]);
@@ -1036,26 +989,22 @@
             
             for (let i = 0; i < selected.length; i++) {
                 const anime = selected[i];
-                const title = getTitle(anime);
+                const title = window.getTitle(anime);
                 
                 if (loadingSub) {
                     loadingSub.textContent = `Cercando opening di: ${title} su YouTube (${i+1}/${selected.length})`;
                 }
 
-                // Cerca l'opening su YouTube
                 const videoId = getFirstVideoId(title);
 
-                if (!videoId) {
-                    continue;
-                }
+                if (!videoId) continue;
 
-                // Crea le opzioni
                 const others = animeList.filter(a => a.id !== anime.id);
                 const shuffledOthers = shuffleArrayLocal([...others]).slice(0, 3);
                 const options = shuffleArrayLocal([
                     { text: title, isCorrect: true },
                     ...shuffledOthers.map(a => ({ 
-                        text: getTitle(a), 
+                        text: window.getTitle(a), 
                         isCorrect: false 
                     }))
                 ]);
@@ -1100,7 +1049,6 @@
                 return;
             }
 
-            // Distruggi il player precedente
             if (player) {
                 try { player.destroy(); } catch(e) {}
                 player = null;
@@ -1147,11 +1095,9 @@
 
         function onPlayerError(event) {
             console.error('Errore YouTube:', event.data);
-            // Prova a passare alla prossima domanda
             document.getElementById('loading').style.display = 'none';
             document.getElementById('gameArea').style.display = 'block';
             
-            // Mostra un messaggio all'utente
             const feedback = document.getElementById('feedback');
             feedback.className = 'feedback show wrong';
             document.getElementById('feedbackTitle').textContent = '⚠️ Errore audio';
@@ -1328,7 +1274,6 @@
             document.getElementById('gameArea').style.display = 'none';
             document.getElementById('loadingSub').textContent = `Caricando: ${questions[currentIndex]?.anime || '...'}`;
             
-            // Inizializza il player per la prossima domanda
             setTimeout(() => {
                 initPlayer();
             }, 500);
@@ -1380,7 +1325,6 @@
 
                 questions = generatedQuestions;
                 
-                // Carica il primo video
                 document.getElementById('loading').style.display = 'block';
                 document.getElementById('gameArea').style.display = 'none';
                 document.getElementById('loadingSub').textContent = `Caricando: ${questions[0]?.anime || '...'}`;
