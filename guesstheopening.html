@@ -3,13 +3,12 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>AniQuiz - Indovina l'Opening (AnimeThemes)</title>
+    <title>AniQuiz - Indovina l'Opening</title>
     
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
     
     <style>
-        /* ... STESSO STILE DI PRIMA ... */
         * {
             margin: 0;
             padding: 0;
@@ -592,6 +591,12 @@
             margin-top: 8px;
         }
 
+        .loading .loading-error {
+            color: var(--accent-red);
+            font-size: 0.9rem;
+            margin-top: 12px;
+        }
+
         @keyframes spin {
             to { transform: rotate(360deg); }
         }
@@ -704,6 +709,7 @@
             <div class="spinner"></div>
             <p>Caricamento anime in corso...</p>
             <p class="loading-sub" id="loadingSub">Richiesta a AniList API</p>
+            <p class="loading-error" id="loadingError"></p>
         </div>
 
         <div id="gameArea" style="display: none;">
@@ -778,7 +784,33 @@
 
     <script>
         // ============================================================
-        // ANIQUIZ CORE - Carica anime da AniList
+        // 🔥 DATABASE DI BACKUP (se AniList non risponde)
+        // ============================================================
+        const BACKUP_ANIME = [
+            { id: 1, title: { english: 'Attack on Titan', romaji: 'Shingeki no Kyojin' }, coverImage: { large: 'https://anilist.co/img/header/16498.jpg' } },
+            { id: 2, title: { english: 'Demon Slayer', romaji: 'Kimetsu no Yaiba' }, coverImage: { large: 'https://anilist.co/img/header/101922.jpg' } },
+            { id: 3, title: { english: 'Naruto', romaji: 'Naruto' }, coverImage: { large: 'https://anilist.co/img/header/20.jpg' } },
+            { id: 4, title: { english: 'One Piece', romaji: 'One Piece' }, coverImage: { large: 'https://anilist.co/img/header/21.jpg' } },
+            { id: 5, title: { english: 'Dragon Ball Z', romaji: 'Dragon Ball Z' }, coverImage: { large: 'https://anilist.co/img/header/813.jpg' } },
+            { id: 6, title: { english: 'Death Note', romaji: 'Death Note' }, coverImage: { large: 'https://anilist.co/img/header/1535.jpg' } },
+            { id: 7, title: { english: 'Fullmetal Alchemist: Brotherhood', romaji: 'Fullmetal Alchemist: Brotherhood' }, coverImage: { large: 'https://anilist.co/img/header/5114.jpg' } },
+            { id: 8, title: { english: 'Tokyo Ghoul', romaji: 'Tokyo Ghoul' }, coverImage: { large: 'https://anilist.co/img/header/20605.jpg' } },
+            { id: 9, title: { english: 'My Hero Academia', romaji: 'Boku no Hero Academia' }, coverImage: { large: 'https://anilist.co/img/header/21459.jpg' } },
+            { id: 10, title: { english: 'Jujutsu Kaisen', romaji: 'Jujutsu Kaisen' }, coverImage: { large: 'https://anilist.co/img/header/113415.jpg' } },
+            { id: 11, title: { english: 'Cowboy Bebop', romaji: 'Cowboy Bebop' }, coverImage: { large: 'https://anilist.co/img/header/23.jpg' } },
+            { id: 12, title: { english: 'Sword Art Online', romaji: 'Sword Art Online' }, coverImage: { large: 'https://anilist.co/img/header/11757.jpg' } },
+            { id: 13, title: { english: 'Bleach', romaji: 'Bleach' }, coverImage: { large: 'https://anilist.co/img/header/22.jpg' } },
+            { id: 14, title: { english: 'Spy x Family', romaji: 'Spy x Family' }, coverImage: { large: 'https://anilist.co/img/header/130970.jpg' } },
+            { id: 15, title: { english: 'Chainsaw Man', romaji: 'Chainsaw Man' }, coverImage: { large: 'https://anilist.co/img/header/127244.jpg' } },
+            { id: 16, title: { english: 'Mob Psycho 100', romaji: 'Mob Psycho 100' }, coverImage: { large: 'https://anilist.co/img/header/100424.jpg' } },
+            { id: 17, title: { english: 'One Punch Man', romaji: 'One Punch Man' }, coverImage: { large: 'https://anilist.co/img/header/30276.jpg' } },
+            { id: 18, title: { english: 'Re:Zero', romaji: 'Re:Zero' }, coverImage: { large: 'https://anilist.co/img/header/31240.jpg' } },
+            { id: 19, title: { english: 'Vinland Saga', romaji: 'Vinland Saga' }, coverImage: { large: 'https://anilist.co/img/header/37521.jpg' } },
+            { id: 20, title: { english: 'Steins;Gate', romaji: 'Steins;Gate' }, coverImage: { large: 'https://anilist.co/img/header/9253.jpg' } },
+        ];
+
+        // ============================================================
+        // ANIQUIZ CORE - Carica anime da AniList CON TIMEOUT
         // ============================================================
         (function() {
             'use strict';
@@ -805,8 +837,7 @@
                     { sort: 'POPULARITY_DESC', page: 1 },
                     { sort: 'TRENDING_DESC', page: 1 },
                     { sort: 'SCORE_DESC', page: 1 },
-                    { sort: 'START_DATE_DESC', page: 1 },
-                    { sort: 'POPULARITY_DESC', page: Math.floor(Math.random() * 20) + 1 }
+                    { sort: 'START_DATE_DESC', page: 1 }
                 ];
 
                 let query = 'query {';
@@ -826,18 +857,36 @@
                 return query;
             }
 
+            // 🔥 FUNZIONE CON TIMEOUT
+            async function fetchWithTimeout(url, options, timeout = 10000) {
+                const controller = new AbortController();
+                const timeoutId = setTimeout(() => controller.abort(), timeout);
+                
+                try {
+                    const response = await fetch(url, {
+                        ...options,
+                        signal: controller.signal
+                    });
+                    clearTimeout(timeoutId);
+                    return response;
+                } catch (err) {
+                    clearTimeout(timeoutId);
+                    throw err;
+                }
+            }
+
             async function fetchMixedAnime() {
                 const query = buildMultiQuery();
                 
                 try {
-                    const response = await fetch('https://graphql.anilist.co', {
+                    const response = await fetchWithTimeout('https://graphql.anilist.co', {
                         method: 'POST',
                         headers: {
                             'Content-Type': 'application/json',
                             'Accept': 'application/json',
                         },
                         body: JSON.stringify({ query })
-                    });
+                    }, 8000); // 🔥 TIMEOUT 8 SECONDI
 
                     if (!response.ok) throw new Error(`HTTP ${response.status}`);
                     
@@ -845,7 +894,7 @@
                     if (data.errors) throw new Error(data.errors[0].message);
                     
                     const allAnimeResults = [];
-                    const categories = ['cat1', 'cat2', 'cat3', 'cat4', 'cat5'];
+                    const categories = ['cat1', 'cat2', 'cat3', 'cat4'];
                     
                     categories.forEach((cat) => {
                         const categoryData = data.data[cat]?.media || [];
@@ -859,11 +908,16 @@
                         }
                     }
                     
-                    return shuffleArray(Array.from(uniqueMap.values()));
+                    const result = Array.from(uniqueMap.values());
+                    if (result.length < 10) {
+                        throw new Error('Pochi anime');
+                    }
+                    
+                    return shuffleArray(result);
 
                 } catch (err) {
-                    console.error('Errore fetch:', err);
-                    throw err;
+                    console.warn('⚠️ AniList fallito, uso backup:', err.message);
+                    return null;
                 }
             }
 
@@ -874,74 +928,94 @@
                 }
                 
                 window.isLoading = true;
+                const loadingSub = document.getElementById('loadingSub');
+                const loadingError = document.getElementById('loadingError');
 
                 try {
-                    const data = await fetchMixedAnime();
+                    if (loadingSub) loadingSub.textContent = 'Caricamento da AniList...';
+                    if (loadingError) loadingError.textContent = '';
+
+                    let data = await fetchMixedAnime();
+                    
+                    // 🔥 SE ANILIST FALLISCE, USA IL BACKUP
                     if (!data || data.length < 10) {
-                        throw new Error('Pochi anime disponibili');
+                        if (loadingSub) loadingSub.textContent = 'AniList non risponde, uso database locale...';
+                        if (loadingError) loadingError.textContent = '⚠️ Usando anime di backup';
+                        
+                        // Usa il backup
+                        data = BACKUP_ANIME.map(a => ({
+                            id: a.id,
+                            title: a.title,
+                            coverImage: a.coverImage
+                        }));
+                        
+                        // Aspetta un po' per far vedere il messaggio
+                        await new Promise(r => setTimeout(r, 1000));
                     }
+
                     window.allAnime = data;
                     window.isDataLoaded = true;
                     window.isLoading = false;
+                    
+                    if (loadingError) loadingError.textContent = '';
+                    
                     return data;
+
                 } catch (err) {
                     console.error(err);
                     window.isLoading = false;
-                    throw err;
+                    
+                    // 🔥 ULTIMA SPIAGGIA: usa il backup
+                    if (loadingSub) loadingSub.textContent = 'Errore, uso database di backup...';
+                    if (loadingError) loadingError.textContent = '⚠️ Usando anime di backup';
+                    
+                    window.allAnime = BACKUP_ANIME.map(a => ({
+                        id: a.id,
+                        title: a.title,
+                        coverImage: a.coverImage
+                    }));
+                    window.isDataLoaded = true;
+                    
+                    await new Promise(r => setTimeout(r, 500));
+                    return window.allAnime;
                 }
             };
 
         })();
 
         // ============================================================
-        // 🔥 ANIMETHEMES.MOE - AUDIO PURO (FUNZIONA SEMPRE)
+        // 🔥 ANIMETHEMES.MOE - AUDIO PURO
         // ============================================================
         
-        // 🔥 LISTA DI ANIME CON ID MAL PER ANIMETHEMES
         const ANIME_THEMES_DB = {
-            // Anime famosi con ID MyAnimeList
-            'Attack on Titan': { malId: 16498, slug: 'shingeki-no-kyojin' },
-            'Demon Slayer': { malId: 38000, slug: 'kimetsu-no-yaiba' },
-            'Naruto': { malId: 20, slug: 'naruto' },
-            'One Piece': { malId: 21, slug: 'one-piece' },
-            'Dragon Ball Z': { malId: 813, slug: 'dragon-ball-z' },
-            'Death Note': { malId: 1535, slug: 'death-note' },
-            'Fullmetal Alchemist: Brotherhood': { malId: 5114, slug: 'fullmetal-alchemist-brotherhood' },
-            'Tokyo Ghoul': { malId: 22319, slug: 'tokyo-ghoul' },
-            'My Hero Academia': { malId: 31964, slug: 'boku-no-hero-academia' },
-            'Jujutsu Kaisen': { malId: 40748, slug: 'jujutsu-kaisen' },
-            'Neon Genesis Evangelion': { malId: 30, slug: 'neon-genesis-evangelion' },
-            'Cowboy Bebop': { malId: 23, slug: 'cowboy-bebop' },
-            'Sword Art Online': { malId: 11757, slug: 'sword-art-online' },
-            'Hunter x Hunter': { malId: 1535, slug: 'hunter-x-hunter-2011' },
-            'Bleach': { malId: 22, slug: 'bleach' },
-            'Spy x Family': { malId: 50265, slug: 'spy-x-family' },
-            'Chainsaw Man': { malId: 44511, slug: 'chainsaw-man' },
-            'Mob Psycho 100': { malId: 32182, slug: 'mob-psycho-100' },
-            'One Punch Man': { malId: 30276, slug: 'one-punch-man' },
-            'Re:Zero': { malId: 31240, slug: 'rezero-kara-hajimeru-isekai-seikatsu' },
-            'Vinland Saga': { malId: 37521, slug: 'vinland-saga' },
-            'Steins;Gate': { malId: 9253, slug: 'steinsgate' },
-            'Code Geass': { malId: 1575, slug: 'code-geass-hangyaku-no-lelouch' },
-            'Gintama': { malId: 918, slug: 'gintama' },
-            'Fate/Zero': { malId: 10087, slug: 'fate-zero' },
-            'Kaguya-sama': { malId: 37992, slug: 'kaguya-sama-wa-kokurasetai' },
-            'Dr. Stone': { malId: 38691, slug: 'dr-stone' },
-            'Fire Force': { malId: 38671, slug: 'en'en-no-shouboutai' },
-            'The Promised Neverland': { malId: 37732, slug: 'yakusoku-no-neverland' },
-            'Black Clover': { malId: 34572, slug: 'black-clover' },
-            'Fairy Tail': { malId: 6702, slug: 'fairytail' },
+            'Attack on Titan': { malId: 16498 },
+            'Demon Slayer': { malId: 38000 },
+            'Naruto': { malId: 20 },
+            'One Piece': { malId: 21 },
+            'Dragon Ball Z': { malId: 813 },
+            'Death Note': { malId: 1535 },
+            'Fullmetal Alchemist': { malId: 5114 },
+            'Tokyo Ghoul': { malId: 22319 },
+            'My Hero Academia': { malId: 31964 },
+            'Jujutsu Kaisen': { malId: 40748 },
+            'Cowboy Bebop': { malId: 23 },
+            'Sword Art Online': { malId: 11757 },
+            'Bleach': { malId: 22 },
+            'Spy x Family': { malId: 50265 },
+            'Chainsaw Man': { malId: 44511 },
+            'Mob Psycho 100': { malId: 32182 },
+            'One Punch Man': { malId: 30276 },
+            'Re:Zero': { malId: 31240 },
+            'Vinland Saga': { malId: 37521 },
+            'Steins;Gate': { malId: 9253 },
         };
 
-        // 🔥 URL DI ANIMETHEMES.MOE PER AUDIO
         const AUDIO_URLS = [
             'https://animethemes.moe/audio/',
-            'https://a.animethemes.moe/',
-            'https://beta.animethemes.moe/audio/'
+            'https://a.animethemes.moe/'
         ];
 
         async function getAnimeThemesAudio(animeTitle) {
-            // Cerca l'anime nel database
             let animeData = null;
             for (const [key, value] of Object.entries(ANIME_THEMES_DB)) {
                 if (animeTitle.toLowerCase().includes(key.toLowerCase()) || 
@@ -951,46 +1025,30 @@
                 }
             }
 
-            if (!animeData) {
-                console.log(`❌ Anime non trovato in database: ${animeTitle}`);
-                return null;
-            }
+            if (!animeData) return null;
 
             try {
-                // Chiedi a AnimeThemes API
                 const url = `https://api.animethemes.moe/anime?filter[has]=resources&filter[site]=MyAnimeList&filter[external_id]=${animeData.malId}&include=animethemes.animethemeentries.videos`;
-                console.log(`🔍 Cerco su AnimeThemes: ${animeTitle} (ID: ${animeData.malId})`);
                 
                 const response = await fetch(url);
-                if (!response.ok) {
-                    console.log(`⚠️ Errore AnimeThemes: ${response.status}`);
-                    return null;
-                }
+                if (!response.ok) return null;
                 
                 const data = await response.json();
                 
-                if (!data.anime || data.anime.length === 0) {
-                    console.log(`❌ Nessun tema trovato per: ${animeTitle}`);
-                    return null;
-                }
+                if (!data.anime || data.anime.length === 0) return null;
 
-                // Cerca un opening
                 const themes = data.anime[0]?.animethemes || [];
                 for (const theme of themes) {
-                    // Cerca solo opening (tipo 1 = Opening)
                     if (theme.type === 1) {
                         const entries = theme.animethemeentries || [];
                         for (const entry of entries) {
                             const videos = entry.videos || [];
                             for (const video of videos) {
                                 if (video.filename) {
-                                    // Prova diversi URL audio
                                     for (const baseUrl of AUDIO_URLS) {
                                         const audioUrl = baseUrl + video.filename + '.ogg';
-                                        console.log(`✅ Trovato audio: ${audioUrl}`);
                                         return {
                                             url: audioUrl,
-                                            title: theme.song?.title || animeTitle,
                                             duration: 30
                                         };
                                     }
@@ -999,8 +1057,6 @@
                         }
                     }
                 }
-
-                console.log(`❌ Nessun opening trovato per: ${animeTitle}`);
                 return null;
 
             } catch (err) {
@@ -1041,8 +1097,7 @@
             
             let loadingSub = document.getElementById('loadingSub');
             
-            // 🔥 PRENDO FINO A 30 ANIME PER TROVARNE 10
-            const maxAttempts = Math.min(shuffled.length, 30);
+            const maxAttempts = Math.min(shuffled.length, 25);
             
             for (let i = 0; i < maxAttempts && questions.length < totalQuestions; i++) {
                 const anime = shuffled[i];
@@ -1052,20 +1107,15 @@
                     loadingSub.textContent = `🔍 Cercando su AnimeThemes: ${title} (${questions.length + 1}/${totalQuestions})`;
                 }
 
-                // 🔥 CERCA L'AUDIO SU ANIMETHEMES
                 const audioResult = await getAnimeThemesAudio(title);
-                
-                // 🔥 ASPETTA 500ms TRA UNA RICERCA E L'ALTRA
-                await delay(500);
+                await delay(300);
                 
                 if (!audioResult || !audioResult.url) {
-                    console.log(`❌ Nessun audio per: ${title}`);
                     continue;
                 }
 
                 const audioUrl = audioResult.url;
 
-                // 🔥 TROVA DISTRATTORI
                 const others = animeList.filter(a => a.id !== anime.id);
                 const shuffledOthers = shuffleArrayLocal([...others]);
                 
@@ -1075,7 +1125,7 @@
                     
                     const otherTitle = window.getTitle(other);
                     const otherAudio = await getAnimeThemesAudio(otherTitle);
-                    await delay(500);
+                    await delay(300);
                     
                     if (otherAudio && otherAudio.url && otherAudio.url !== audioUrl) {
                         distractors.push({
@@ -1086,17 +1136,12 @@
                     }
                 }
 
-                // 🔥 SE NON HA ABBASTANZA DISTRATTORI, USA FALLBACK
                 if (distractors.length < 3) {
-                    const fallbackTitles = [
-                        'Naruto', 'One Piece', 'Dragon Ball Z', 'Bleach', 
-                        'Death Note', 'Attack on Titan', 'Demon Slayer',
-                        'My Hero Academia', 'Jujutsu Kaisen', 'Tokyo Ghoul'
-                    ];
+                    const fallbackTitles = ['Naruto', 'One Piece', 'Dragon Ball Z', 'Bleach', 'Attack on Titan'];
                     for (const fb of fallbackTitles) {
                         if (fb !== title && !distractors.some(d => d.text === fb)) {
                             const fbAudio = await getAnimeThemesAudio(fb);
-                            await delay(500);
+                            await delay(300);
                             if (fbAudio && fbAudio.url && fbAudio.url !== audioUrl) {
                                 distractors.push({
                                     text: fb,
@@ -1109,10 +1154,7 @@
                     }
                 }
 
-                if (distractors.length < 3) {
-                    console.log(`⚠️ Non abbastanza distrattori per: ${title}`);
-                    continue;
-                }
+                if (distractors.length < 3) continue;
 
                 const options = shuffleArrayLocal([
                     { text: title, isCorrect: true, url: audioUrl },
@@ -1134,7 +1176,7 @@
         }
 
         // ============================================================
-        // AUDIO PLAYER (SENZA YOUTUBE)
+        // AUDIO PLAYER
         // ============================================================
         function loadQuestionUI() {
             if (currentIndex >= questions.length) {
@@ -1176,12 +1218,10 @@
             document.getElementById('feedback').className = 'feedback';
             document.getElementById('nextBtn').className = 'next-btn';
             
-            // 🔥 CARICA L'AUDIO
             loadAudio(q);
         }
 
         function loadAudio(q) {
-            // Rimuovi audio precedente
             if (audioElement) {
                 audioElement.pause();
                 audioElement.remove();
@@ -1195,7 +1235,6 @@
             document.getElementById('waveform').classList.remove('playing');
             document.getElementById('timerDisplay').textContent = '0:00';
 
-            // 🔥 CREA NUOVO AUDIO
             audioElement = new Audio(q.audioUrl);
             audioElement.preload = 'auto';
             
@@ -1216,13 +1255,11 @@
 
             audioElement.addEventListener('error', (e) => {
                 console.error('Errore audio:', e);
-                // Passa alla prossima domanda
                 setTimeout(() => {
                     nextQuestion();
                 }, 1000);
             });
 
-            // Mostra game area
             document.getElementById('loading').style.display = 'none';
             document.getElementById('gameArea').style.display = 'block';
         }
@@ -1240,7 +1277,6 @@
             } else {
                 audioElement.play().catch(err => {
                     console.error('Errore play:', err);
-                    alert('Impossibile riprodurre l\'audio. Passa alla prossima domanda.');
                 });
                 isPlaying = true;
                 document.getElementById('playIcon').className = 'fas fa-pause';
@@ -1367,7 +1403,7 @@
             document.getElementById('resultScreen').className = 'result-screen';
             document.getElementById('gameArea').style.display = 'none';
             document.getElementById('loading').style.display = 'block';
-            document.getElementById('loadingSub').textContent = 'Ricarico le opening da AnimeThemes...';
+            document.getElementById('loadingSub').textContent = 'Ricarico le opening...';
             initGame();
         }
 
@@ -1376,10 +1412,19 @@
         // ============================================================
         async function initGame() {
             try {
+                const loadingSub = document.getElementById('loadingSub');
+                const loadingError = document.getElementById('loadingError');
+                
+                if (loadingSub) loadingSub.textContent = 'Caricamento anime...';
+                if (loadingError) loadingError.textContent = '';
+
                 const animeList = await window.loadAnimeData();
+                
                 if (!animeList || animeList.length < 10) {
                     throw new Error('Non abbastanza anime');
                 }
+
+                if (loadingSub) loadingSub.textContent = 'Generazione domande...';
 
                 const generatedQuestions = await generateQuestionsFromAnime(animeList);
                 if (generatedQuestions.length < 3) {
@@ -1388,9 +1433,10 @@
 
                 questions = generatedQuestions;
                 
+                if (loadingError) loadingError.textContent = '';
                 document.getElementById('loading').style.display = 'block';
                 document.getElementById('gameArea').style.display = 'none';
-                document.getElementById('loadingSub').textContent = `Caricando: ${questions[0]?.anime || '...'}`;
+                if (loadingSub) loadingSub.textContent = `Caricando: ${questions[0]?.anime || '...'}`;
                 
                 loadQuestionUI();
 
