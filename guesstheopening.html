@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>AniQuiz - Indovina l'Opening (YouTube API)</title>
+    <title>AniQuiz - Indovina l'Opening (Invidious)</title>
     
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
@@ -665,7 +665,7 @@
                 <a href="../index.html" class="back-btn">
                     <i class="fas fa-arrow-left"></i> Torna indietro
                 </a>
-                <span><i class="fab fa-youtube"></i> YouTube API</span>
+                <span><i class="fas fa-search"></i> Invidious</span>
             </div>
         </div>
     </nav>
@@ -674,9 +674,9 @@
         
         <div class="game-header">
             <h1>🎵 Indovina l'Opening</h1>
-            <p>🔍 Ricerca VERA su YouTube con API</p>
+            <p>🔍 Ricerca VERA su YouTube (Invidious)</p>
             <div class="audio-badge">
-                <i class="fab fa-youtube"></i> YouTube Data API v3
+                <i class="fas fa-search"></i> Senza API · Gratis · Illimitato
             </div>
         </div>
 
@@ -776,11 +776,6 @@
     </div>
 
     <script>
-        // ============================================================
-        // 🔥 YOUTUBE API KEY
-        // ============================================================
-        const YOUTUBE_API_KEY = 'AIzaSyCeM7KVc9lZsdd8HM5b-PAfhx0usN8Aubo';
-
         // ============================================================
         // ANIQUIZ CORE - Carica anime da AniList
         // ============================================================
@@ -898,10 +893,20 @@
         })();
 
         // ============================================================
-        // 🔥 RICERCA VERA SU YOUTUBE CON API (MULTI-QUERY)
+        // 🔥 RICERCA SU INVIOUS (SENZA API)
         // ============================================================
-        async function searchYouTubeOpening(animeName) {
-            // 🔥 DIVERSI TENTATIVI DI RICERCA
+        
+        // 🔥 LISTA DI ISTANZE INVIOUS (se una non funziona, usa l'altra)
+        const INVIOUS_INSTANCES = [
+            'https://invidious.io/api/v1/search',
+            'https://invidious.weblibre.org/api/v1/search',
+            'https://invidious.vern.cc/api/v1/search',
+            'https://invidious.snopyta.org/api/v1/search',
+            'https://invidious.namazso.eu/api/v1/search'
+        ];
+
+        async function searchYouTubeInvidious(animeName) {
+            // 🔥 DIVERSE QUERY DI RICERCA
             const searchQueries = [
                 `${animeName} opening`,
                 `${animeName} op`,
@@ -912,32 +917,42 @@
             ];
 
             for (const query of searchQueries) {
-                try {
-                    const url = `https://www.googleapis.com/youtube/v3/search?part=snippet&maxResults=1&q=${encodeURIComponent(query)}&key=${YOUTUBE_API_KEY}&type=video&videoCategoryId=10`;
-                    
-                    console.log(`🔍 Cerco: ${query}`);
-                    const response = await fetch(url);
-                    const data = await response.json();
-                    
-                    if (data.error) {
-                        console.error('Errore API YouTube:', data.error);
+                for (const instance of INVIOUS_INSTANCES) {
+                    try {
+                        const url = `${instance}?q=${encodeURIComponent(query)}&type=video&sort_by=relevance`;
+                        console.log(`🔍 Cercando: ${query} su ${instance.split('/')[2]}`);
+                        
+                        const response = await fetch(url);
+                        
+                        if (!response.ok) {
+                            console.log(`⚠️ ${instance} non risponde, provo prossimo...`);
+                            continue;
+                        }
+                        
+                        const data = await response.json();
+                        
+                        if (data && data.length > 0) {
+                            // 🔥 CERCA IL VIDEO MIGLIORE (che contenga "opening" o "op" nel titolo)
+                            let bestMatch = data[0];
+                            for (const video of data) {
+                                const title = video.title?.toLowerCase() || '';
+                                if (title.includes('opening') || title.includes('op ') || title.includes('tv size')) {
+                                    bestMatch = video;
+                                    break;
+                                }
+                            }
+                            
+                            console.log(`✅ Trovato: ${bestMatch.title} (${bestMatch.videoId})`);
+                            return {
+                                videoId: bestMatch.videoId,
+                                title: bestMatch.title || animeName,
+                                duration: Math.min(bestMatch.lengthSeconds || 30, 30)
+                            };
+                        }
+                    } catch (err) {
+                        console.log(`❌ Errore con ${instance}: ${err.message}`);
                         continue;
                     }
-                    
-                    if (data.items && data.items.length > 0) {
-                        const video = data.items[0];
-                        const videoId = video.id.videoId;
-                        const title = video.snippet.title;
-                        console.log(`✅ Trovato: ${title} (${videoId})`);
-                        return {
-                            videoId: videoId,
-                            title: title,
-                            duration: 30
-                        };
-                    }
-                } catch (error) {
-                    console.error('Errore ricerca:', error);
-                    continue;
                 }
             }
             
@@ -967,7 +982,6 @@
             return arr;
         }
 
-        // 🔥 ATTESA TRA LE RICHIESTE PER NON SUPERARE IL LIMITE
         function delay(ms) {
             return new Promise(resolve => setTimeout(resolve, ms));
         }
@@ -978,7 +992,7 @@
             
             let loadingSub = document.getElementById('loadingSub');
             
-            // 🔥 PRENDO PIÙ ANIME POSSIBILI (fino a 30)
+            // 🔥 PRENDO FINO A 30 ANIME PER TROVARNE 10
             const maxAttempts = Math.min(shuffled.length, 30);
             
             for (let i = 0; i < maxAttempts && questions.length < totalQuestions; i++) {
@@ -989,11 +1003,11 @@
                     loadingSub.textContent = `🔍 Cercando su YouTube: ${title} (${questions.length + 1}/${totalQuestions})`;
                 }
 
-                // 🔥 CERCA L'OPENING CON MULTI-QUERY
-                const searchResult = await searchYouTubeOpening(title);
+                // 🔥 CERCA L'OPENING
+                const searchResult = await searchYouTubeInvidious(title);
                 
-                // 🔥 ASPETTA 500ms tra una ricerca e l'altra
-                await delay(500);
+                // 🔥 ASPETTA 1 SECONDO TRA UNA RICERCA E L'ALTRA
+                await delay(1000);
                 
                 if (!searchResult || !searchResult.videoId) {
                     console.log(`❌ Nessun risultato per: ${title}`);
@@ -1011,8 +1025,8 @@
                     if (distractors.length >= 3) break;
                     
                     const otherTitle = window.getTitle(other);
-                    const otherSearch = await searchYouTubeOpening(otherTitle);
-                    await delay(300);
+                    const otherSearch = await searchYouTubeInvidious(otherTitle);
+                    await delay(800);
                     
                     if (otherSearch && otherSearch.videoId && otherSearch.videoId !== videoId) {
                         distractors.push({
@@ -1032,8 +1046,8 @@
                     ];
                     for (const fb of fallbackTitles) {
                         if (fb !== title && !distractors.some(d => d.text === fb)) {
-                            const fbSearch = await searchYouTubeOpening(fb);
-                            await delay(300);
+                            const fbSearch = await searchYouTubeInvidious(fb);
+                            await delay(800);
                             if (fbSearch && fbSearch.videoId && fbSearch.videoId !== videoId) {
                                 distractors.push({
                                     text: fb,
