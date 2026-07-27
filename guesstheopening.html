@@ -3,12 +3,15 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>AniQuiz - Indovina l'Opening</title>
+    <title>AniQuiz - Indovina l'Opening (Solo Audio)</title>
     
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
     
     <style>
+        /* ============================================================
+           RESET & VARIABILI
+           ============================================================ */
         * {
             margin: 0;
             padding: 0;
@@ -32,6 +35,12 @@
             --radius: 16px;
             --radius-sm: 10px;
             --transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
         }
 
         body {
@@ -62,6 +71,9 @@
                 radial-gradient(ellipse at 80% 20%, rgba(255, 107, 157, 0.04) 0%, transparent 50%);
         }
 
+        /* ============================================================
+           NAVBAR
+           ============================================================ */
         .navbar {
             background: rgba(10, 10, 15, 0.85);
             backdrop-filter: blur(20px);
@@ -141,6 +153,9 @@
             color: var(--text-primary);
         }
 
+        /* ============================================================
+           OPENING GAME - STILI SPECIFICI
+           ============================================================ */
         .game-container {
             padding: 40px 0 20px;
             position: relative;
@@ -171,8 +186,8 @@
         .game-header .audio-badge {
             display: inline-block;
             margin-top: 12px;
-            background: rgba(74, 222, 128, 0.15);
-            color: var(--accent-green);
+            background: rgba(168, 85, 247, 0.15);
+            color: var(--accent-purple);
             padding: 6px 20px;
             border-radius: 20px;
             font-size: 0.85rem;
@@ -183,6 +198,7 @@
             margin-right: 8px;
         }
 
+        /* Stats bar */
         .stats-bar {
             display: flex;
             justify-content: space-between;
@@ -214,6 +230,7 @@
             font-size: 1.1rem;
         }
 
+        /* Audio Player - STILE SPETTACOLARE */
         .audio-wrapper {
             background: var(--bg-card);
             border-radius: var(--radius);
@@ -288,6 +305,7 @@
             margin-left: 4px;
         }
 
+        /* Waveform animato */
         .waveform {
             display: flex;
             align-items: center;
@@ -366,6 +384,17 @@
             box-shadow: 0 0 30px rgba(168, 85, 247, 0.3);
         }
 
+        .audio-controls button.danger {
+            background: linear-gradient(135deg, var(--accent-red), #dc2626);
+            border: none;
+        }
+
+        .audio-controls button.danger:hover {
+            transform: scale(1.05);
+            box-shadow: 0 0 30px rgba(248, 113, 113, 0.3);
+        }
+
+        /* Timer */
         .timer {
             font-size: 0.9rem;
             color: var(--text-secondary);
@@ -377,6 +406,7 @@
             font-weight: 700;
         }
 
+        /* Options */
         .options-grid {
             display: grid;
             grid-template-columns: repeat(2, 1fr);
@@ -433,6 +463,7 @@
             color: var(--text-secondary);
         }
 
+        /* Feedback */
         .feedback {
             background: var(--bg-card);
             border-radius: var(--radius);
@@ -476,6 +507,7 @@
             }
         }
 
+        /* Progress */
         .progress-bar {
             background: var(--bg-card);
             border-radius: var(--radius-sm);
@@ -492,6 +524,7 @@
             width: 0%;
         }
 
+        /* Next button */
         .next-btn {
             width: 100%;
             padding: 16px;
@@ -516,6 +549,7 @@
             display: block;
         }
 
+        /* Result */
         .result-screen {
             text-align: center;
             padding: 40px 20px;
@@ -570,6 +604,7 @@
             box-shadow: 0 0 40px rgba(168, 85, 247, 0.3);
         }
 
+        /* Loading */
         .loading {
             text-align: center;
             padding: 60px 20px;
@@ -585,22 +620,13 @@
             margin: 0 auto 16px;
         }
 
-        .loading .loading-sub {
-            color: var(--text-secondary);
-            font-size: 0.9rem;
-            margin-top: 8px;
-        }
-
-        .loading .loading-error {
-            color: var(--accent-red);
-            font-size: 0.9rem;
-            margin-top: 12px;
-        }
-
         @keyframes spin {
             to { transform: rotate(360deg); }
         }
 
+        /* ============================================================
+           RESPONSIVE
+           ============================================================ */
         @media (max-width: 768px) {
             .game-header h1 {
                 font-size: 1.8rem;
@@ -661,6 +687,9 @@
 
     <div class="bg-glow"></div>
 
+    <!-- ============================================================
+    NAVBAR
+    ============================================================ -->
     <nav class="navbar">
         <div class="container">
             <a href="../index.html" class="logo">
@@ -671,21 +700,26 @@
                 <a href="../index.html" class="back-btn">
                     <i class="fas fa-arrow-left"></i> Torna indietro
                 </a>
-                <span><i class="fas fa-music"></i> AnimeThemes</span>
+                <span><i class="fas fa-music"></i> Opening Quiz</span>
             </div>
         </div>
     </nav>
 
+    <!-- ============================================================
+    GAME
+    ============================================================ -->
     <div class="game-container">
         
+        <!-- Header -->
         <div class="game-header">
             <h1>🎵 Indovina l'Opening</h1>
-            <p>🎧 Ascolta la sigla da AnimeThemes.moe</p>
+            <p>🎧 Ascolta la sigla a occhi chiusi... indovina l'anime!</p>
             <div class="audio-badge">
-                <i class="fas fa-check-circle"></i> Audio puro · Funziona sempre
+                <i class="fas fa-headphones"></i> Solo Audio · Nessun video
             </div>
         </div>
 
+        <!-- Stats -->
         <div class="stats-bar" id="statsBar">
             <div class="stat">
                 <i class="fas fa-question-circle"></i>
@@ -701,19 +735,21 @@
             </div>
         </div>
 
+        <!-- Progress -->
         <div class="progress-bar">
             <div class="fill" id="progressFill"></div>
         </div>
 
+        <!-- Loading -->
         <div class="loading" id="loading">
             <div class="spinner"></div>
-            <p>Caricamento anime in corso...</p>
-            <p class="loading-sub" id="loadingSub">Richiesta a AniList API</p>
-            <p class="loading-error" id="loadingError"></p>
+            <p>Caricamento opening...</p>
         </div>
 
+        <!-- Game Area -->
         <div id="gameArea" style="display: none;">
             
+            <!-- Audio Player -->
             <div class="audio-wrapper">
                 <div class="audio-visual" id="audioVisual">
                     <img 
@@ -728,6 +764,7 @@
                     </div>
                 </div>
 
+                <!-- Waveform -->
                 <div class="waveform" id="waveform">
                     <div class="bar"></div>
                     <div class="bar"></div>
@@ -744,7 +781,7 @@
                 </div>
 
                 <div class="timer">
-                    ⏱️ <span class="time" id="timerDisplay">0:00</span>
+                    ⏱️ <span class="time" id="timerDisplay">0:00</span> / <span id="totalDuration">0:30</span>
                 </div>
 
                 <div class="audio-controls">
@@ -757,19 +794,25 @@
                 </div>
             </div>
 
-            <div class="options-grid" id="optionsGrid"></div>
+            <!-- Options -->
+            <div class="options-grid" id="optionsGrid">
+                <!-- Generate via JS -->
+            </div>
 
+            <!-- Feedback -->
             <div class="feedback" id="feedback">
                 <h3 id="feedbackTitle">✅ Corretto!</h3>
                 <p id="feedbackText">Dettaglio</p>
             </div>
 
+            <!-- Next Button -->
             <button class="next-btn" id="nextBtn" onclick="nextQuestion()">
                 <i class="fas fa-arrow-right"></i> Prossima domanda
             </button>
 
         </div>
 
+        <!-- Result -->
         <div class="result-screen" id="resultScreen">
             <div class="big-icon">🏆</div>
             <h2>Quiz completato!</h2>
@@ -782,288 +825,120 @@
 
     </div>
 
+    <!-- ============================================================
+    SCRIPT
+    ============================================================ -->
     <script>
         // ============================================================
-        // 🔥 DATABASE DI BACKUP (se AniList non risponde)
+        // DATABASE OPENING (con copertine anime)
         // ============================================================
-        const BACKUP_ANIME = [
-            { id: 1, title: { english: 'Attack on Titan', romaji: 'Shingeki no Kyojin' }, coverImage: { large: 'https://anilist.co/img/header/16498.jpg' } },
-            { id: 2, title: { english: 'Demon Slayer', romaji: 'Kimetsu no Yaiba' }, coverImage: { large: 'https://anilist.co/img/header/101922.jpg' } },
-            { id: 3, title: { english: 'Naruto', romaji: 'Naruto' }, coverImage: { large: 'https://anilist.co/img/header/20.jpg' } },
-            { id: 4, title: { english: 'One Piece', romaji: 'One Piece' }, coverImage: { large: 'https://anilist.co/img/header/21.jpg' } },
-            { id: 5, title: { english: 'Dragon Ball Z', romaji: 'Dragon Ball Z' }, coverImage: { large: 'https://anilist.co/img/header/813.jpg' } },
-            { id: 6, title: { english: 'Death Note', romaji: 'Death Note' }, coverImage: { large: 'https://anilist.co/img/header/1535.jpg' } },
-            { id: 7, title: { english: 'Fullmetal Alchemist: Brotherhood', romaji: 'Fullmetal Alchemist: Brotherhood' }, coverImage: { large: 'https://anilist.co/img/header/5114.jpg' } },
-            { id: 8, title: { english: 'Tokyo Ghoul', romaji: 'Tokyo Ghoul' }, coverImage: { large: 'https://anilist.co/img/header/20605.jpg' } },
-            { id: 9, title: { english: 'My Hero Academia', romaji: 'Boku no Hero Academia' }, coverImage: { large: 'https://anilist.co/img/header/21459.jpg' } },
-            { id: 10, title: { english: 'Jujutsu Kaisen', romaji: 'Jujutsu Kaisen' }, coverImage: { large: 'https://anilist.co/img/header/113415.jpg' } },
-            { id: 11, title: { english: 'Cowboy Bebop', romaji: 'Cowboy Bebop' }, coverImage: { large: 'https://anilist.co/img/header/23.jpg' } },
-            { id: 12, title: { english: 'Sword Art Online', romaji: 'Sword Art Online' }, coverImage: { large: 'https://anilist.co/img/header/11757.jpg' } },
-            { id: 13, title: { english: 'Bleach', romaji: 'Bleach' }, coverImage: { large: 'https://anilist.co/img/header/22.jpg' } },
-            { id: 14, title: { english: 'Spy x Family', romaji: 'Spy x Family' }, coverImage: { large: 'https://anilist.co/img/header/130970.jpg' } },
-            { id: 15, title: { english: 'Chainsaw Man', romaji: 'Chainsaw Man' }, coverImage: { large: 'https://anilist.co/img/header/127244.jpg' } },
-            { id: 16, title: { english: 'Mob Psycho 100', romaji: 'Mob Psycho 100' }, coverImage: { large: 'https://anilist.co/img/header/100424.jpg' } },
-            { id: 17, title: { english: 'One Punch Man', romaji: 'One Punch Man' }, coverImage: { large: 'https://anilist.co/img/header/30276.jpg' } },
-            { id: 18, title: { english: 'Re:Zero', romaji: 'Re:Zero' }, coverImage: { large: 'https://anilist.co/img/header/31240.jpg' } },
-            { id: 19, title: { english: 'Vinland Saga', romaji: 'Vinland Saga' }, coverImage: { large: 'https://anilist.co/img/header/37521.jpg' } },
-            { id: 20, title: { english: 'Steins;Gate', romaji: 'Steins;Gate' }, coverImage: { large: 'https://anilist.co/img/header/9253.jpg' } },
+        const OPENING_DB = [
+            {
+                anime: "Attack on Titan",
+                videoId: "8OkpRK2_gVs",
+                cover: "https://anilist.co/img/header/16498.jpg",
+                start: 0,
+                duration: 30
+            },
+            {
+                anime: "Demon Slayer",
+                videoId: "pmanD_s7G3U",
+                cover: "https://anilist.co/img/header/101922.jpg",
+                start: 0,
+                duration: 30
+            },
+            {
+                anime: "Naruto",
+                videoId: "MvH9eu7xg3g",
+                cover: "https://anilist.co/img/header/20.jpg",
+                start: 0,
+                duration: 30
+            },
+            {
+                anime: "One Piece",
+                videoId: "Xa2bpzAe6Sk",
+                cover: "https://anilist.co/img/header/21.jpg",
+                start: 0,
+                duration: 30
+            },
+            {
+                anime: "Dragon Ball Z",
+                videoId: "9DkE6P0Dk5I",
+                cover: "https://anilist.co/img/header/813.jpg",
+                start: 0,
+                duration: 30
+            },
+            {
+                anime: "Death Note",
+                videoId: "L_vyPLzBB2o",
+                cover: "https://anilist.co/img/header/1535.jpg",
+                start: 0,
+                duration: 30
+            },
+            {
+                anime: "Fullmetal Alchemist: Brotherhood",
+                videoId: "WAkWQsh1Ghc",
+                cover: "https://anilist.co/img/header/5114.jpg",
+                start: 0,
+                duration: 30
+            },
+            {
+                anime: "Tokyo Ghoul",
+                videoId: "50VWOB1S2KM",
+                cover: "https://anilist.co/img/header/20605.jpg",
+                start: 0,
+                duration: 30
+            },
+            {
+                anime: "My Hero Academia",
+                videoId: "P4MIXh6CrO0",
+                cover: "https://anilist.co/img/header/21459.jpg",
+                start: 0,
+                duration: 30
+            },
+            {
+                anime: "Jujutsu Kaisen",
+                videoId: "H5ahmWcG1ko",
+                cover: "https://anilist.co/img/header/113415.jpg",
+                start: 0,
+                duration: 30
+            },
+            {
+                anime: "Neon Genesis Evangelion",
+                videoId: "Z9LkLb-7tXo",
+                cover: "https://anilist.co/img/header/30.jpg",
+                start: 0,
+                duration: 30
+            },
+            {
+                anime: "Cowboy Bebop",
+                videoId: "el8A3VHnlG8",
+                cover: "https://anilist.co/img/header/23.jpg",
+                start: 0,
+                duration: 30
+            },
+            {
+                anime: "Sword Art Online",
+                videoId: "A3k6vj2-F9Y",
+                cover: "https://anilist.co/img/header/11757.jpg",
+                start: 0,
+                duration: 30
+            },
+            {
+                anime: "Hunter x Hunter",
+                videoId: "wMTmz1F5gqQ",
+                cover: "https://anilist.co/img/header/1535.jpg",
+                start: 0,
+                duration: 30
+            },
+            {
+                anime: "Bleach",
+                videoId: "G7vXmVoFqlY",
+                cover: "https://anilist.co/img/header/22.jpg",
+                start: 0,
+                duration: 30
+            }
         ];
-
-        // ============================================================
-        // ANIQUIZ CORE - Carica anime da AniList CON TIMEOUT
-        // ============================================================
-        (function() {
-            'use strict';
-
-            const PER_PAGE = 10;
-            window.allAnime = [];
-            window.isDataLoaded = false;
-            window.isLoading = false;
-
-            function shuffleArray(arr) {
-                for (let i = arr.length - 1; i > 0; i--) {
-                    const j = Math.floor(Math.random() * (i + 1));
-                    [arr[i], arr[j]] = [arr[j], arr[i]];
-                }
-                return arr;
-            }
-
-            window.getTitle = function(media) {
-                return media.title.english || media.title.romaji || media.title.native || 'Sconosciuto';
-            };
-
-            function buildMultiQuery() {
-                const sorts = [
-                    { sort: 'POPULARITY_DESC', page: 1 },
-                    { sort: 'TRENDING_DESC', page: 1 },
-                    { sort: 'SCORE_DESC', page: 1 },
-                    { sort: 'START_DATE_DESC', page: 1 }
-                ];
-
-                let query = 'query {';
-                sorts.forEach((s, index) => {
-                    const alias = `cat${index + 1}`;
-                    query += `
-                        ${alias}: Page(page: ${s.page}, perPage: ${PER_PAGE}) {
-                            media(type: ANIME, sort: ${s.sort}, isAdult: false, status_not: NOT_YET_RELEASED) {
-                                id
-                                title { romaji english native }
-                                coverImage { large }
-                            }
-                        }
-                    `;
-                });
-                query += '}';
-                return query;
-            }
-
-            // 🔥 FUNZIONE CON TIMEOUT
-            async function fetchWithTimeout(url, options, timeout = 10000) {
-                const controller = new AbortController();
-                const timeoutId = setTimeout(() => controller.abort(), timeout);
-                
-                try {
-                    const response = await fetch(url, {
-                        ...options,
-                        signal: controller.signal
-                    });
-                    clearTimeout(timeoutId);
-                    return response;
-                } catch (err) {
-                    clearTimeout(timeoutId);
-                    throw err;
-                }
-            }
-
-            async function fetchMixedAnime() {
-                const query = buildMultiQuery();
-                
-                try {
-                    const response = await fetchWithTimeout('https://graphql.anilist.co', {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json',
-                            'Accept': 'application/json',
-                        },
-                        body: JSON.stringify({ query })
-                    }, 8000); // 🔥 TIMEOUT 8 SECONDI
-
-                    if (!response.ok) throw new Error(`HTTP ${response.status}`);
-                    
-                    const data = await response.json();
-                    if (data.errors) throw new Error(data.errors[0].message);
-                    
-                    const allAnimeResults = [];
-                    const categories = ['cat1', 'cat2', 'cat3', 'cat4'];
-                    
-                    categories.forEach((cat) => {
-                        const categoryData = data.data[cat]?.media || [];
-                        allAnimeResults.push(...categoryData);
-                    });
-
-                    const uniqueMap = new Map();
-                    for (const anime of allAnimeResults) {
-                        if (!uniqueMap.has(anime.id)) {
-                            uniqueMap.set(anime.id, anime);
-                        }
-                    }
-                    
-                    const result = Array.from(uniqueMap.values());
-                    if (result.length < 10) {
-                        throw new Error('Pochi anime');
-                    }
-                    
-                    return shuffleArray(result);
-
-                } catch (err) {
-                    console.warn('⚠️ AniList fallito, uso backup:', err.message);
-                    return null;
-                }
-            }
-
-            window.loadAnimeData = async function() {
-                if (window.isLoading) return;
-                if (window.isDataLoaded && window.allAnime.length > 0) {
-                    return window.allAnime;
-                }
-                
-                window.isLoading = true;
-                const loadingSub = document.getElementById('loadingSub');
-                const loadingError = document.getElementById('loadingError');
-
-                try {
-                    if (loadingSub) loadingSub.textContent = 'Caricamento da AniList...';
-                    if (loadingError) loadingError.textContent = '';
-
-                    let data = await fetchMixedAnime();
-                    
-                    // 🔥 SE ANILIST FALLISCE, USA IL BACKUP
-                    if (!data || data.length < 10) {
-                        if (loadingSub) loadingSub.textContent = 'AniList non risponde, uso database locale...';
-                        if (loadingError) loadingError.textContent = '⚠️ Usando anime di backup';
-                        
-                        // Usa il backup
-                        data = BACKUP_ANIME.map(a => ({
-                            id: a.id,
-                            title: a.title,
-                            coverImage: a.coverImage
-                        }));
-                        
-                        // Aspetta un po' per far vedere il messaggio
-                        await new Promise(r => setTimeout(r, 1000));
-                    }
-
-                    window.allAnime = data;
-                    window.isDataLoaded = true;
-                    window.isLoading = false;
-                    
-                    if (loadingError) loadingError.textContent = '';
-                    
-                    return data;
-
-                } catch (err) {
-                    console.error(err);
-                    window.isLoading = false;
-                    
-                    // 🔥 ULTIMA SPIAGGIA: usa il backup
-                    if (loadingSub) loadingSub.textContent = 'Errore, uso database di backup...';
-                    if (loadingError) loadingError.textContent = '⚠️ Usando anime di backup';
-                    
-                    window.allAnime = BACKUP_ANIME.map(a => ({
-                        id: a.id,
-                        title: a.title,
-                        coverImage: a.coverImage
-                    }));
-                    window.isDataLoaded = true;
-                    
-                    await new Promise(r => setTimeout(r, 500));
-                    return window.allAnime;
-                }
-            };
-
-        })();
-
-        // ============================================================
-        // 🔥 ANIMETHEMES.MOE - AUDIO PURO
-        // ============================================================
-        
-        const ANIME_THEMES_DB = {
-            'Attack on Titan': { malId: 16498 },
-            'Demon Slayer': { malId: 38000 },
-            'Naruto': { malId: 20 },
-            'One Piece': { malId: 21 },
-            'Dragon Ball Z': { malId: 813 },
-            'Death Note': { malId: 1535 },
-            'Fullmetal Alchemist': { malId: 5114 },
-            'Tokyo Ghoul': { malId: 22319 },
-            'My Hero Academia': { malId: 31964 },
-            'Jujutsu Kaisen': { malId: 40748 },
-            'Cowboy Bebop': { malId: 23 },
-            'Sword Art Online': { malId: 11757 },
-            'Bleach': { malId: 22 },
-            'Spy x Family': { malId: 50265 },
-            'Chainsaw Man': { malId: 44511 },
-            'Mob Psycho 100': { malId: 32182 },
-            'One Punch Man': { malId: 30276 },
-            'Re:Zero': { malId: 31240 },
-            'Vinland Saga': { malId: 37521 },
-            'Steins;Gate': { malId: 9253 },
-        };
-
-        const AUDIO_URLS = [
-            'https://animethemes.moe/audio/',
-            'https://a.animethemes.moe/'
-        ];
-
-        async function getAnimeThemesAudio(animeTitle) {
-            let animeData = null;
-            for (const [key, value] of Object.entries(ANIME_THEMES_DB)) {
-                if (animeTitle.toLowerCase().includes(key.toLowerCase()) || 
-                    key.toLowerCase().includes(animeTitle.toLowerCase())) {
-                    animeData = value;
-                    break;
-                }
-            }
-
-            if (!animeData) return null;
-
-            try {
-                const url = `https://api.animethemes.moe/anime?filter[has]=resources&filter[site]=MyAnimeList&filter[external_id]=${animeData.malId}&include=animethemes.animethemeentries.videos`;
-                
-                const response = await fetch(url);
-                if (!response.ok) return null;
-                
-                const data = await response.json();
-                
-                if (!data.anime || data.anime.length === 0) return null;
-
-                const themes = data.anime[0]?.animethemes || [];
-                for (const theme of themes) {
-                    if (theme.type === 1) {
-                        const entries = theme.animethemeentries || [];
-                        for (const entry of entries) {
-                            const videos = entry.videos || [];
-                            for (const video of videos) {
-                                if (video.filename) {
-                                    for (const baseUrl of AUDIO_URLS) {
-                                        const audioUrl = baseUrl + video.filename + '.ogg';
-                                        return {
-                                            url: audioUrl,
-                                            duration: 30
-                                        };
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-                return null;
-
-            } catch (err) {
-                console.error('Errore AnimeThemes:', err);
-                return null;
-            }
-        }
 
         // ============================================================
         // GAME LOGIC
@@ -1074,12 +949,11 @@
         let wrongCount = 0;
         let isAnswered = false;
         let totalQuestions = 10;
-        let audioElement = null;
+        let player = null;
         let isPlaying = false;
         let timerInterval = null;
-        let currentQuestionData = null;
 
-        function shuffleArrayLocal(arr) {
+        function shuffleArray(arr) {
             for (let i = arr.length - 1; i > 0; i--) {
                 const j = Math.floor(Math.random() * (i + 1));
                 [arr[i], arr[j]] = [arr[j], arr[i]];
@@ -1087,97 +961,137 @@
             return arr;
         }
 
-        function delay(ms) {
-            return new Promise(resolve => setTimeout(resolve, ms));
+        function generateQuestions() {
+            const shuffled = shuffleArray([...OPENING_DB]);
+            const selected = shuffled.slice(0, totalQuestions);
+            
+            return selected.map((item) => {
+                const others = OPENING_DB.filter(a => a.anime !== item.anime);
+                const shuffledOthers = shuffleArray([...others]).slice(0, 3);
+                const options = shuffleArray([
+                    { text: item.anime, isCorrect: true },
+                    ...shuffledOthers.map(a => ({ text: a.anime, isCorrect: false }))
+                ]);
+                
+                return {
+                    ...item,
+                    options: options
+                };
+            });
         }
 
-        async function generateQuestionsFromAnime(animeList) {
-            const questions = [];
-            const shuffled = shuffleArrayLocal([...animeList]);
-            
-            let loadingSub = document.getElementById('loadingSub');
-            
-            const maxAttempts = Math.min(shuffled.length, 25);
-            
-            for (let i = 0; i < maxAttempts && questions.length < totalQuestions; i++) {
-                const anime = shuffled[i];
-                const title = window.getTitle(anime);
-                
-                if (loadingSub) {
-                    loadingSub.textContent = `🔍 Cercando su AnimeThemes: ${title} (${questions.length + 1}/${totalQuestions})`;
-                }
-
-                const audioResult = await getAnimeThemesAudio(title);
-                await delay(300);
-                
-                if (!audioResult || !audioResult.url) {
-                    continue;
-                }
-
-                const audioUrl = audioResult.url;
-
-                const others = animeList.filter(a => a.id !== anime.id);
-                const shuffledOthers = shuffleArrayLocal([...others]);
-                
-                let distractors = [];
-                for (const other of shuffledOthers) {
-                    if (distractors.length >= 3) break;
-                    
-                    const otherTitle = window.getTitle(other);
-                    const otherAudio = await getAnimeThemesAudio(otherTitle);
-                    await delay(300);
-                    
-                    if (otherAudio && otherAudio.url && otherAudio.url !== audioUrl) {
-                        distractors.push({
-                            text: otherTitle,
-                            isCorrect: false,
-                            url: otherAudio.url
-                        });
-                    }
-                }
-
-                if (distractors.length < 3) {
-                    const fallbackTitles = ['Naruto', 'One Piece', 'Dragon Ball Z', 'Bleach', 'Attack on Titan'];
-                    for (const fb of fallbackTitles) {
-                        if (fb !== title && !distractors.some(d => d.text === fb)) {
-                            const fbAudio = await getAnimeThemesAudio(fb);
-                            await delay(300);
-                            if (fbAudio && fbAudio.url && fbAudio.url !== audioUrl) {
-                                distractors.push({
-                                    text: fb,
-                                    isCorrect: false,
-                                    url: fbAudio.url
-                                });
-                            }
-                        }
-                        if (distractors.length >= 3) break;
-                    }
-                }
-
-                if (distractors.length < 3) continue;
-
-                const options = shuffleArrayLocal([
-                    { text: title, isCorrect: true, url: audioUrl },
-                    ...distractors
-                ]);
-
-                questions.push({
-                    anime: title,
-                    audioUrl: audioUrl,
-                    cover: anime.coverImage?.large || null,
-                    options: options,
-                    duration: 30
-                });
-                
-                console.log(`✅ Aggiunta domanda ${questions.length}: ${title}`);
+        function loadYouTubeAPI() {
+            if (window.YT) {
+                initPlayer();
+                return;
             }
 
-            return questions;
+            const tag = document.createElement('script');
+            tag.src = 'https://www.youtube.com/iframe_api';
+            document.head.appendChild(tag);
+
+            window.onYouTubeIframeAPIReady = () => {
+                initPlayer();
+            };
         }
 
-        // ============================================================
-        // AUDIO PLAYER
-        // ============================================================
+        function initPlayer() {
+            const q = questions[currentIndex];
+            if (!q) return;
+
+            player = new YT.Player('youtubePlayer', {
+                height: '0',
+                width: '0',
+                videoId: q.videoId,
+                playerVars: {
+                    autoplay: 0,
+                    controls: 0,
+                    modestbranding: 1,
+                    rel: 0,
+                    showinfo: 0,
+                    start: q.start,
+                    end: q.start + q.duration
+                },
+                events: {
+                    onReady: onPlayerReady,
+                    onStateChange: onPlayerStateChange
+                }
+            });
+        }
+
+        function onPlayerReady(event) {
+            document.getElementById('loading').style.display = 'none';
+            document.getElementById('gameArea').style.display = 'block';
+            loadQuestionUI();
+            updateTimer();
+        }
+
+        function onPlayerStateChange(event) {
+            if (event.data === YT.PlayerState.ENDED) {
+                // Quando finisce, ferma tutto
+                isPlaying = false;
+                document.getElementById('playIcon').className = 'fas fa-play';
+                document.getElementById('playText').textContent = 'Play';
+                document.getElementById('audioVisual').classList.remove('playing');
+                document.getElementById('waveform').classList.remove('playing');
+                clearInterval(timerInterval);
+            }
+        }
+
+        function togglePlay() {
+            if (!player) return;
+
+            if (isPlaying) {
+                player.pauseVideo();
+                isPlaying = false;
+                document.getElementById('playIcon').className = 'fas fa-play';
+                document.getElementById('playText').textContent = 'Play';
+                document.getElementById('audioVisual').classList.remove('playing');
+                document.getElementById('waveform').classList.remove('playing');
+                clearInterval(timerInterval);
+            } else {
+                player.playVideo();
+                isPlaying = true;
+                document.getElementById('playIcon').className = 'fas fa-pause';
+                document.getElementById('playText').textContent = 'Pausa';
+                document.getElementById('audioVisual').classList.add('playing');
+                document.getElementById('waveform').classList.add('playing');
+                updateTimer();
+            }
+        }
+
+        function resetAudio() {
+            if (!player) return;
+            const q = questions[currentIndex];
+            player.seekTo(q.start);
+            player.pauseVideo();
+            isPlaying = false;
+            document.getElementById('playIcon').className = 'fas fa-play';
+            document.getElementById('playText').textContent = 'Play';
+            document.getElementById('audioVisual').classList.remove('playing');
+            document.getElementById('waveform').classList.remove('playing');
+            clearInterval(timerInterval);
+            updateTimer();
+        }
+
+        function updateTimer() {
+            clearInterval(timerInterval);
+            timerInterval = setInterval(() => {
+                if (player && player.getCurrentTime) {
+                    const current = player.getCurrentTime() || 0;
+                    const q = questions[currentIndex];
+                    const elapsed = current - (q.start || 0);
+                    const total = q.duration || 30;
+                    const minutes = Math.floor(elapsed / 60);
+                    const seconds = Math.floor(elapsed % 60);
+                    document.getElementById('timerDisplay').textContent = 
+                        `${minutes}:${seconds.toString().padStart(2, '0')}`;
+                    document.getElementById('totalDuration').textContent = 
+                        `${Math.floor(total / 60)}:${Math.floor(total % 60).toString().padStart(2, '0')}`;
+                }
+            }, 100);
+        }
+
         function loadQuestionUI() {
             if (currentIndex >= questions.length) {
                 showResult();
@@ -1185,23 +1099,21 @@
             }
 
             const q = questions[currentIndex];
-            currentQuestionData = q;
             isAnswered = false;
             
+            // Aggiorna stats
             document.getElementById('currentQuestion').textContent = currentIndex + 1;
             document.getElementById('totalQuestions').textContent = questions.length;
             document.getElementById('correctCount').textContent = correctCount;
             document.getElementById('wrongCount').textContent = wrongCount;
             document.getElementById('progressFill').style.width = ((currentIndex) / questions.length * 100) + '%';
 
+            // Aggiorna cover
             const cover = document.getElementById('animeCover');
-            if (q.cover) {
-                cover.src = q.cover;
-                cover.style.display = 'block';
-            } else {
-                cover.style.display = 'none';
-            }
+            cover.src = q.cover || '';
+            cover.style.display = q.cover ? 'block' : 'none';
 
+            // Genera opzioni
             const grid = document.getElementById('optionsGrid');
             grid.innerHTML = '';
             const letters = ['A', 'B', 'C', 'D'];
@@ -1215,100 +1127,27 @@
                 grid.appendChild(btn);
             });
 
+            // Nascondi feedback e next
             document.getElementById('feedback').className = 'feedback';
             document.getElementById('nextBtn').className = 'next-btn';
             
-            loadAudio(q);
-        }
-
-        function loadAudio(q) {
-            if (audioElement) {
-                audioElement.pause();
-                audioElement.remove();
-                audioElement = null;
-            }
-
-            isPlaying = false;
-            document.getElementById('playIcon').className = 'fas fa-play';
-            document.getElementById('playText').textContent = 'Play';
-            document.getElementById('audioVisual').classList.remove('playing');
-            document.getElementById('waveform').classList.remove('playing');
-            document.getElementById('timerDisplay').textContent = '0:00';
-
-            audioElement = new Audio(q.audioUrl);
-            audioElement.preload = 'auto';
-            
-            audioElement.addEventListener('timeupdate', () => {
-                const minutes = Math.floor(audioElement.currentTime / 60);
-                const seconds = Math.floor(audioElement.currentTime % 60);
-                document.getElementById('timerDisplay').textContent = 
-                    `${minutes}:${seconds.toString().padStart(2, '0')}`;
-            });
-
-            audioElement.addEventListener('ended', () => {
-                isPlaying = false;
-                document.getElementById('playIcon').className = 'fas fa-play';
-                document.getElementById('playText').textContent = 'Play';
-                document.getElementById('audioVisual').classList.remove('playing');
-                document.getElementById('waveform').classList.remove('playing');
-            });
-
-            audioElement.addEventListener('error', (e) => {
-                console.error('Errore audio:', e);
-                setTimeout(() => {
-                    nextQuestion();
-                }, 1000);
-            });
-
-            document.getElementById('loading').style.display = 'none';
-            document.getElementById('gameArea').style.display = 'block';
-        }
-
-        function togglePlay() {
-            if (!audioElement) return;
-
-            if (isPlaying) {
-                audioElement.pause();
-                isPlaying = false;
-                document.getElementById('playIcon').className = 'fas fa-play';
-                document.getElementById('playText').textContent = 'Play';
-                document.getElementById('audioVisual').classList.remove('playing');
-                document.getElementById('waveform').classList.remove('playing');
-            } else {
-                audioElement.play().catch(err => {
-                    console.error('Errore play:', err);
-                });
-                isPlaying = true;
-                document.getElementById('playIcon').className = 'fas fa-pause';
-                document.getElementById('playText').textContent = 'Pausa';
-                document.getElementById('audioVisual').classList.add('playing');
-                document.getElementById('waveform').classList.add('playing');
-            }
-        }
-
-        function resetAudio() {
-            if (!audioElement) return;
-            audioElement.currentTime = 0;
-            audioElement.pause();
-            isPlaying = false;
-            document.getElementById('playIcon').className = 'fas fa-play';
-            document.getElementById('playText').textContent = 'Play';
-            document.getElementById('audioVisual').classList.remove('playing');
-            document.getElementById('waveform').classList.remove('playing');
-            document.getElementById('timerDisplay').textContent = '0:00';
+            // Reset audio
+            resetAudio();
         }
 
         function selectOption(btn, isCorrect) {
             if (isAnswered) return;
             isAnswered = true;
 
-            if (audioElement && isPlaying) {
-                audioElement.pause();
+            // Ferma l'audio
+            if (player && isPlaying) {
+                player.pauseVideo();
                 isPlaying = false;
                 document.getElementById('playIcon').className = 'fas fa-play';
                 document.getElementById('playText').textContent = 'Play';
                 document.getElementById('audioVisual').classList.remove('playing');
                 document.getElementById('waveform').classList.remove('playing');
+                clearInterval(timerInterval);
             }
 
             const allBtns = document.querySelectorAll('.option-btn');
@@ -1323,14 +1162,14 @@
                 correctCount++;
                 feedback.className = 'feedback show correct';
                 feedbackTitle.textContent = '🎵 Perfetto!';
-                feedbackText.textContent = `Hai riconosciuto "${currentQuestionData.anime}" dalla sigla!`;
+                feedbackText.textContent = `Hai riconosciuto "${questions[currentIndex].anime}" dalla sigla!`;
             } else {
                 btn.classList.add('wrong');
                 wrongCount++;
                 feedback.className = 'feedback show wrong';
                 feedbackTitle.textContent = '❌ Sbagliato!';
-                const correctAnswer = currentQuestionData.options.find(o => o.isCorrect);
-                feedbackText.textContent = `Era "${correctAnswer.text}"!`;
+                const correctAnswer = questions[currentIndex].options.find(o => o.isCorrect);
+                feedbackText.textContent = `Era "${correctAnswer.text}"! Riprova con la prossima!`;
                 
                 allBtns.forEach(b => {
                     if (b.dataset.correct === 'true') {
@@ -1352,25 +1191,8 @@
         }
 
         function nextQuestion() {
-            if (audioElement) {
-                audioElement.pause();
-                audioElement.remove();
-                audioElement = null;
-            }
             currentIndex++;
-            
-            if (currentIndex >= questions.length) {
-                showResult();
-                return;
-            }
-            
-            document.getElementById('loading').style.display = 'block';
-            document.getElementById('gameArea').style.display = 'none';
-            document.getElementById('loadingSub').textContent = `Caricando: ${questions[currentIndex]?.anime || '...'}`;
-            
-            setTimeout(() => {
-                loadQuestionUI();
-            }, 500);
+            loadQuestionUI();
         }
 
         function showResult() {
@@ -1395,75 +1217,37 @@
             currentIndex = 0;
             correctCount = 0;
             wrongCount = 0;
-            if (audioElement) {
-                audioElement.pause();
-                audioElement.remove();
-                audioElement = null;
-            }
+            questions = generateQuestions();
+            
             document.getElementById('resultScreen').className = 'result-screen';
-            document.getElementById('gameArea').style.display = 'none';
-            document.getElementById('loading').style.display = 'block';
-            document.getElementById('loadingSub').textContent = 'Ricarico le opening...';
-            initGame();
-        }
-
-        // ============================================================
-        // INIT GAME
-        // ============================================================
-        async function initGame() {
-            try {
-                const loadingSub = document.getElementById('loadingSub');
-                const loadingError = document.getElementById('loadingError');
-                
-                if (loadingSub) loadingSub.textContent = 'Caricamento anime...';
-                if (loadingError) loadingError.textContent = '';
-
-                const animeList = await window.loadAnimeData();
-                
-                if (!animeList || animeList.length < 10) {
-                    throw new Error('Non abbastanza anime');
-                }
-
-                if (loadingSub) loadingSub.textContent = 'Generazione domande...';
-
-                const generatedQuestions = await generateQuestionsFromAnime(animeList);
-                if (generatedQuestions.length < 3) {
-                    throw new Error('Poche opening trovate');
-                }
-
-                questions = generatedQuestions;
-                
-                if (loadingError) loadingError.textContent = '';
-                document.getElementById('loading').style.display = 'block';
-                document.getElementById('gameArea').style.display = 'none';
-                if (loadingSub) loadingSub.textContent = `Caricando: ${questions[0]?.anime || '...'}`;
-                
-                loadQuestionUI();
-
-            } catch (err) {
-                console.error('Errore init:', err);
-                document.getElementById('loading').innerHTML = `
-                    <div style="color: var(--accent-red); font-size: 2rem; margin-bottom: 16px;">❌</div>
-                    <p style="color: var(--text-primary); font-weight: 600;">Errore nel caricamento</p>
-                    <p style="color: var(--text-secondary); font-size: 0.9rem; margin-top: 8px;">${err.message}</p>
-                    <button onclick="restartGame()" style="
-                        margin-top: 20px;
-                        padding: 12px 32px;
-                        background: var(--accent-purple);
-                        border: none;
-                        border-radius: var(--radius-sm);
-                        color: #fff;
-                        font-family: 'Inter', sans-serif;
-                        font-weight: 600;
-                        cursor: pointer;
-                    ">Riprova</button>
-                `;
+            document.getElementById('gameArea').style.display = 'block';
+            document.getElementById('loading').style.display = 'none';
+            
+            // Ricarica il player
+            if (player) {
+                player.destroy();
             }
+            initPlayer();
+            loadQuestionUI();
         }
 
+        // ============================================================
+        // INIT
+        // ============================================================
         document.addEventListener('DOMContentLoaded', () => {
-            initGame();
+            questions = generateQuestions();
+            
+            // Mostra loading
+            document.getElementById('loading').style.display = 'block';
+            document.getElementById('gameArea').style.display = 'none';
+            
+            loadYouTubeAPI();
         });
+
+        // Player YouTube nascosto
+        document.body.insertAdjacentHTML('beforeend', `
+            <div id="youtubePlayer" style="position: absolute; width: 0; height: 0; opacity: 0; pointer-events: none;"></div>
+        `);
     </script>
 
 </body>
