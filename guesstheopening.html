@@ -9,7 +9,6 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
     
     <style>
-        /* ... TUTTO LO STILE COME PRIMA ... */
         * {
             margin: 0;
             padding: 0;
@@ -899,41 +898,51 @@
         })();
 
         // ============================================================
-        // 🔥 RICERCA VERA SU YOUTUBE CON API
+        // 🔥 RICERCA VERA SU YOUTUBE CON API (MULTI-QUERY)
         // ============================================================
         async function searchYouTubeOpening(animeName) {
-            try {
-                // Cerca "nome anime opening"
-                const searchQuery = `${animeName} opening`;
-                const url = `https://www.googleapis.com/youtube/v3/search?part=snippet&maxResults=1&q=${encodeURIComponent(searchQuery)}&key=${YOUTUBE_API_KEY}&type=video&videoCategoryId=10`;
-                
-                console.log(`🔍 Cerco su YouTube: ${searchQuery}`);
-                const response = await fetch(url);
-                const data = await response.json();
-                
-                if (data.error) {
-                    console.error('Errore API YouTube:', data.error);
-                    return null;
+            // 🔥 DIVERSI TENTATIVI DI RICERCA
+            const searchQueries = [
+                `${animeName} opening`,
+                `${animeName} op`,
+                `${animeName} opening 1`,
+                `${animeName} opening full`,
+                `${animeName} opening hd`,
+                `${animeName} intro`
+            ];
+
+            for (const query of searchQueries) {
+                try {
+                    const url = `https://www.googleapis.com/youtube/v3/search?part=snippet&maxResults=1&q=${encodeURIComponent(query)}&key=${YOUTUBE_API_KEY}&type=video&videoCategoryId=10`;
+                    
+                    console.log(`🔍 Cerco: ${query}`);
+                    const response = await fetch(url);
+                    const data = await response.json();
+                    
+                    if (data.error) {
+                        console.error('Errore API YouTube:', data.error);
+                        continue;
+                    }
+                    
+                    if (data.items && data.items.length > 0) {
+                        const video = data.items[0];
+                        const videoId = video.id.videoId;
+                        const title = video.snippet.title;
+                        console.log(`✅ Trovato: ${title} (${videoId})`);
+                        return {
+                            videoId: videoId,
+                            title: title,
+                            duration: 30
+                        };
+                    }
+                } catch (error) {
+                    console.error('Errore ricerca:', error);
+                    continue;
                 }
-                
-                if (data.items && data.items.length > 0) {
-                    const video = data.items[0];
-                    const videoId = video.id.videoId;
-                    const title = video.snippet.title;
-                    console.log(`✅ Trovato: ${title} (${videoId})`);
-                    return {
-                        videoId: videoId,
-                        title: title,
-                        duration: 30
-                    };
-                } else {
-                    console.log(`❌ Nessun risultato per: ${animeName}`);
-                    return null;
-                }
-            } catch (error) {
-                console.error('Errore ricerca YouTube:', error);
-                return null;
             }
+            
+            console.log(`❌ Nessun risultato per: ${animeName}`);
+            return null;
         }
 
         // ============================================================
@@ -958,13 +967,21 @@
             return arr;
         }
 
+        // 🔥 ATTESA TRA LE RICHIESTE PER NON SUPERARE IL LIMITE
+        function delay(ms) {
+            return new Promise(resolve => setTimeout(resolve, ms));
+        }
+
         async function generateQuestionsFromAnime(animeList) {
             const questions = [];
             const shuffled = shuffleArrayLocal([...animeList]);
             
             let loadingSub = document.getElementById('loadingSub');
             
-            for (let i = 0; i < shuffled.length && questions.length < totalQuestions; i++) {
+            // 🔥 PRENDO PIÙ ANIME POSSIBILI (fino a 30)
+            const maxAttempts = Math.min(shuffled.length, 30);
+            
+            for (let i = 0; i < maxAttempts && questions.length < totalQuestions; i++) {
                 const anime = shuffled[i];
                 const title = window.getTitle(anime);
                 
@@ -972,8 +989,11 @@
                     loadingSub.textContent = `🔍 Cercando su YouTube: ${title} (${questions.length + 1}/${totalQuestions})`;
                 }
 
-                // 🔥 FA LA RICERCA VERA SU YOUTUBE CON API
+                // 🔥 CERCA L'OPENING CON MULTI-QUERY
                 const searchResult = await searchYouTubeOpening(title);
+                
+                // 🔥 ASPETTA 500ms tra una ricerca e l'altra
+                await delay(500);
                 
                 if (!searchResult || !searchResult.videoId) {
                     console.log(`❌ Nessun risultato per: ${title}`);
@@ -982,17 +1002,18 @@
 
                 const videoId = searchResult.videoId;
 
-                // Trova distrattori
+                // 🔥 TROVA DISTRATTORI
                 const others = animeList.filter(a => a.id !== anime.id);
                 const shuffledOthers = shuffleArrayLocal([...others]);
                 
                 let distractors = [];
                 for (const other of shuffledOthers) {
-                    const otherTitle = window.getTitle(other);
                     if (distractors.length >= 3) break;
                     
-                    // Cerca anche i distrattori su YouTube
+                    const otherTitle = window.getTitle(other);
                     const otherSearch = await searchYouTubeOpening(otherTitle);
+                    await delay(300);
+                    
                     if (otherSearch && otherSearch.videoId && otherSearch.videoId !== videoId) {
                         distractors.push({
                             text: otherTitle,
@@ -1000,16 +1021,19 @@
                             videoId: otherSearch.videoId
                         });
                     }
-                    // Aspetta un po' per non fare troppe richieste
-                    await new Promise(r => setTimeout(r, 100));
                 }
 
+                // 🔥 SE NON HA ABBASTANZA DISTRATTORI, USA FALLBACK
                 if (distractors.length < 3) {
-                    // Se non ha abbastanza distrattori, usa dei placeholder
-                    const fallbackTitles = ['Naruto', 'One Piece', 'Dragon Ball Z', 'Bleach', 'Death Note', 'Attack on Titan'];
+                    const fallbackTitles = [
+                        'Naruto', 'One Piece', 'Dragon Ball Z', 'Bleach', 
+                        'Death Note', 'Attack on Titan', 'Demon Slayer',
+                        'My Hero Academia', 'Jujutsu Kaisen', 'Tokyo Ghoul'
+                    ];
                     for (const fb of fallbackTitles) {
                         if (fb !== title && !distractors.some(d => d.text === fb)) {
                             const fbSearch = await searchYouTubeOpening(fb);
+                            await delay(300);
                             if (fbSearch && fbSearch.videoId && fbSearch.videoId !== videoId) {
                                 distractors.push({
                                     text: fb,
@@ -1019,11 +1043,13 @@
                             }
                         }
                         if (distractors.length >= 3) break;
-                        await new Promise(r => setTimeout(r, 100));
                     }
                 }
 
-                if (distractors.length < 3) continue;
+                if (distractors.length < 3) {
+                    console.log(`⚠️ Non abbastanza distrattori per: ${title}`);
+                    continue;
+                }
 
                 const options = shuffleArrayLocal([
                     { text: title, isCorrect: true, videoId: videoId },
@@ -1038,6 +1064,8 @@
                     start: 0,
                     duration: 30
                 });
+                
+                console.log(`✅ Aggiunta domanda ${questions.length}: ${title}`);
             }
 
             return questions;
@@ -1119,7 +1147,6 @@
 
         function onPlayerError(event) {
             console.error('Errore YouTube:', event.data);
-            // Passa alla prossima domanda automaticamente
             setTimeout(() => {
                 nextQuestion();
             }, 1000);
