@@ -1,0 +1,1522 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>AniQuiz - Higher or Lower Anime</title>
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+    
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
+    
+    <style>
+        /* ============================================================
+           RESET & VARIABILI
+           ============================================================ */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --bg-primary: #0a0a0f;
+            --bg-secondary: #12121a;
+            --bg-card: #1a1a2e;
+            --bg-card-hover: #22223a;
+            --text-primary: #ffffff;
+            --text-secondary: #8a8aa0;
+            --accent-pink: #ff6b9d;
+            --accent-purple: #a855f7;
+            --accent-blue: #4cc9f0;
+            --accent-green: #4ade80;
+            --accent-orange: #fbbf24;
+            --accent-yellow: #facc15;
+            --accent-red: #f87171;
+            --shadow: 0 8px 40px rgba(0, 0, 0, 0.6);
+            --radius: 16px;
+            --radius-sm: 10px;
+            --transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            min-height: 100vh;
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        .bg-glow {
+            position: fixed;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            z-index: 0;
+            pointer-events: none;
+            background: 
+                radial-gradient(ellipse at 20% 50%, rgba(168, 85, 247, 0.06) 0%, transparent 60%),
+                radial-gradient(ellipse at 80% 20%, rgba(255, 107, 157, 0.04) 0%, transparent 50%);
+        }
+
+        /* ============================================================
+           NAVBAR
+           ============================================================ */
+        .navbar {
+            background: rgba(10, 10, 15, 0.85);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+            padding: 16px 0;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .navbar .container {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 1.4rem;
+            font-weight: 900;
+        }
+
+        .logo-icon {
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(135deg, var(--accent-pink), var(--accent-purple));
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.1rem;
+            color: #fff;
+            box-shadow: 0 0 30px rgba(168, 85, 247, 0.2);
+        }
+
+        .logo-text {
+            background: linear-gradient(135deg, var(--accent-pink), var(--accent-purple), var(--accent-blue));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .nav-stats {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            color: var(--text-secondary);
+            font-size: 0.85rem;
+        }
+
+        .nav-stats span {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .nav-stats i {
+            color: var(--accent-purple);
+        }
+
+        /* ============================================================
+           HERO
+           ============================================================ */
+        .hero {
+            padding: 30px 0 16px;
+            text-align: center;
+            position: relative;
+            z-index: 1;
+        }
+
+        .hero h1 {
+            font-size: 2.4rem;
+            font-weight: 900;
+            background: linear-gradient(135deg, #fff 30%, var(--accent-pink), var(--accent-purple));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 4px;
+        }
+
+        .hero p {
+            color: var(--text-secondary);
+            font-size: 1rem;
+            max-width: 500px;
+            margin: 0 auto;
+        }
+
+        /* ============================================================
+           GAME CONTAINER
+           ============================================================ */
+        .game-container {
+            background: var(--bg-card);
+            border-radius: var(--radius);
+            padding: 30px;
+            border: 1px solid rgba(255, 255, 255, 0.04);
+            box-shadow: var(--shadow);
+            position: relative;
+            z-index: 1;
+            min-height: 400px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* ============================================================
+           GAME HEADER
+           ============================================================ */
+        .game-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+
+        .game-header .score-display {
+            font-size: 1.1rem;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        .game-header .score-display i {
+            color: var(--accent-orange);
+        }
+
+        .game-header .score-display .score-number {
+            color: var(--accent-orange);
+            font-size: 1.4rem;
+        }
+
+        .game-header .score-display .tie-number {
+            color: var(--accent-yellow);
+            font-size: 1.4rem;
+        }
+
+        .game-header .streak-display {
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .game-header .streak-display i {
+            color: var(--accent-red);
+        }
+
+        .game-header .streak-display .streak-number {
+            color: var(--accent-red);
+            font-weight: 700;
+        }
+
+        .reset-game-btn {
+            background: rgba(248, 113, 113, 0.1);
+            border: 1px solid rgba(248, 113, 113, 0.2);
+            color: var(--accent-red);
+            padding: 6px 16px;
+            border-radius: 60px;
+            font-weight: 600;
+            font-size: 0.75rem;
+            cursor: pointer;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .reset-game-btn:hover {
+            background: rgba(248, 113, 113, 0.2);
+            transform: translateY(-2px);
+        }
+
+        /* ============================================================
+           LOADING
+           ============================================================ */
+        .loading {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 60px 20px;
+            gap: 16px;
+            color: var(--text-secondary);
+            flex: 1;
+        }
+
+        .loading .spinner {
+            width: 48px;
+            height: 48px;
+            border: 3px solid var(--bg-secondary);
+            border-top-color: var(--accent-purple);
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .loading .loading-text {
+            font-size: 1.1rem;
+            font-weight: 600;
+        }
+
+        .loading .loading-sub {
+            font-size: 0.85rem;
+            opacity: 0.6;
+        }
+
+        .loading-progress {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 12px;
+            width: 100%;
+            max-width: 400px;
+            margin-top: 8px;
+        }
+
+        .progress-bar-full {
+            width: 100%;
+            height: 6px;
+            background: var(--bg-secondary);
+            border-radius: 4px;
+            overflow: hidden;
+        }
+
+        .progress-bar-full .fill-full {
+            height: 100%;
+            background: linear-gradient(90deg, var(--accent-pink), var(--accent-purple));
+            border-radius: 4px;
+            transition: width 0.3s ease;
+            width: 0%;
+        }
+
+        .loading-stats {
+            display: flex;
+            gap: 20px;
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+        }
+
+        .loading-stats span {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .loading-stats i {
+            color: var(--accent-purple);
+        }
+
+        /* ============================================================
+           ERROR STATE
+           ============================================================ */
+        .error-state {
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 60px 20px;
+            text-align: center;
+            gap: 12px;
+            flex: 1;
+        }
+
+        .error-state.show {
+            display: flex;
+        }
+
+        .error-state i {
+            font-size: 3rem;
+            color: var(--accent-red);
+        }
+
+        .error-state h3 {
+            font-size: 1.2rem;
+        }
+
+        .error-state p {
+            color: var(--text-secondary);
+            max-width: 400px;
+        }
+
+        .retry-btn {
+            margin-top: 8px;
+            background: var(--bg-secondary);
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            color: var(--text-primary);
+            padding: 10px 28px;
+            border-radius: 60px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .retry-btn:hover {
+            background: var(--bg-card-hover);
+        }
+
+        /* ============================================================
+           GAME AREA
+           ============================================================ */
+        #gameArea {
+            display: none;
+            flex: 1;
+            flex-direction: column;
+        }
+
+        /* ============================================================
+           COMPARE CARDS
+           ============================================================ */
+        .compare-container {
+            display: grid;
+            grid-template-columns: 1fr auto 1fr;
+            gap: 16px;
+            align-items: center;
+            margin-bottom: 24px;
+        }
+
+        .compare-card {
+            background: var(--bg-secondary);
+            border-radius: var(--radius-sm);
+            padding: 20px;
+            text-align: center;
+            border: 2px solid rgba(255, 255, 255, 0.04);
+            transition: var(--transition);
+            min-height: 200px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .compare-card .card-image {
+            width: 120px;
+            height: 160px;
+            border-radius: 8px;
+            object-fit: cover;
+            background: var(--bg-primary);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            margin-bottom: 8px;
+        }
+
+        .compare-card .card-title {
+            font-size: 1.1rem;
+            font-weight: 700;
+            line-height: 1.3;
+        }
+
+        .compare-card .card-value {
+            font-size: 1.8rem;
+            font-weight: 900;
+            color: var(--accent-orange);
+            margin-top: 4px;
+        }
+
+        .compare-card .card-label {
+            font-size: 0.7rem;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .compare-card.current {
+            border-color: rgba(168, 85, 247, 0.3);
+        }
+
+        .compare-card.next {
+            border-color: rgba(76, 201, 240, 0.2);
+            position: relative;
+        }
+
+        .compare-card.next .card-value-hidden {
+            font-size: 1.2rem;
+            color: var(--text-secondary);
+            opacity: 0.5;
+        }
+
+        .compare-card .card-result {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            font-size: 2rem;
+            font-weight: 900;
+            display: none;
+        }
+
+        .compare-card .card-result.show {
+            display: block;
+        }
+
+        .compare-card .card-result.correct {
+            color: var(--accent-green);
+        }
+
+        .compare-card .card-result.wrong {
+            color: var(--accent-red);
+        }
+
+        .compare-card .card-result.tie {
+            color: var(--accent-yellow);
+        }
+
+        .vs-badge {
+            font-size: 1.5rem;
+            font-weight: 900;
+            color: var(--text-secondary);
+            opacity: 0.3;
+        }
+
+        /* ============================================================
+           ACTION BUTTONS
+           ============================================================ */
+        .action-buttons {
+            display: flex;
+            gap: 16px;
+            justify-content: center;
+            margin: 8px 0 16px;
+        }
+
+        .action-btn {
+            padding: 14px 40px;
+            border-radius: 60px;
+            font-weight: 700;
+            font-size: 1.1rem;
+            cursor: pointer;
+            transition: var(--transition);
+            border: none;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            flex: 1;
+            justify-content: center;
+        }
+
+        .action-btn.higher {
+            background: linear-gradient(135deg, var(--accent-green), #22c55e);
+            color: #fff;
+            box-shadow: 0 0 30px rgba(74, 222, 128, 0.1);
+        }
+
+        .action-btn.higher:hover:not(:disabled) {
+            transform: translateY(-3px) scale(1.02);
+            box-shadow: 0 0 50px rgba(74, 222, 128, 0.2);
+        }
+
+        .action-btn.lower {
+            background: linear-gradient(135deg, var(--accent-red), #dc2626);
+            color: #fff;
+            box-shadow: 0 0 30px rgba(248, 113, 113, 0.1);
+        }
+
+        .action-btn.lower:hover:not(:disabled) {
+            transform: translateY(-3px) scale(1.02);
+            box-shadow: 0 0 50px rgba(248, 113, 113, 0.2);
+        }
+
+        .action-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none !important;
+        }
+
+        /* ============================================================
+           FEEDBACK
+           ============================================================ */
+        .feedback-area {
+            margin-top: 16px;
+            padding: 16px 20px;
+            border-radius: var(--radius-sm);
+            display: none;
+            animation: slideUp 0.3s ease;
+            text-align: center;
+        }
+
+        .feedback-area.show {
+            display: block;
+        }
+
+        .feedback-area.correct {
+            background: rgba(74, 222, 128, 0.08);
+            border: 1px solid rgba(74, 222, 128, 0.15);
+        }
+
+        .feedback-area.wrong {
+            background: rgba(248, 113, 113, 0.08);
+            border: 1px solid rgba(248, 113, 113, 0.15);
+        }
+
+        .feedback-area.tie {
+            background: rgba(250, 204, 21, 0.08);
+            border: 1px solid rgba(250, 204, 21, 0.15);
+        }
+
+        .feedback-area .feedback-title {
+            font-weight: 700;
+            font-size: 1.1rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .feedback-area .feedback-title i {
+            font-size: 1.3rem;
+        }
+
+        .feedback-area.correct .feedback-title i {
+            color: var(--accent-green);
+        }
+        .feedback-area.wrong .feedback-title i {
+            color: var(--accent-red);
+        }
+        .feedback-area.tie .feedback-title i {
+            color: var(--accent-yellow);
+        }
+
+        .feedback-area .feedback-detail {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            margin-top: 4px;
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* ============================================================
+           GAME OVER
+           ============================================================ */
+        .game-over {
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            padding: 40px 20px;
+            animation: slideUp 0.5s ease;
+            flex: 1;
+            justify-content: center;
+        }
+
+        .game-over.show {
+            display: flex;
+        }
+
+        .game-over .result-icon {
+            font-size: 4rem;
+            margin-bottom: 16px;
+        }
+
+        .game-over .result-score {
+            font-size: 3.5rem;
+            font-weight: 900;
+            background: linear-gradient(135deg, var(--accent-pink), var(--accent-purple));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .game-over .result-label {
+            color: var(--text-secondary);
+            font-size: 1.1rem;
+            margin-top: 4px;
+        }
+
+        .game-over .result-stats {
+            display: flex;
+            gap: 40px;
+            margin: 20px 0 28px;
+        }
+
+        .game-over .result-stats .stat {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .game-over .result-stats .stat .number {
+            font-size: 1.5rem;
+            font-weight: 700;
+        }
+
+        .game-over .result-stats .stat .label {
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+        }
+
+        .game-over .result-stats .stat .number.correct {
+            color: var(--accent-green);
+        }
+        .game-over .result-stats .stat .number.wrong {
+            color: var(--accent-red);
+        }
+        .game-over .result-stats .stat .number.tie {
+            color: var(--accent-yellow);
+        }
+        .game-over .result-stats .stat .number.streak {
+            color: var(--accent-orange);
+        }
+
+        .play-again-btn {
+            background: linear-gradient(135deg, var(--accent-pink), var(--accent-purple));
+            border: none;
+            color: #fff;
+            padding: 12px 32px;
+            border-radius: 60px;
+            font-weight: 700;
+            font-size: 0.95rem;
+            cursor: pointer;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            box-shadow: 0 0 30px rgba(168, 85, 247, 0.15);
+        }
+
+        .play-again-btn:hover {
+            transform: translateY(-2px) scale(1.02);
+            box-shadow: 0 0 50px rgba(168, 85, 247, 0.25);
+        }
+
+        /* ============================================================
+           FOOTER
+           ============================================================ */
+        .footer {
+            border-top: 1px solid rgba(255, 255, 255, 0.04);
+            padding: 20px 0;
+            margin-top: 30px;
+            text-align: center;
+            color: var(--text-secondary);
+            font-size: 0.8rem;
+            position: relative;
+            z-index: 1;
+        }
+
+        .footer a {
+            color: var(--accent-purple);
+        }
+
+        /* ============================================================
+           RESPONSIVE
+           ============================================================ */
+        @media (max-width: 768px) {
+            .hero h1 {
+                font-size: 1.8rem;
+            }
+
+            .game-container {
+                padding: 20px;
+            }
+
+            .compare-container {
+                grid-template-columns: 1fr;
+                gap: 12px;
+            }
+
+            .vs-badge {
+                font-size: 1.2rem;
+                padding: 4px 0;
+            }
+
+            .compare-card {
+                min-height: 150px;
+                padding: 16px;
+            }
+
+            .compare-card .card-image {
+                width: 80px;
+                height: 110px;
+            }
+
+            .compare-card .card-value {
+                font-size: 1.4rem;
+            }
+
+            .action-buttons {
+                flex-direction: column;
+            }
+
+            .action-btn {
+                padding: 12px 24px;
+                font-size: 1rem;
+            }
+
+            .game-header {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .game-over .result-stats {
+                gap: 24px;
+            }
+
+            .game-over .result-score {
+                font-size: 2.8rem;
+            }
+
+            .navbar .container {
+                flex-direction: column;
+                align-items: stretch;
+                gap: 8px;
+            }
+
+            .logo {
+                justify-content: center;
+            }
+
+            .nav-stats {
+                justify-content: center;
+                flex-wrap: wrap;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .container {
+                padding: 0 12px;
+            }
+
+            .game-container {
+                padding: 12px;
+                border-radius: var(--radius-sm);
+            }
+
+            .compare-card {
+                min-height: 120px;
+                padding: 12px;
+            }
+
+            .compare-card .card-image {
+                width: 60px;
+                height: 85px;
+            }
+
+            .compare-card .card-title {
+                font-size: 0.9rem;
+            }
+
+            .compare-card .card-value {
+                font-size: 1.2rem;
+            }
+
+            .hero h1 {
+                font-size: 1.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="bg-glow"></div>
+
+    <!-- ===== NAVBAR ===== -->
+    <nav class="navbar">
+        <div class="container">
+            <div class="logo">
+                <div class="logo-icon"><i class="fas fa-arrow-up-arrow-down"></i></div>
+                <span class="logo-text">Higher or Lower</span>
+            </div>
+            <div class="nav-stats">
+                <span><i class="fas fa-database"></i> <span id="totalAnime">0</span> anime</span>
+                <span><i class="fas fa-star"></i> <span id="avgScore">0</span> media voti</span>
+            </div>
+        </div>
+    </nav>
+
+    <!-- ===== HERO ===== -->
+    <section class="hero">
+        <div class="container">
+            <h1>⬆️ Higher or Lower ⬇️</h1>
+            <p>Indovina se il prossimo anime ha un voto più alto o più basso!</p>
+        </div>
+    </section>
+
+    <!-- ===== GAME CONTAINER ===== -->
+    <div class="container">
+        <div class="game-container" id="gameContainer">
+
+            <!-- ===== LOADING ===== -->
+            <div class="loading" id="loading">
+                <div class="spinner"></div>
+                <div class="loading-text">Caricamento anime in corso...</div>
+                <div class="loading-sub">Stiamo preparando il gioco per te</div>
+                <div class="loading-progress">
+                    <div class="progress-bar-full">
+                        <div class="fill-full" id="progressFillFull" style="width:0%"></div>
+                    </div>
+                    <div class="loading-stats">
+                        <span><i class="fas fa-film"></i> <span id="loadedCount">0</span> anime caricati</span>
+                        <span><i class="fas fa-clock"></i> <span id="progressPercent">0</span>%</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ===== ERROR STATE ===== -->
+            <div class="error-state" id="errorState">
+                <i class="fas fa-circle-exclamation"></i>
+                <h3>Ops! Qualcosa è andato storto</h3>
+                <p id="errorMessage">Non siamo riusciti a caricare i dati. Verifica la connessione e riprova.</p>
+                <button class="retry-btn" id="retryBtn"><i class="fas fa-rotate"></i> Riprova</button>
+            </div>
+
+            <!-- ===== GAME AREA ===== -->
+            <div id="gameArea">
+
+                <!-- Game Header -->
+                <div class="game-header">
+                    <div class="score-display">
+                        <i class="fas fa-trophy"></i>
+                        Punteggio: <span class="score-number" id="scoreDisplay">0</span>
+                        <span style="color:var(--text-secondary);font-weight:400;font-size:0.9rem;margin-left:4px;">|</span>
+                        <i class="fas fa-equals" style="color:var(--accent-yellow);"></i>
+                        Pareggi: <span class="tie-number" id="tieDisplay">0</span>
+                    </div>
+                    <div class="streak-display">
+                        <i class="fas fa-fire"></i>
+                        Streak: <span class="streak-number" id="streakDisplay">0</span>
+                    </div>
+                    <button class="reset-game-btn" id="resetGameBtn">
+                        <i class="fas fa-rotate"></i> Reset
+                    </button>
+                </div>
+
+                <!-- Compare Cards -->
+                <div class="compare-container" id="compareContainer">
+                    <!-- Anime Corrente -->
+                    <div class="compare-card current" id="currentCard">
+                        <img class="card-image" id="currentImage" src="" alt="Anime" onerror="this.style.display='none'">
+                        <div class="card-title" id="currentTitle">Caricamento...</div>
+                        <div class="card-value" id="currentValue">?</div>
+                        <div class="card-label">Voto attuale</div>
+                    </div>
+
+                    <div class="vs-badge">VS</div>
+
+                    <!-- Anime Successivo (VISIBILE - solo il voto è nascosto) -->
+                    <div class="compare-card next" id="nextCard">
+                        <img class="card-image" id="nextImage" src="" alt="Anime" onerror="this.style.display='none'">
+                        <div class="card-title" id="nextTitle">Caricamento...</div>
+                        <div class="card-value-hidden" id="nextValueHidden">❓ Voto sconosciuto</div>
+                        <div class="card-value" id="nextValue" style="display:none;"></div>
+                        <div class="card-result" id="nextResult"></div>
+                        <div class="card-label">Indovina il voto!</div>
+                    </div>
+                </div>
+
+                <!-- Action Buttons -->
+                <div class="action-buttons">
+                    <button class="action-btn higher" id="higherBtn">
+                        <i class="fas fa-arrow-up"></i> Higher ⬆️
+                    </button>
+                    <button class="action-btn lower" id="lowerBtn">
+                        <i class="fas fa-arrow-down"></i> Lower ⬇️
+                    </button>
+                </div>
+
+                <!-- Feedback -->
+                <div class="feedback-area" id="feedback">
+                    <div class="feedback-title">
+                        <i class="fas fa-check-circle"></i>
+                        <span id="feedbackTitle">Corretto!</span>
+                    </div>
+                    <div class="feedback-detail" id="feedbackDetail"></div>
+                </div>
+            </div>
+
+            <!-- ===== GAME OVER ===== -->
+            <div class="game-over" id="gameOver">
+                <div class="result-icon" id="resultIcon">💀</div>
+                <div class="result-score" id="resultScore">0</div>
+                <div class="result-label" id="resultLabel">Game Over!</div>
+                <div class="result-stats">
+                    <div class="stat">
+                        <span class="number correct" id="resultCorrect">0</span>
+                        <span class="label">Corrette</span>
+                    </div>
+                    <div class="stat">
+                        <span class="number wrong" id="resultWrong">0</span>
+                        <span class="label">Sbagliate</span>
+                    </div>
+                    <div class="stat">
+                        <span class="number tie" id="resultTie">0</span>
+                        <span class="label">Pareggi</span>
+                    </div>
+                    <div class="stat">
+                        <span class="number streak" id="resultStreak">0</span>
+                        <span class="label">Miglior Streak</span>
+                    </div>
+                </div>
+                <button class="play-again-btn" id="playAgainBtn">
+                    <i class="fas fa-rotate"></i> Gioca Ancora
+                </button>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- ===== FOOTER ===== -->
+    <footer class="footer">
+        <div class="container">
+            <p>
+                <i class="fas fa-code"></i> AniQuiz · Dati da
+                <a href="https://anilist.co" target="_blank">AniList API</a> ·
+                <span id="footerAnimeCount">0</span> anime disponibili
+            </p>
+        </div>
+    </footer>
+
+    <script>
+        // ============================================================
+        // ANIQUIZ - HIGHER OR LOWER (VOTI ANIME)
+        // ============================================================
+
+        (function() {
+            'use strict';
+
+            const MAX_ANIME = 300;
+            const PER_PAGE = 50;
+            const BATCH_SIZE = 5;
+
+            // ===== DOM REFS =====
+            const loading = document.getElementById('loading');
+            const errorState = document.getElementById('errorState');
+            const errorMessage = document.getElementById('errorMessage');
+            const gameArea = document.getElementById('gameArea');
+            const gameOver = document.getElementById('gameOver');
+            const progressFillFull = document.getElementById('progressFillFull');
+            const loadedCount = document.getElementById('loadedCount');
+            const progressPercent = document.getElementById('progressPercent');
+            const totalAnimeSpan = document.getElementById('totalAnime');
+            const avgScoreSpan = document.getElementById('avgScore');
+            const footerAnimeCount = document.getElementById('footerAnimeCount');
+
+            const currentTitle = document.getElementById('currentTitle');
+            const currentImage = document.getElementById('currentImage');
+            const currentValue = document.getElementById('currentValue');
+            const nextTitle = document.getElementById('nextTitle');
+            const nextImage = document.getElementById('nextImage');
+            const nextValue = document.getElementById('nextValue');
+            const nextValueHidden = document.getElementById('nextValueHidden');
+            const nextResult = document.getElementById('nextResult');
+
+            const scoreDisplay = document.getElementById('scoreDisplay');
+            const tieDisplay = document.getElementById('tieDisplay');
+            const streakDisplay = document.getElementById('streakDisplay');
+            const higherBtn = document.getElementById('higherBtn');
+            const lowerBtn = document.getElementById('lowerBtn');
+            const resetGameBtn = document.getElementById('resetGameBtn');
+            const playAgainBtn = document.getElementById('playAgainBtn');
+            const retryBtn = document.getElementById('retryBtn');
+            const feedback = document.getElementById('feedback');
+            const feedbackTitle = document.getElementById('feedbackTitle');
+            const feedbackDetail = document.getElementById('feedbackDetail');
+
+            const resultScore = document.getElementById('resultScore');
+            const resultLabel = document.getElementById('resultLabel');
+            const resultIcon = document.getElementById('resultIcon');
+            const resultCorrect = document.getElementById('resultCorrect');
+            const resultWrong = document.getElementById('resultWrong');
+            const resultTie = document.getElementById('resultTie');
+            const resultStreak = document.getElementById('resultStreak');
+
+            // ===== STATE =====
+            let allAnime = [];
+            let currentAnime = null;
+            let nextAnime = null;
+            let score = 0;
+            let ties = 0;
+            let streak = 0;
+            let bestStreak = 0;
+            let totalCorrect = 0;
+            let totalWrong = 0;
+            let totalTies = 0;
+            let isPlaying = false;
+            let isLoading = false;
+            let isDataLoaded = false;
+            let isWaitingForNext = false;
+
+            // ===== UTILITY =====
+            function shuffleArray(arr) {
+                for (let i = arr.length - 1; i > 0; i--) {
+                    const j = Math.floor(Math.random() * (i + 1));
+                    [arr[i], arr[j]] = [arr[j], arr[i]];
+                }
+                return arr;
+            }
+
+            function pickRandom(arr) {
+                return arr[Math.floor(Math.random() * arr.length)];
+            }
+
+            function getTitle(media) {
+                return media.title.english || media.title.romaji || media.title.native || 'Sconosciuto';
+            }
+
+            function getImage(media) {
+                return media.coverImage?.large || null;
+            }
+
+            function getScore(media) {
+                return media.averageScore || 0;
+            }
+
+            function sleep(ms) {
+                return new Promise(resolve => setTimeout(resolve, ms));
+            }
+
+            // ===== FETCH ANIME =====
+            async function fetchAnime() {
+                const totalPages = Math.ceil(MAX_ANIME / PER_PAGE);
+                const allAnimeResults = [];
+                let loadedTotal = 0;
+                let failedPages = 0;
+
+                for (let batchStart = 0; batchStart < totalPages; batchStart += BATCH_SIZE) {
+                    const batchEnd = Math.min(batchStart + BATCH_SIZE, totalPages);
+                    const batchPromises = [];
+
+                    for (let page = batchStart + 1; page <= batchEnd; page++) {
+                        const query = `
+                            query {
+                                Page(page: ${page}, perPage: ${PER_PAGE}) {
+                                    pageInfo { hasNextPage }
+                                    media(type: ANIME, sort: SCORE_DESC, isAdult: false) {
+                                        id
+                                        title { romaji english native }
+                                        coverImage { large }
+                                        averageScore
+                                    }
+                                }
+                            }
+                        `;
+
+                        batchPromises.push(
+                            fetch('https://graphql.anilist.co', {
+                                method: 'POST',
+                                headers: {
+                                    'Content-Type': 'application/json',
+                                    'Accept': 'application/json',
+                                },
+                                body: JSON.stringify({ query })
+                            })
+                            .then(res => {
+                                if (!res.ok) throw new Error(`HTTP ${res.status}`);
+                                return res.json();
+                            })
+                            .then(data => {
+                                if (data.errors) throw new Error(data.errors[0].message);
+                                return data.data.Page.media;
+                            })
+                            .catch(err => {
+                                console.warn(`Errore pagina ${page}:`, err);
+                                failedPages++;
+                                return [];
+                            })
+                        );
+                    }
+
+                    const batchResults = await Promise.all(batchPromises);
+
+                    for (const media of batchResults) {
+                        allAnimeResults.push(...media);
+                        loadedTotal += media.length;
+
+                        const percent = Math.min(100, (loadedTotal / MAX_ANIME) * 100);
+                        progressFillFull.style.width = `${percent}%`;
+                        loadedCount.textContent = loadedTotal;
+                        progressPercent.textContent = Math.round(percent);
+                    }
+
+                    const remainingPages = totalPages - (batchStart + BATCH_SIZE);
+                    if (remainingPages > 0) {
+                        document.querySelector('.loading-sub').textContent =
+                            `Caricati ${loadedTotal} anime su ${MAX_ANIME} (${remainingPages} pagine rimanenti)`;
+                    }
+
+                    if (batchEnd < totalPages) {
+                        await sleep(300);
+                    }
+                }
+
+                if (allAnimeResults.length === 0) {
+                    throw new Error('Impossibile caricare gli anime. Verifica la connessione.');
+                }
+
+                const uniqueMap = new Map();
+                for (const anime of allAnimeResults) {
+                    if (!uniqueMap.has(anime.id)) {
+                        uniqueMap.set(anime.id, anime);
+                    }
+                }
+
+                const uniqueAnime = Array.from(uniqueMap.values());
+                console.log(`✅ Caricati ${uniqueAnime.length} anime unici (${failedPages} pagine fallite)`);
+
+                const withScore = uniqueAnime.filter(a => getScore(a) > 0);
+                console.log(`✅ ${withScore.length} anime con voto disponibile`);
+
+                return shuffleArray(withScore);
+            }
+
+            // ===== GAME LOGIC =====
+            function startGame() {
+                if (allAnime.length < 5) {
+                    errorMessage.textContent = 'Non ci sono abbastanza anime disponibili.';
+                    errorState.classList.add('show');
+                    return;
+                }
+
+                // Reset state
+                score = 0;
+                ties = 0;
+                streak = 0;
+                bestStreak = 0;
+                totalCorrect = 0;
+                totalWrong = 0;
+                totalTies = 0;
+                isPlaying = true;
+                isWaitingForNext = false;
+
+                gameOver.classList.remove('show');
+                gameOver.style.display = 'none';
+                gameArea.style.display = 'flex';
+                errorState.classList.remove('show');
+                loading.style.display = 'none';
+
+                updateScoreDisplay();
+                resetFeedback();
+
+                pickNewPair();
+            }
+
+            function pickNewPair() {
+                if (allAnime.length < 2) {
+                    endGame();
+                    return;
+                }
+
+                if (nextAnime) {
+                    currentAnime = nextAnime;
+                } else {
+                    currentAnime = pickRandom(allAnime);
+                }
+
+                let available = allAnime.filter(a => a.id !== currentAnime.id);
+                if (available.length === 0) {
+                    endGame();
+                    return;
+                }
+
+                nextAnime = pickRandom(available);
+
+                updateCards();
+                resetFeedback();
+                enableButtons(true);
+
+                nextResult.classList.remove('show', 'correct', 'wrong', 'tie');
+                nextValue.style.display = 'none';
+                nextValueHidden.style.display = 'block';
+
+                isWaitingForNext = false;
+            }
+
+            function updateCards() {
+                // Current anime - tutto visibile
+                currentTitle.textContent = getTitle(currentAnime);
+                const currentImg = getImage(currentAnime);
+                if (currentImg) {
+                    currentImage.src = currentImg;
+                    currentImage.style.display = 'block';
+                } else {
+                    currentImage.style.display = 'none';
+                }
+                currentValue.textContent = getScore(currentAnime);
+
+                // Next anime - visibile ma senza voto
+                nextTitle.textContent = getTitle(nextAnime);
+                const nextImg = getImage(nextAnime);
+                if (nextImg) {
+                    nextImage.src = nextImg;
+                    nextImage.style.display = 'block';
+                } else {
+                    nextImage.style.display = 'none';
+                }
+                nextValue.textContent = getScore(nextAnime);
+                nextValue.style.display = 'none';
+                nextValueHidden.style.display = 'block';
+            }
+
+            function handleGuess(guess) {
+                if (!isPlaying || isWaitingForNext) return;
+                if (!currentAnime || !nextAnime) return;
+
+                const currentScore = getScore(currentAnime);
+                const nextScore = getScore(nextAnime);
+                const isHigher = nextScore > currentScore;
+                const isTie = nextScore === currentScore;
+
+                // RIVELA IL VOTO
+                nextValue.style.display = 'block';
+                nextValueHidden.style.display = 'none';
+
+                if (isTie) {
+                    totalTies++;
+                    ties++;
+
+                    nextResult.textContent = '⚖️';
+                    nextResult.className = 'card-result show tie';
+
+                    showFeedback('tie', `⚖️ Pareggio! ${getTitle(nextAnime)} ha lo stesso voto (${nextScore})`);
+
+                    updateScoreDisplay();
+                    enableButtons(false);
+                    isWaitingForNext = true;
+
+                    setTimeout(() => {
+                        if (isPlaying) {
+                            pickNewPair();
+                        }
+                    }, 1500);
+
+                    return;
+                }
+
+                const isCorrect = (guess === 'higher' && isHigher) || (guess === 'lower' && !isHigher);
+
+                if (isCorrect) {
+                    totalCorrect++;
+                    score++;
+                    streak++;
+                    if (streak > bestStreak) bestStreak = streak;
+
+                    nextResult.textContent = '✅';
+                    nextResult.className = 'card-result show correct';
+
+                    showFeedback('correct', `${getTitle(nextAnime)} ha voto ${nextScore} (${isHigher ? 'più alto' : 'più basso'}) ✅`);
+
+                } else {
+                    totalWrong++;
+                    streak = 0;
+
+                    nextResult.textContent = '❌';
+                    nextResult.className = 'card-result show wrong';
+
+                    showFeedback('wrong', `${getTitle(nextAnime)} ha voto ${nextScore} (${isHigher ? 'più alto' : 'più basso'}) ❌`);
+
+                    setTimeout(() => {
+                        endGame();
+                    }, 1500);
+                    return;
+                }
+
+                updateScoreDisplay();
+                enableButtons(false);
+                isWaitingForNext = true;
+
+                setTimeout(() => {
+                    if (isPlaying) {
+                        pickNewPair();
+                    }
+                }, 1200);
+            }
+
+            function endGame() {
+                isPlaying = false;
+                gameArea.style.display = 'none';
+                gameOver.style.display = 'flex';
+                gameOver.classList.add('show');
+
+                resultScore.textContent = score;
+                resultCorrect.textContent = totalCorrect;
+                resultWrong.textContent = totalWrong;
+                resultTie.textContent = totalTies;
+                resultStreak.textContent = bestStreak;
+
+                if (score >= 20) {
+                    resultIcon.textContent = '🏆';
+                    resultLabel.textContent = 'LEGENDA! Sei un maestro assoluto!';
+                } else if (score >= 15) {
+                    resultIcon.textContent = '🌟';
+                    resultLabel.textContent = 'Fantastico! Conosci benissimo gli anime!';
+                } else if (score >= 10) {
+                    resultIcon.textContent = '📚';
+                    resultLabel.textContent = 'Ottimo! Continua così!';
+                } else if (score >= 5) {
+                    resultIcon.textContent = '🤔';
+                    resultLabel.textContent = 'Non male, ma puoi fare di meglio!';
+                } else {
+                    resultIcon.textContent = '😅';
+                    resultLabel.textContent = 'Forse è ora di guardare più anime!';
+                }
+            }
+
+            function updateScoreDisplay() {
+                scoreDisplay.textContent = score;
+                tieDisplay.textContent = totalTies;
+                streakDisplay.textContent = streak;
+            }
+
+            function resetFeedback() {
+                feedback.className = 'feedback-area';
+                feedback.classList.remove('show', 'correct', 'wrong', 'tie');
+                feedbackTitle.textContent = '';
+                feedbackDetail.textContent = '';
+            }
+
+            function showFeedback(type, detail) {
+                feedback.className = 'feedback-area show';
+                feedback.classList.add(type);
+                
+                const icons = {
+                    correct: '<i class="fas fa-check-circle"></i> Corretto!',
+                    wrong: '<i class="fas fa-times-circle"></i> Sbagliato!',
+                    tie: '<i class="fas fa-equals"></i> Pareggio!'
+                };
+                
+                feedbackTitle.innerHTML = icons[type] || icons.correct;
+                feedbackDetail.textContent = detail;
+            }
+
+            function enableButtons(enabled) {
+                higherBtn.disabled = !enabled;
+                lowerBtn.disabled = !enabled;
+            }
+
+            // ===== LOAD ANIME =====
+            async function loadAnime() {
+                if (isLoading) return;
+
+                if (isDataLoaded && allAnime.length > 0) {
+                    startGame();
+                    return;
+                }
+
+                isLoading = true;
+
+                loading.style.display = 'flex';
+                loading.querySelector('.loading-text').textContent = 'Caricamento anime in corso...';
+                loading.querySelector('.loading-sub').textContent = `Stiamo caricando fino a ${MAX_ANIME} anime`;
+                document.querySelector('.loading-progress').style.display = 'flex';
+                progressFillFull.style.width = '0%';
+                loadedCount.textContent = '0';
+                progressPercent.textContent = '0';
+
+                errorState.classList.remove('show');
+                gameArea.style.display = 'none';
+                gameOver.classList.remove('show');
+                gameOver.style.display = 'none';
+
+                try {
+                    const data = await fetchAnime();
+                    if (!data || data.length < 5) {
+                        throw new Error('Pochi anime disponibili');
+                    }
+
+                    allAnime = data;
+                    isDataLoaded = true;
+
+                    totalAnimeSpan.textContent = allAnime.length;
+                    footerAnimeCount.textContent = allAnime.length;
+
+                    const totalScore = allAnime.reduce((sum, a) => sum + getScore(a), 0);
+                    const avg = Math.round(totalScore / allAnime.length);
+                    avgScoreSpan.textContent = avg;
+
+                    isLoading = false;
+                    startGame();
+
+                } catch (err) {
+                    console.error(err);
+                    errorMessage.textContent = 'Errore nel caricamento degli anime.';
+                    errorState.classList.add('show');
+                    loading.style.display = 'none';
+                    isLoading = false;
+                }
+            }
+
+            // ============================================================
+            // EVENT LISTENERS
+            // ============================================================
+
+            higherBtn.addEventListener('click', function() {
+                handleGuess('higher');
+            });
+
+            lowerBtn.addEventListener('click', function() {
+                handleGuess('lower');
+            });
+
+            resetGameBtn.addEventListener('click', function() {
+                if (confirm('Sei sicuro di voler ricominciare da capo?')) {
+                    startGame();
+                }
+            });
+
+            playAgainBtn.addEventListener('click', function() {
+                startGame();
+            });
+
+            retryBtn.addEventListener('click', loadAnime);
+
+            // ===== KEYBOARD SHORTCUTS =====
+            document.addEventListener('keydown', function(e) {
+                if (e.key === 'ArrowUp' && !higherBtn.disabled) {
+                    e.preventDefault();
+                    higherBtn.click();
+                }
+                if (e.key === 'ArrowDown' && !lowerBtn.disabled) {
+                    e.preventDefault();
+                    lowerBtn.click();
+                }
+                if (e.key === 'Enter' && gameOver.classList.contains('show')) {
+                    playAgainBtn.click();
+                }
+                if (e.key === 'r' && !e.ctrlKey) {
+                    resetGameBtn.click();
+                }
+            });
+
+            // ============================================================
+            // INIT
+            // ============================================================
+
+            console.log('🎮 Keyboard Shortcuts:');
+            console.log('  ⬆️  Arrow Up = Higher');
+            console.log('  ⬇️  Arrow Down = Lower');
+            console.log('  ↩️  Enter = Gioca Ancora');
+            console.log('  R = Reset');
+
+            loadAnime();
+
+        })();
+    </script>
+
+</body>
+</html>

@@ -1,0 +1,1726 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Misto - AniQuiz</title>
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
+    
+    <style>
+        /* ============================================================
+           RESET & VARIABILI
+           ============================================================ */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --bg-primary: #0a0a0f;
+            --bg-secondary: #12121a;
+            --bg-card: #1a1a2e;
+            --bg-card-hover: #22223a;
+            --text-primary: #ffffff;
+            --text-secondary: #8a8aa0;
+            --accent-pink: #ff6b9d;
+            --accent-purple: #a855f7;
+            --accent-blue: #4cc9f0;
+            --accent-green: #4ade80;
+            --accent-red: #f87171;
+            --shadow: 0 8px 40px rgba(0, 0, 0, 0.6);
+            --radius: 16px;
+            --radius-sm: 10px;
+            --transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            min-height: 100vh;
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        .bg-glow {
+            position: fixed;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            z-index: 0;
+            pointer-events: none;
+            background: 
+                radial-gradient(ellipse at 20% 50%, rgba(168, 85, 247, 0.06) 0%, transparent 60%),
+                radial-gradient(ellipse at 80% 20%, rgba(255, 107, 157, 0.04) 0%, transparent 50%);
+        }
+
+        /* ============================================================
+           NAVBAR
+           ============================================================ */
+        .navbar {
+            background: rgba(10, 10, 15, 0.85);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+            padding: 16px 0;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .navbar .container {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 1.6rem;
+            font-weight: 900;
+            text-decoration: none;
+            color: inherit;
+        }
+
+        .logo-icon {
+            width: 42px;
+            height: 42px;
+            background: linear-gradient(135deg, var(--accent-pink), var(--accent-purple));
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            color: #fff;
+            box-shadow: 0 0 30px rgba(168, 85, 247, 0.2);
+        }
+
+        .logo-text {
+            background: linear-gradient(135deg, var(--accent-pink), var(--accent-purple), var(--accent-blue));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .nav-stats {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            color: var(--text-secondary);
+            font-size: 0.85rem;
+        }
+
+        .nav-stats span {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .nav-stats i {
+            color: var(--accent-purple);
+        }
+
+        /* ============================================================
+           BREADCRUMB
+           ============================================================ */
+        .breadcrumb {
+            padding: 16px 0 8px;
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+        }
+
+        .breadcrumb a {
+            color: var(--accent-purple);
+            text-decoration: none;
+            transition: var(--transition);
+        }
+
+        .breadcrumb a:hover {
+            color: var(--accent-pink);
+        }
+
+        .breadcrumb span {
+            margin: 0 8px;
+        }
+
+        /* ============================================================
+           QUIZ CONTAINER
+           ============================================================ */
+        .quiz-container {
+            background: var(--bg-card);
+            border-radius: var(--radius);
+            padding: 40px;
+            border: 1px solid rgba(255, 255, 255, 0.04);
+            box-shadow: var(--shadow);
+            position: relative;
+            z-index: 1;
+            min-height: 420px;
+            display: flex;
+            flex-direction: column;
+            margin-bottom: 40px;
+        }
+
+        .quiz-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 24px;
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+
+        .quiz-header .quiz-title {
+            font-size: 1.2rem;
+            font-weight: 700;
+        }
+
+        .quiz-header .quiz-title i {
+            color: var(--accent-purple);
+            margin-right: 10px;
+        }
+
+        .quiz-header .quiz-progress {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+        }
+
+        .quiz-header .quiz-progress .current {
+            color: var(--text-primary);
+            font-weight: 700;
+        }
+
+        .progress-bar {
+            width: 120px;
+            height: 4px;
+            background: var(--bg-secondary);
+            border-radius: 4px;
+            overflow: hidden;
+        }
+
+        .progress-bar .fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--accent-pink), var(--accent-purple));
+            border-radius: 4px;
+            transition: width 0.5s ease;
+        }
+
+        /* ============================================================
+           QUESTION AREA
+           ============================================================ */
+        .question-area {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 24px;
+        }
+
+        .question-text {
+            font-size: 1.3rem;
+            font-weight: 600;
+            line-height: 1.5;
+            padding: 8px 0;
+        }
+
+        .question-text .highlight {
+            color: var(--accent-pink);
+        }
+
+        .question-image {
+            display: flex;
+            justify-content: center;
+            margin: 8px 0 16px;
+        }
+
+        .question-image img {
+            max-width: 160px;
+            max-height: 220px;
+            border-radius: 12px;
+            object-fit: cover;
+            border: 2px solid rgba(255, 255, 255, 0.08);
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.4);
+        }
+
+        .options-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+        }
+
+        .option-btn {
+            background: var(--bg-secondary);
+            border: 2px solid rgba(255, 255, 255, 0.04);
+            border-radius: var(--radius-sm);
+            cursor: pointer;
+            transition: var(--transition);
+            padding: 16px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            text-align: center;
+            min-height: 120px;
+            position: relative;
+        }
+
+        .option-btn .letter {
+            position: absolute;
+            top: 10px;
+            left: 12px;
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.05);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+            flex-shrink: 0;
+        }
+
+        .option-btn .option-image {
+            width: 140px;
+            height: 180px;
+            border-radius: 8px;
+            object-fit: cover;
+            background: var(--bg-primary);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            transition: var(--transition);
+        }
+
+        .option-btn .option-text {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            line-height: 1.3;
+            max-width: 100%;
+            word-wrap: break-word;
+            padding: 8px 0;
+        }
+
+        .option-btn .option-icon {
+            font-size: 2.5rem;
+            color: var(--accent-purple);
+            opacity: 0.7;
+            margin: 8px 0;
+        }
+
+        .option-btn:hover:not(.disabled) {
+            border-color: rgba(255, 255, 255, 0.15);
+            background: var(--bg-card-hover);
+            transform: translateY(-4px);
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.3);
+        }
+
+        .option-btn:hover:not(.disabled) .option-image {
+            transform: scale(1.03);
+        }
+
+        .option-btn.correct {
+            border-color: var(--accent-green);
+            background: rgba(74, 222, 128, 0.1);
+            box-shadow: 0 0 40px rgba(74, 222, 128, 0.1);
+        }
+
+        .option-btn.correct .letter {
+            background: var(--accent-green);
+            color: #000;
+        }
+
+        .option-btn.correct .option-image {
+            border-color: var(--accent-green);
+        }
+
+        .option-btn.wrong {
+            border-color: var(--accent-red);
+            background: rgba(248, 113, 113, 0.1);
+            box-shadow: 0 0 40px rgba(248, 113, 113, 0.1);
+        }
+
+        .option-btn.wrong .letter {
+            background: var(--accent-red);
+            color: #fff;
+        }
+
+        .option-btn.wrong .option-image {
+            border-color: var(--accent-red);
+        }
+
+        .option-btn.disabled {
+            cursor: default;
+            opacity: 0.85;
+        }
+
+        .option-btn.disabled:hover {
+            transform: none;
+            box-shadow: none;
+        }
+
+        .option-btn.disabled:hover .option-image {
+            transform: none;
+        }
+
+        /* ============================================================
+           FEEDBACK
+           ============================================================ */
+        .feedback-area {
+            margin-top: 20px;
+            padding: 16px 20px;
+            border-radius: var(--radius-sm);
+            display: none;
+            animation: slideUp 0.3s ease;
+        }
+
+        .feedback-area.show {
+            display: block;
+        }
+
+        .feedback-area.correct {
+            background: rgba(74, 222, 128, 0.08);
+            border: 1px solid rgba(74, 222, 128, 0.15);
+        }
+
+        .feedback-area.wrong {
+            background: rgba(248, 113, 113, 0.08);
+            border: 1px solid rgba(248, 113, 113, 0.15);
+        }
+
+        .feedback-area .feedback-title {
+            font-weight: 700;
+            font-size: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .feedback-area .feedback-title i {
+            font-size: 1.2rem;
+        }
+
+        .feedback-area.correct .feedback-title i {
+            color: var(--accent-green);
+        }
+        .feedback-area.wrong .feedback-title i {
+            color: var(--accent-red);
+        }
+
+        .feedback-area .feedback-detail {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            margin-top: 4px;
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* ============================================================
+           NEXT BUTTON
+           ============================================================ */
+        .next-btn {
+            align-self: flex-end;
+            margin-top: 20px;
+            background: linear-gradient(135deg, var(--accent-pink), var(--accent-purple));
+            border: none;
+            color: #fff;
+            padding: 12px 32px;
+            border-radius: 60px;
+            font-weight: 700;
+            font-size: 0.95rem;
+            cursor: pointer;
+            transition: var(--transition);
+            display: none;
+            align-items: center;
+            gap: 10px;
+            box-shadow: 0 0 30px rgba(168, 85, 247, 0.15);
+        }
+
+        .next-btn.show {
+            display: flex;
+        }
+
+        .next-btn:hover {
+            transform: translateY(-2px) scale(1.02);
+            box-shadow: 0 0 50px rgba(168, 85, 247, 0.25);
+        }
+
+        /* ============================================================
+           RESULTS
+           ============================================================ */
+        .results {
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            padding: 40px 20px;
+            animation: slideUp 0.5s ease;
+        }
+
+        .results.show {
+            display: flex;
+        }
+
+        .results .result-icon {
+            font-size: 4rem;
+            margin-bottom: 16px;
+        }
+
+        .results .result-score {
+            font-size: 3.5rem;
+            font-weight: 900;
+            background: linear-gradient(135deg, var(--accent-pink), var(--accent-purple));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .results .result-label {
+            color: var(--text-secondary);
+            font-size: 1.1rem;
+            margin-top: 4px;
+        }
+
+        .results .result-stats {
+            display: flex;
+            gap: 40px;
+            margin: 24px 0 32px;
+        }
+
+        .results .result-stats .stat {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .results .result-stats .stat .number {
+            font-size: 1.5rem;
+            font-weight: 700;
+        }
+
+        .results .result-stats .stat .label {
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+        }
+
+        .results .result-stats .stat .number.correct {
+            color: var(--accent-green);
+        }
+        .results .result-stats .stat .number.wrong {
+            color: var(--accent-red);
+        }
+
+        .results-actions {
+            display: flex;
+            gap: 16px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .restart-btn,
+        .home-btn {
+            background: var(--bg-secondary);
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            color: var(--text-primary);
+            padding: 12px 32px;
+            border-radius: 60px;
+            font-weight: 600;
+            font-size: 0.95rem;
+            cursor: pointer;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            text-decoration: none;
+        }
+
+        .restart-btn:hover,
+        .home-btn:hover {
+            background: var(--bg-card-hover);
+            transform: translateY(-2px);
+        }
+
+        .home-btn {
+            background: rgba(168, 85, 247, 0.1);
+            border-color: var(--accent-purple);
+            color: var(--accent-purple);
+        }
+
+        .home-btn:hover {
+            background: rgba(168, 85, 247, 0.2);
+        }
+
+        /* ============================================================
+           LOADING
+           ============================================================ */
+        .loading {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 60px 20px;
+            gap: 16px;
+            color: var(--text-secondary);
+            flex: 1;
+        }
+
+        .loading .spinner {
+            width: 48px;
+            height: 48px;
+            border: 3px solid var(--bg-secondary);
+            border-top-color: var(--accent-purple);
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+        }
+
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        .loading-progress {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 12px;
+            width: 100%;
+            max-width: 400px;
+            margin-top: 8px;
+        }
+
+        .progress-bar-full {
+            width: 100%;
+            height: 6px;
+            background: var(--bg-secondary);
+            border-radius: 4px;
+            overflow: hidden;
+        }
+
+        .progress-bar-full .fill-full {
+            height: 100%;
+            background: linear-gradient(90deg, var(--accent-pink), var(--accent-purple));
+            border-radius: 4px;
+            transition: width 0.3s ease;
+            width: 0%;
+        }
+
+        .loading-stats {
+            display: flex;
+            gap: 20px;
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+        }
+
+        .loading-stats span {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .loading-stats i {
+            color: var(--accent-purple);
+        }
+
+        /* ============================================================
+           ERROR STATE
+           ============================================================ */
+        .error-state {
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 60px 20px;
+            text-align: center;
+            gap: 12px;
+            flex: 1;
+        }
+
+        .error-state.show {
+            display: flex;
+        }
+
+        .error-state i {
+            font-size: 3rem;
+            color: var(--accent-red);
+        }
+
+        .error-state h3 {
+            font-size: 1.2rem;
+        }
+
+        .error-state p {
+            color: var(--text-secondary);
+            max-width: 500px;
+        }
+
+        .error-state .error-detail {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            max-width: 450px;
+            background: rgba(255, 255, 255, 0.03);
+            padding: 12px 20px;
+            border-radius: 8px;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            margin: 4px 0 8px;
+        }
+
+        .error-state .error-detail i {
+            font-size: 1rem;
+            color: var(--accent-pink);
+            margin-right: 8px;
+        }
+
+        .retry-btn {
+            margin-top: 8px;
+            background: var(--bg-secondary);
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            color: var(--text-primary);
+            padding: 10px 28px;
+            border-radius: 60px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .retry-btn:hover {
+            background: var(--bg-card-hover);
+        }
+
+        /* ============================================================
+           FOOTER
+           ============================================================ */
+        .footer {
+            border-top: 1px solid rgba(255, 255, 255, 0.04);
+            padding: 24px 0;
+            margin-top: 40px;
+            text-align: center;
+            color: var(--text-secondary);
+            font-size: 0.8rem;
+            position: relative;
+            z-index: 1;
+        }
+
+        .footer a {
+            color: var(--accent-purple);
+            text-decoration: none;
+        }
+
+        .footer a:hover {
+            color: var(--accent-pink);
+        }
+
+        /* ============================================================
+           RESPONSIVE
+           ============================================================ */
+        @media (max-width: 1024px) {
+            .option-btn .option-image {
+                width: 110px;
+                height: 150px;
+            }
+            .question-image img {
+                max-width: 140px;
+                max-height: 190px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .quiz-container {
+                padding: 24px;
+            }
+            .options-grid {
+                grid-template-columns: 1fr 1fr;
+                gap: 12px;
+            }
+            .option-btn {
+                padding: 12px;
+                min-height: 100px;
+            }
+            .option-btn .option-image {
+                width: 80px;
+                height: 110px;
+            }
+            .option-btn .option-text {
+                font-size: 0.95rem;
+            }
+            .option-btn .option-icon {
+                font-size: 2rem;
+            }
+            .quiz-header {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            .quiz-header .quiz-progress {
+                width: 100%;
+                justify-content: space-between;
+            }
+            .progress-bar {
+                flex: 1;
+            }
+            .results .result-stats {
+                gap: 24px;
+            }
+            .results .result-score {
+                font-size: 2.8rem;
+            }
+            .navbar .container {
+                flex-direction: column;
+                align-items: stretch;
+                gap: 8px;
+            }
+            .logo {
+                justify-content: center;
+            }
+            .nav-stats {
+                justify-content: center;
+                flex-wrap: wrap;
+            }
+            .question-image img {
+                max-width: 130px;
+                max-height: 180px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .container {
+                padding: 0 12px;
+            }
+            .quiz-container {
+                padding: 16px;
+                border-radius: var(--radius-sm);
+            }
+            .question-text {
+                font-size: 1.05rem;
+            }
+            .options-grid {
+                grid-template-columns: 1fr 1fr;
+                gap: 8px;
+            }
+            .option-btn {
+                padding: 8px;
+                min-height: 80px;
+                gap: 6px;
+            }
+            .option-btn .option-image {
+                width: 60px;
+                height: 85px;
+            }
+            .option-btn .option-text {
+                font-size: 0.85rem;
+            }
+            .option-btn .option-icon {
+                font-size: 1.5rem;
+            }
+            .option-btn .letter {
+                width: 22px;
+                height: 22px;
+                font-size: 0.6rem;
+                top: 6px;
+                left: 8px;
+            }
+            .question-image img {
+                max-width: 110px;
+                max-height: 150px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="bg-glow"></div>
+
+    <nav class="navbar">
+        <div class="container">
+            <a href="../index.html" class="logo">
+                <div class="logo-icon"><i class="fas fa-mask"></i></div>
+                <span class="logo-text">AniQuiz</span>
+            </a>
+            <div class="nav-stats">
+                <span><i class="fas fa-database"></i> <span id="totalAnime">0</span> anime</span>
+                <span><i class="fas fa-question-circle"></i> <span id="totalQuestions">0</span> domande</span>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container">
+        <div class="breadcrumb">
+            <a href="../index.html"><i class="fas fa-home"></i> Home</a>
+            <span>/</span>
+            <span>Misto 🔥</span>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="quiz-container" id="quizContainer">
+
+            <div class="loading" id="loading">
+                <div class="spinner"></div>
+                <div class="loading-text">Caricamento anime in corso...</div>
+                <div class="loading-sub">Stiamo preparando le domande per te</div>
+                <div class="loading-progress">
+                    <div class="progress-bar-full">
+                        <div class="fill-full" id="progressFillFull" style="width:0%"></div>
+                    </div>
+                    <div class="loading-stats">
+                        <span><i class="fas fa-film"></i> <span id="loadedCount">0</span> anime caricati</span>
+                        <span><i class="fas fa-clock"></i> <span id="progressPercent">0</span>%</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="error-state" id="errorState">
+                <i class="fas fa-circle-exclamation"></i>
+                <h3>Ops! Qualcosa è andato storto</h3>
+                <p id="errorMessage">Non siamo riusciti a caricare i dati.</p>
+                <div class="error-detail" id="errorDetail">
+                    <i class="fas fa-info-circle"></i>
+                    <span>Verifica la connessione e riprova.</span>
+                </div>
+                <button class="retry-btn" id="retryBtn"><i class="fas fa-rotate"></i> Riprova</button>
+            </div>
+
+            <div id="quizArea" style="display:none;">
+                <div class="quiz-header">
+                    <div class="quiz-title">
+                        <i class="fas fa-shuffle"></i>
+                        <span id="quizTitle">Quiz Misto 🔥</span>
+                    </div>
+                    <div class="quiz-progress">
+                        <span>Domanda <span class="current" id="currentQuestion">1</span> di <span id="totalQuestionsCount">10</span></span>
+                        <div class="progress-bar">
+                            <div class="fill" id="progressFill" style="width:0%"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="question-area">
+                    <div class="question-text" id="questionText">
+                        Caricamento domanda...
+                    </div>
+
+                    <div id="questionImageContainer"></div>
+
+                    <div class="options-grid" id="optionsGrid"></div>
+
+                    <div class="feedback-area" id="feedback">
+                        <div class="feedback-title">
+                            <i class="fas fa-check-circle"></i>
+                            <span id="feedbackTitle">Corretto!</span>
+                        </div>
+                        <div class="feedback-detail" id="feedbackDetail"></div>
+                    </div>
+
+                    <button class="next-btn" id="nextBtn">
+                        Prossima Domanda <i class="fas fa-arrow-right"></i>
+                    </button>
+                </div>
+            </div>
+
+            <div class="results" id="results">
+                <div class="result-icon" id="resultIcon">🏆</div>
+                <div class="result-score" id="resultScore">10/10</div>
+                <div class="result-label" id="resultLabel">Perfetto! Sei un vero esperto!</div>
+                <div class="result-stats">
+                    <div class="stat">
+                        <span class="number correct" id="resultCorrect">0</span>
+                        <span class="label">Corrette</span>
+                    </div>
+                    <div class="stat">
+                        <span class="number wrong" id="resultWrong">0</span>
+                        <span class="label">Sbagliate</span>
+                    </div>
+                    <div class="stat">
+                        <span class="number" id="resultAccuracy" style="color:var(--accent-purple);">0%</span>
+                        <span class="label">Precisione</span>
+                    </div>
+                </div>
+                <div class="results-actions">
+                    <button class="restart-btn" id="restartBtn">
+                        <i class="fas fa-rotate"></i> Ricomincia Quiz
+                    </button>
+                    <a href="../index.html" class="home-btn">
+                        <i class="fas fa-home"></i> Torna alla Home
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer class="footer">
+        <div class="container">
+            <p>
+                <i class="fas fa-code"></i> AniQuiz · Dati da
+                <a href="https://anilist.co" target="_blank">AniList API</a>
+            </p>
+        </div>
+    </footer>
+
+    <script>
+        // ============================================================
+        // MAIN.JS - Utility condivise per tutti i quiz
+        // ============================================================
+
+        (function() {
+            'use strict';
+
+            const PER_PAGE = 10;
+            const TOTAL_CATEGORIES = 5;
+            const TOTAL_ANIME = 50;
+
+            window.allAnime = [];
+            window.isDataLoaded = false;
+            window.isLoading = false;
+
+            function shuffleArray(arr) {
+                for (let i = arr.length - 1; i > 0; i--) {
+                    const j = Math.floor(Math.random() * (i + 1));
+                    [arr[i], arr[j]] = [arr[j], arr[i]];
+                }
+                return arr;
+            }
+
+            function pickRandom(arr) {
+                return arr[Math.floor(Math.random() * arr.length)];
+            }
+
+            function getTitle(media) {
+                return media.title.english || media.title.romaji || media.title.native || 'Sconosciuto';
+            }
+
+            function getStudio(media) {
+                return media.studios?.nodes?.[0]?.name || 'Sconosciuto';
+            }
+
+            function getYear(media) {
+                return media.startDate?.year || '?';
+            }
+
+            function getGenres(media) {
+                return media.genres || [];
+            }
+
+            function getCharacters(media) {
+                return media.characters?.nodes || [];
+            }
+
+            function getImage(media) {
+                return media.coverImage?.large || null;
+            }
+
+            function buildMultiQuery() {
+                const sorts = [
+                    { name: 'popolari', sort: 'POPULARITY_DESC', page: 1 },
+                    { name: 'trending', sort: 'TRENDING_DESC', page: 1 },
+                    { name: 'votati', sort: 'SCORE_DESC', page: 1 },
+                    { name: 'recenti', sort: 'START_DATE_DESC', page: 1 },
+                    { name: 'casuali', sort: 'POPULARITY_DESC', page: Math.floor(Math.random() * 20) + 1 }
+                ];
+
+                let query = 'query {';
+                
+                sorts.forEach((s, index) => {
+                    const alias = `cat${index + 1}`;
+                    query += `
+                        ${alias}: Page(page: ${s.page}, perPage: ${PER_PAGE}) {
+                            pageInfo { hasNextPage }
+                            media(type: ANIME, sort: ${s.sort}, isAdult: false, status_not: NOT_YET_RELEASED) {
+                                id
+                                title { romaji english native }
+                                coverImage { large }
+                                startDate { year }
+                                studios { nodes { name } }
+                                genres
+                                characters(page: 1, perPage: 10) {
+                                    nodes {
+                                        id
+                                        name { full }
+                                        image { large }
+                                    }
+                                }
+                            }
+                        }
+                    `;
+                });
+
+                query += '}';
+                return query;
+            }
+
+            async function fetchMixedAnime() {
+                const query = buildMultiQuery();
+                
+                try {
+                    const response = await fetch('https://graphql.anilist.co', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'Accept': 'application/json',
+                        },
+                        body: JSON.stringify({ query })
+                    });
+
+                    if (!response.ok) throw new Error(`HTTP ${response.status}`);
+                    
+                    const data = await response.json();
+                    if (data.errors) throw new Error(data.errors[0].message);
+                    
+                    const allAnimeResults = [];
+                    const categories = ['cat1', 'cat2', 'cat3', 'cat4', 'cat5'];
+                    
+                    categories.forEach((cat, index) => {
+                        const categoryData = data.data[cat]?.media || [];
+                        const names = ['Popolari', 'Trending', 'Votati', 'Recenti', 'Casuali'];
+                        console.log(`📊 ${names[index]}: ${categoryData.length} anime`);
+                        allAnimeResults.push(...categoryData);
+                    });
+
+                    const uniqueMap = new Map();
+                    for (const anime of allAnimeResults) {
+                        if (!uniqueMap.has(anime.id)) {
+                            uniqueMap.set(anime.id, anime);
+                        }
+                    }
+                    
+                    const uniqueAnime = Array.from(uniqueMap.values());
+                    console.log(`✅ Caricati ${uniqueAnime.length} anime unici (mix di 5 categorie)`);
+                    
+                    return shuffleArray(uniqueAnime);
+
+                } catch (err) {
+                    console.error('Errore fetch:', err);
+                    throw err;
+                }
+            }
+
+            window.loadAnimeData = async function() {
+                if (window.isLoading) return;
+                
+                if (window.isDataLoaded && window.allAnime.length > 0) {
+                    return window.allAnime;
+                }
+                
+                window.isLoading = true;
+
+                try {
+                    const progressFill = document.getElementById('progressFillFull');
+                    const loadedCount = document.getElementById('loadedCount');
+                    const progressPercent = document.getElementById('progressPercent');
+                    const loadingSub = document.querySelector('.loading-sub');
+                    
+                    if (progressFill) progressFill.style.width = '10%';
+                    if (loadedCount) loadedCount.textContent = '0';
+                    if (progressPercent) progressPercent.textContent = '10';
+                    if (loadingSub) loadingSub.textContent = 'Caricamento anime in corso...';
+
+                    const data = await fetchMixedAnime();
+                    
+                    if (!data || data.length < 10) {
+                        throw new Error('Pochi anime disponibili');
+                    }
+
+                    window.allAnime = data;
+                    window.isDataLoaded = true;
+                    
+                    const totalAnimeSpan = document.getElementById('totalAnime');
+                    const footerAnimeCount = document.getElementById('footerAnimeCount');
+                    const totalQuestionsSpan = document.getElementById('totalQuestions');
+                    
+                    if (totalAnimeSpan) totalAnimeSpan.textContent = data.length;
+                    if (footerAnimeCount) footerAnimeCount.textContent = data.length;
+                    if (totalQuestionsSpan) totalQuestionsSpan.textContent = data.length * 10;
+
+                    if (progressFill) progressFill.style.width = '100%';
+                    if (loadedCount) loadedCount.textContent = data.length;
+                    if (progressPercent) progressPercent.textContent = '100';
+
+                    window.isLoading = false;
+                    return data;
+
+                } catch (err) {
+                    console.error(err);
+                    window.isLoading = false;
+                    throw err;
+                }
+            };
+
+            // ===== GENERATORI DOMANDE =====
+
+            function generateCharacterQuestion(animeList) {
+                const valid = animeList.filter(a => getCharacters(a).length > 2);
+                if (valid.length < 4) return null;
+
+                const media = pickRandom(valid);
+                const chars = getCharacters(media);
+                const character = pickRandom(chars);
+                if (!character) return null;
+
+                const correct = getTitle(media);
+                const correctImage = getImage(media);
+                const others = valid.filter(a => a.id !== media.id);
+                if (others.length < 3) return null;
+
+                const shuffledOthers = shuffleArray(others).slice(0, 3);
+                const options = shuffleArray([
+                    { text: correct, image: correctImage, isCorrect: true },
+                    ...shuffledOthers.map(a => ({ text: getTitle(a), image: getImage(a), isCorrect: false }))
+                ]);
+
+                return {
+                    question: `In quale anime compare il personaggio <span class="highlight">"${character.name.full}"</span>?`,
+                    options: options,
+                    correct: correct,
+                    detail: `✅ "${character.name.full}" appare in <strong>"${correct}"</strong>`,
+                    showImageInQuestion: false,
+                    questionImage: null,
+                    isTextOnly: false
+                };
+            }
+
+            function generateAnimeQuestion(animeList) {
+                const media = pickRandom(animeList);
+                if (!media) return null;
+
+                const correct = getTitle(media);
+                const correctImage = getImage(media);
+                const others = animeList.filter(a => a.id !== media.id);
+                if (others.length < 3) return null;
+
+                const shuffledOthers = shuffleArray(others).slice(0, 3);
+                const options = shuffleArray([
+                    { text: correct, image: correctImage, isCorrect: true },
+                    ...shuffledOthers.map(a => ({ text: getTitle(a), image: getImage(a), isCorrect: false }))
+                ]);
+
+                const chars = getCharacters(media);
+                const character = chars.length > 0 ? pickRandom(chars) : null;
+
+                const question = character ?
+                    `In quale di questi anime compare <span class="highlight">"${character.name.full}"</span>?` :
+                    `Quale di questi è l'anime <span class="highlight">"${correct}"</span>?`;
+
+                return {
+                    question: question,
+                    options: options,
+                    correct: correct,
+                    detail: character ?
+                        `✅ "${character.name.full}" appare in <strong>"${correct}"</strong>` :
+                        `✅ L'anime corretto è <strong>"${correct}"</strong>`,
+                    showImageInQuestion: false,
+                    questionImage: null,
+                    isTextOnly: false
+                };
+            }
+
+            function generateStudioQuestion(animeList) {
+                const valid = animeList.filter(a => getStudio(a) !== 'Sconosciuto');
+                if (valid.length < 4) return null;
+
+                const media = pickRandom(valid);
+                const correct = getStudio(media);
+                const title = getTitle(media);
+                const correctImage = getImage(media);
+
+                const others = valid.filter(a => a.id !== media.id);
+                if (others.length < 3) return null;
+
+                const shuffledOthers = shuffleArray(others).slice(0, 3);
+                const options = shuffleArray([
+                    { text: correct, icon: 'fa-building', isCorrect: true },
+                    ...shuffledOthers.map(a => ({ text: getStudio(a), icon: 'fa-building', isCorrect: false }))
+                ]);
+
+                return {
+                    question: `Quale studio ha animato <span class="highlight">"${title}"</span>?`,
+                    options: options,
+                    correct: correct,
+                    detail: `✅ "${title}" è stato animato da <strong>${correct}</strong>`,
+                    showImageInQuestion: true,
+                    questionImage: correctImage,
+                    title: title,
+                    isTextOnly: true
+                };
+            }
+
+            function generateYearQuestion(animeList) {
+                const valid = animeList.filter(a => a.startDate?.year && a.startDate.year > 1970);
+                if (valid.length < 4) return null;
+
+                const media = pickRandom(valid);
+                const correct = String(getYear(media));
+                const title = getTitle(media);
+                const correctImage = getImage(media);
+
+                const others = valid.filter(a => a.id !== media.id);
+                if (others.length < 3) return null;
+
+                const yearNum = parseInt(correct);
+                const distractorYears = new Set();
+                const offsets = [-5, -4, -3, -2, -1, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
+                for (const offset of offsets) {
+                    const y = yearNum + offset;
+                    if (y > 1970 && y < 2030) {
+                        distractorYears.add(String(y));
+                    }
+                    if (distractorYears.size >= 3) break;
+                }
+
+                let distractors = Array.from(distractorYears);
+                let attempts = 0;
+                while (distractors.length < 3 && attempts < 50) {
+                    const other = pickRandom(others);
+                    if (other) {
+                        const y = String(getYear(other));
+                        if (y !== correct && !distractors.includes(y) && y !== '?' && y !== 'undefined') {
+                            distractors.push(y);
+                        }
+                    }
+                    attempts++;
+                }
+
+                if (distractors.length < 3) {
+                    let fakeCounter = 1;
+                    while (distractors.length < 3) {
+                        const fakeYear = String(yearNum + (fakeCounter * 2));
+                        if (!distractors.includes(fakeYear) && fakeYear !== correct) {
+                            distractors.push(fakeYear);
+                        }
+                        fakeCounter++;
+                        if (fakeCounter > 20) break;
+                    }
+                }
+
+                if (distractors.length < 3) {
+                    const fallbacks = ['2000', '2005', '2010', '2015', '2020'];
+                    for (const fb of fallbacks) {
+                        if (!distractors.includes(fb) && fb !== correct) {
+                            distractors.push(fb);
+                        }
+                        if (distractors.length >= 3) break;
+                    }
+                }
+
+                const options = shuffleArray([
+                    { text: correct, icon: 'fa-calendar', isCorrect: true },
+                    ...distractors.slice(0, 3).map(y => ({ text: y, icon: 'fa-calendar', isCorrect: false }))
+                ]);
+
+                return {
+                    question: `In che anno è uscito <span class="highlight">"${title}"</span>?`,
+                    options: options,
+                    correct: correct,
+                    detail: `✅ "${title}" è uscito nel <strong>${correct}</strong>`,
+                    showImageInQuestion: true,
+                    questionImage: correctImage,
+                    title: title,
+                    isTextOnly: true
+                };
+            }
+
+            function generateGenreQuestion(animeList) {
+                const valid = animeList.filter(a => a.genres && a.genres.length > 0);
+                if (valid.length < 4) return null;
+
+                const media = pickRandom(valid);
+                const genres = getGenres(media);
+                if (genres.length === 0) return null;
+
+                const genre = pickRandom(genres);
+                const title = getTitle(media);
+                const correctImage = getImage(media);
+
+                const notInGenre = valid.filter(a => 
+                    a.id !== media.id && 
+                    (!a.genres || !a.genres.includes(genre))
+                );
+                
+                if (notInGenre.length < 3) return null;
+
+                const shuffledDistractors = shuffleArray(notInGenre).slice(0, 3);
+                
+                const options = shuffleArray([
+                    { text: title, image: correctImage, isCorrect: true },
+                    ...shuffledDistractors.map(a => ({ 
+                        text: getTitle(a), 
+                        image: getImage(a), 
+                        isCorrect: false 
+                    }))
+                ]);
+
+                return {
+                    question: `Quale di questi anime appartiene al genere <span class="highlight">"${genre}"</span>?`,
+                    options: options,
+                    correct: title,
+                    detail: `✅ "<strong>${title}</strong>" è un anime di genere ${genre}`,
+                    showImageInQuestion: false,
+                    questionImage: null,
+                    isTextOnly: false
+                };
+            }
+
+            function generateMixedQuestion(animeList) {
+                const generators = [
+                    generateCharacterQuestion,
+                    generateAnimeQuestion,
+                    generateStudioQuestion,
+                    generateYearQuestion,
+                    generateGenreQuestion
+                ];
+
+                const generator = pickRandom(generators);
+                let question = null;
+                let attempts = 0;
+                while (!question && attempts < 10) {
+                    question = generator(animeList);
+                    attempts++;
+                }
+                return question;
+            }
+
+            window.generateQuestions = function(type, animeList) {
+                const generators = {
+                    character: generateCharacterQuestion,
+                    anime: generateAnimeQuestion,
+                    studio: generateStudioQuestion,
+                    year: generateYearQuestion,
+                    genre: generateGenreQuestion,
+                    mixed: generateMixedQuestion
+                };
+
+                const generator = generators[type] || generators.mixed;
+                const questions = [];
+                let attempts = 0;
+
+                while (questions.length < 10 && attempts < 300) {
+                    const q = generator(animeList);
+                    if (q && q.options && q.options.length === 4) {
+                        const duplicate = questions.some(existing =>
+                            existing.question === q.question ||
+                            (existing.correct === q.correct && 
+                             existing.options.map(o => o.text).join(',') === q.options.map(o => o.text).join(','))
+                        );
+                        if (!duplicate) {
+                            questions.push(q);
+                        }
+                    }
+                    attempts++;
+                }
+
+                return questions;
+            };
+
+        })();
+
+
+        // ============================================================
+        // MISTO.JS - Logica per "Misto"
+        // ============================================================
+
+        (function() {
+            'use strict';
+
+            const QUESTIONS_PER_QUIZ = 10;
+
+            const loading = document.getElementById('loading');
+            const errorState = document.getElementById('errorState');
+            const errorMessage = document.getElementById('errorMessage');
+            const errorDetail = document.getElementById('errorDetail');
+            const quizArea = document.getElementById('quizArea');
+            const results = document.getElementById('results');
+            const quizTitle = document.getElementById('quizTitle');
+            const questionText = document.getElementById('questionText');
+            const questionImageContainer = document.getElementById('questionImageContainer');
+            const optionsGrid = document.getElementById('optionsGrid');
+            const feedback = document.getElementById('feedback');
+            const feedbackTitle = document.getElementById('feedbackTitle');
+            const feedbackDetail = document.getElementById('feedbackDetail');
+            const nextBtn = document.getElementById('nextBtn');
+            const progressFill = document.getElementById('progressFill');
+            const currentQuestionSpan = document.getElementById('currentQuestion');
+            const totalQuestionsCount = document.getElementById('totalQuestionsCount');
+            const resultScore = document.getElementById('resultScore');
+            const resultLabel = document.getElementById('resultLabel');
+            const resultIcon = document.getElementById('resultIcon');
+            const resultCorrect = document.getElementById('resultCorrect');
+            const resultWrong = document.getElementById('resultWrong');
+            const resultAccuracy = document.getElementById('resultAccuracy');
+            const retryBtn = document.getElementById('retryBtn');
+            const restartBtn = document.getElementById('restartBtn');
+
+            let currentQuestions = [];
+            let currentIndex = 0;
+            let score = 0;
+            let isAnswered = false;
+            let quizType = 'mixed';
+
+            function renderQuestion(index) {
+                const q = currentQuestions[index];
+                if (!q) {
+                    console.warn('Domanda vuota');
+                    return;
+                }
+
+                questionText.innerHTML = q.question;
+                
+                questionImageContainer.innerHTML = '';
+                if (q.showImageInQuestion && q.questionImage) {
+                    questionImageContainer.innerHTML = `
+                        <div class="question-image">
+                            <img src="${q.questionImage}" alt="${q.title || 'Anime'}" onerror="this.style.display='none'">
+                        </div>
+                    `;
+                }
+
+                totalQuestionsCount.textContent = currentQuestions.length;
+                currentQuestionSpan.textContent = index + 1;
+                progressFill.style.width = `${((index) / currentQuestions.length) * 100}%`;
+
+                feedback.className = 'feedback-area';
+                feedback.classList.remove('show', 'correct', 'wrong');
+
+                const letters = ['A', 'B', 'C', 'D'];
+                optionsGrid.innerHTML = '';
+                q.options.forEach((opt, i) => {
+                    const btn = document.createElement('button');
+                    btn.className = 'option-btn';
+                    
+                    let contentHtml = '';
+                    
+                    if (q.isTextOnly) {
+                        contentHtml = `
+                            <span class="letter">${letters[i]}</span>
+                            <div style="display:flex;flex-direction:column;align-items:center;gap:8px;padding:12px 0;">
+                                <i class="fas ${opt.icon || 'fa-question'}" style="font-size:2.5rem;color:var(--accent-purple);opacity:0.7;"></i>
+                                <span class="option-text">${opt.text}</span>
+                            </div>
+                        `;
+                    } else if (opt.image) {
+                        contentHtml = `
+                            <span class="letter">${letters[i]}</span>
+                            <img src="${opt.image}" class="option-image" alt="${opt.text}" onerror="this.style.display='none'">
+                            <span class="option-text">${opt.text}</span>
+                        `;
+                    } else {
+                        contentHtml = `
+                            <span class="letter">${letters[i]}</span>
+                            <span class="option-text">${opt.text}</span>
+                        `;
+                    }
+                    
+                    btn.innerHTML = contentHtml;
+                    btn.dataset.index = i;
+                    btn.addEventListener('click', () => handleOptionClick(i));
+                    optionsGrid.appendChild(btn);
+                });
+
+                nextBtn.className = 'next-btn';
+                nextBtn.style.display = 'none';
+                nextBtn.innerHTML = 'Prossima Domanda <i class="fas fa-arrow-right"></i>';
+
+                isAnswered = false;
+            }
+
+            function handleOptionClick(index) {
+                if (isAnswered) return;
+                isAnswered = true;
+
+                const q = currentQuestions[currentIndex];
+                const btns = optionsGrid.querySelectorAll('.option-btn');
+                const isCorrect = q.options[index].isCorrect;
+
+                if (isCorrect) score++;
+
+                feedback.className = 'feedback-area show';
+                if (isCorrect) {
+                    feedback.classList.add('correct');
+                    feedbackTitle.textContent = '🎉 Corretto!';
+                } else {
+                    feedback.classList.add('wrong');
+                    feedbackTitle.textContent = '❌ Sbagliato!';
+                }
+                feedbackDetail.innerHTML = q.detail;
+
+                btns.forEach((btn, i) => {
+                    btn.classList.add('disabled');
+                    if (q.options[i].isCorrect) {
+                        btn.classList.add('correct');
+                    } else if (i === index && !isCorrect) {
+                        btn.classList.add('wrong');
+                    }
+                });
+
+                nextBtn.style.display = 'flex';
+                nextBtn.className = 'next-btn show';
+                
+                if (currentIndex === currentQuestions.length - 1) {
+                    nextBtn.innerHTML = 'Vedi Risultati 🏆';
+                } else {
+                    nextBtn.innerHTML = 'Prossima Domanda <i class="fas fa-arrow-right"></i>';
+                }
+            }
+
+            function showResults() {
+                quizArea.style.display = 'none';
+                results.className = 'results show';
+                results.style.display = 'flex';
+
+                const total = currentQuestions.length;
+                const wrong = total - score;
+                const accuracy = Math.round((score / total) * 100);
+
+                resultScore.textContent = `${score}/${total}`;
+                resultCorrect.textContent = score;
+                resultWrong.textContent = wrong;
+                resultAccuracy.textContent = `${accuracy}%`;
+
+                if (accuracy === 100) {
+                    resultIcon.textContent = '🏆';
+                    resultLabel.textContent = 'Perfetto! Sei un vero esperto di anime!';
+                } else if (accuracy >= 80) {
+                    resultIcon.textContent = '🌟';
+                    resultLabel.textContent = 'Ottimo! Conosci davvero bene gli anime!';
+                } else if (accuracy >= 60) {
+                    resultIcon.textContent = '📚';
+                    resultLabel.textContent = 'Buon lavoro! Continua a guardare anime!';
+                } else if (accuracy >= 40) {
+                    resultIcon.textContent = '🤔';
+                    resultLabel.textContent = 'Non male, ma puoi fare di meglio!';
+                } else {
+                    resultIcon.textContent = '😅';
+                    resultLabel.textContent = 'Forse è ora di guardare più anime!';
+                }
+            }
+
+            window.startQuiz = async function() {
+                try {
+                    const animeData = await window.loadAnimeData();
+                    
+                    if (!animeData || animeData.length < 10) {
+                        errorMessage.textContent = 'Non ci sono abbastanza anime disponibili.';
+                        errorDetail.innerHTML = `
+                            <i class="fas fa-info-circle"></i>
+                            <span>Caricati solo ${animeData ? animeData.length : 0} anime. Riprova più tardi.</span>
+                        `;
+                        errorState.classList.add('show');
+                        loading.style.display = 'none';
+                        return;
+                    }
+
+                    const questions = window.generateQuestions(quizType, animeData);
+                    
+                    if (questions.length < 5) {
+                        errorMessage.textContent = 'Impossibile generare abbastanza domande. Riprova.';
+                        errorDetail.innerHTML = `
+                            <i class="fas fa-info-circle"></i>
+                            <span>Generate solo ${questions.length} domande su ${QUESTIONS_PER_QUIZ} richieste.</span>
+                        `;
+                        errorState.classList.add('show');
+                        loading.style.display = 'none';
+                        return;
+                    }
+
+                    currentQuestions = questions;
+                    currentIndex = 0;
+                    score = 0;
+                    
+                    const titles = {
+                        anime: 'Indovina l\'Anime',
+                        character: 'Indovina il Personaggio',
+                        studio: 'Indovina lo Studio',
+                        year: 'Indovina l\'Anno',
+                        genre: 'Indovina dal Genere',
+                        mixed: 'Quiz Misto 🔥'
+                    };
+                    quizTitle.textContent = titles[quizType] || 'Quiz';
+                    
+                    loading.style.display = 'none';
+                    quizArea.style.display = 'block';
+                    
+                    renderQuestion(0);
+
+                } catch (err) {
+                    console.error(err);
+                    errorMessage.textContent = 'Errore nel caricamento dei dati.';
+                    errorDetail.innerHTML = `
+                        <i class="fas fa-info-circle"></i>
+                        <span>⚠️ ${err.message || 'Verifica la connessione e riprova.'}</span>
+                    `;
+                    errorState.classList.add('show');
+                    loading.style.display = 'none';
+                }
+            };
+
+            nextBtn.addEventListener('click', function() {
+                if (currentIndex < currentQuestions.length - 1) {
+                    currentIndex++;
+                    renderQuestion(currentIndex);
+                } else {
+                    showResults();
+                }
+            });
+
+            restartBtn.addEventListener('click', function() {
+                results.className = 'results';
+                results.style.display = 'none';
+                quizArea.style.display = 'none';
+                loading.style.display = 'flex';
+                loading.querySelector('.loading-text').textContent = 'Riavvio del quiz...';
+                loading.querySelector('.loading-sub').textContent = 'Preparazione delle domande';
+                document.querySelector('.loading-progress').style.display = 'none';
+                
+                setTimeout(() => {
+                    window.startQuiz();
+                }, 500);
+            });
+
+            retryBtn.addEventListener('click', function() {
+                errorState.classList.remove('show');
+                loading.style.display = 'flex';
+                window.startQuiz();
+            });
+
+            document.addEventListener('keydown', function(e) {
+                if (e.key === 'Enter' && nextBtn.style.display === 'flex' && nextBtn.classList.contains('show')) {
+                    e.preventDefault();
+                    nextBtn.click();
+                }
+                if (e.key >= '1' && e.key <= '4' && !isAnswered) {
+                    const idx = parseInt(e.key) - 1;
+                    const btns = optionsGrid.querySelectorAll('.option-btn');
+                    if (btns[idx] && !btns[idx].classList.contains('disabled')) {
+                        btns[idx].click();
+                    }
+                }
+            });
+
+            document.addEventListener('DOMContentLoaded', function() {
+                quizType = 'mixed';
+                window.startQuiz();
+            });
+
+        })();
+    </script>
+
+</body>
+</html>
