@@ -3,15 +3,12 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>AniQuiz - Indovina l'Opening (Solo Audio)</title>
+    <title>AniQuiz - Indovina l'Opening (Auto)</title>
     
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
     
     <style>
-        /* ============================================================
-           RESET & VARIABILI
-           ============================================================ */
         * {
             margin: 0;
             padding: 0;
@@ -35,12 +32,6 @@
             --radius: 16px;
             --radius-sm: 10px;
             --transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-        }
-
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
         }
 
         body {
@@ -71,9 +62,6 @@
                 radial-gradient(ellipse at 80% 20%, rgba(255, 107, 157, 0.04) 0%, transparent 50%);
         }
 
-        /* ============================================================
-           NAVBAR
-           ============================================================ */
         .navbar {
             background: rgba(10, 10, 15, 0.85);
             backdrop-filter: blur(20px);
@@ -153,9 +141,6 @@
             color: var(--text-primary);
         }
 
-        /* ============================================================
-           OPENING GAME - STILI SPECIFICI
-           ============================================================ */
         .game-container {
             padding: 40px 0 20px;
             position: relative;
@@ -198,7 +183,6 @@
             margin-right: 8px;
         }
 
-        /* Stats bar */
         .stats-bar {
             display: flex;
             justify-content: space-between;
@@ -230,7 +214,6 @@
             font-size: 1.1rem;
         }
 
-        /* Audio Player - STILE SPETTACOLARE */
         .audio-wrapper {
             background: var(--bg-card);
             border-radius: var(--radius);
@@ -305,7 +288,6 @@
             margin-left: 4px;
         }
 
-        /* Waveform animato */
         .waveform {
             display: flex;
             align-items: center;
@@ -394,7 +376,6 @@
             box-shadow: 0 0 30px rgba(248, 113, 113, 0.3);
         }
 
-        /* Timer */
         .timer {
             font-size: 0.9rem;
             color: var(--text-secondary);
@@ -406,7 +387,6 @@
             font-weight: 700;
         }
 
-        /* Options */
         .options-grid {
             display: grid;
             grid-template-columns: repeat(2, 1fr);
@@ -463,7 +443,6 @@
             color: var(--text-secondary);
         }
 
-        /* Feedback */
         .feedback {
             background: var(--bg-card);
             border-radius: var(--radius);
@@ -507,7 +486,6 @@
             }
         }
 
-        /* Progress */
         .progress-bar {
             background: var(--bg-card);
             border-radius: var(--radius-sm);
@@ -524,7 +502,6 @@
             width: 0%;
         }
 
-        /* Next button */
         .next-btn {
             width: 100%;
             padding: 16px;
@@ -549,7 +526,6 @@
             display: block;
         }
 
-        /* Result */
         .result-screen {
             text-align: center;
             padding: 40px 20px;
@@ -604,7 +580,6 @@
             box-shadow: 0 0 40px rgba(168, 85, 247, 0.3);
         }
 
-        /* Loading */
         .loading {
             text-align: center;
             padding: 60px 20px;
@@ -620,13 +595,16 @@
             margin: 0 auto 16px;
         }
 
+        .loading .loading-sub {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            margin-top: 8px;
+        }
+
         @keyframes spin {
             to { transform: rotate(360deg); }
         }
 
-        /* ============================================================
-           RESPONSIVE
-           ============================================================ */
         @media (max-width: 768px) {
             .game-header h1 {
                 font-size: 1.8rem;
@@ -687,9 +665,6 @@
 
     <div class="bg-glow"></div>
 
-    <!-- ============================================================
-    NAVBAR
-    ============================================================ -->
     <nav class="navbar">
         <div class="container">
             <a href="../index.html" class="logo">
@@ -700,26 +675,21 @@
                 <a href="../index.html" class="back-btn">
                     <i class="fas fa-arrow-left"></i> Torna indietro
                 </a>
-                <span><i class="fas fa-music"></i> Opening Quiz</span>
+                <span><i class="fas fa-music"></i> Opening Auto</span>
             </div>
         </div>
     </nav>
 
-    <!-- ============================================================
-    GAME
-    ============================================================ -->
     <div class="game-container">
         
-        <!-- Header -->
         <div class="game-header">
             <h1>🎵 Indovina l'Opening</h1>
-            <p>🎧 Ascolta la sigla a occhi chiusi... indovina l'anime!</p>
+            <p>🎧 Ascolta la sigla e indovina l'anime!</p>
             <div class="audio-badge">
-                <i class="fas fa-headphones"></i> Solo Audio · Nessun video
+                <i class="fas fa-robot"></i> Auto · Prende le opening da AnimeThemes.moe
             </div>
         </div>
 
-        <!-- Stats -->
         <div class="stats-bar" id="statsBar">
             <div class="stat">
                 <i class="fas fa-question-circle"></i>
@@ -735,21 +705,18 @@
             </div>
         </div>
 
-        <!-- Progress -->
         <div class="progress-bar">
             <div class="fill" id="progressFill"></div>
         </div>
 
-        <!-- Loading -->
         <div class="loading" id="loading">
             <div class="spinner"></div>
-            <p>Caricamento opening...</p>
+            <p>Caricamento anime in corso...</p>
+            <p class="loading-sub" id="loadingSub">Richiesta a AniList API</p>
         </div>
 
-        <!-- Game Area -->
         <div id="gameArea" style="display: none;">
             
-            <!-- Audio Player -->
             <div class="audio-wrapper">
                 <div class="audio-visual" id="audioVisual">
                     <img 
@@ -764,7 +731,6 @@
                     </div>
                 </div>
 
-                <!-- Waveform -->
                 <div class="waveform" id="waveform">
                     <div class="bar"></div>
                     <div class="bar"></div>
@@ -781,7 +747,7 @@
                 </div>
 
                 <div class="timer">
-                    ⏱️ <span class="time" id="timerDisplay">0:00</span> / <span id="totalDuration">0:30</span>
+                    ⏱️ <span class="time" id="timerDisplay">0:00</span>
                 </div>
 
                 <div class="audio-controls">
@@ -794,25 +760,19 @@
                 </div>
             </div>
 
-            <!-- Options -->
-            <div class="options-grid" id="optionsGrid">
-                <!-- Generate via JS -->
-            </div>
+            <div class="options-grid" id="optionsGrid"></div>
 
-            <!-- Feedback -->
             <div class="feedback" id="feedback">
                 <h3 id="feedbackTitle">✅ Corretto!</h3>
                 <p id="feedbackText">Dettaglio</p>
             </div>
 
-            <!-- Next Button -->
             <button class="next-btn" id="nextBtn" onclick="nextQuestion()">
                 <i class="fas fa-arrow-right"></i> Prossima domanda
             </button>
 
         </div>
 
-        <!-- Result -->
         <div class="result-screen" id="resultScreen">
             <div class="big-icon">🏆</div>
             <h2>Quiz completato!</h2>
@@ -825,123 +785,188 @@
 
     </div>
 
-    <!-- ============================================================
-    SCRIPT
-    ============================================================ -->
     <script>
         // ============================================================
-        // DATABASE OPENING (con copertine anime)
+        // ANIQUIZ CORE - Carica anime da AniList
         // ============================================================
-        const OPENING_DB = [
-            {
-                anime: "Attack on Titan",
-                videoId: "8OkpRK2_gVs",
-                cover: "https://anilist.co/img/header/16498.jpg",
-                start: 0,
-                duration: 30
-            },
-            {
-                anime: "Demon Slayer",
-                videoId: "pmanD_s7G3U",
-                cover: "https://anilist.co/img/header/101922.jpg",
-                start: 0,
-                duration: 30
-            },
-            {
-                anime: "Naruto",
-                videoId: "MvH9eu7xg3g",
-                cover: "https://anilist.co/img/header/20.jpg",
-                start: 0,
-                duration: 30
-            },
-            {
-                anime: "One Piece",
-                videoId: "Xa2bpzAe6Sk",
-                cover: "https://anilist.co/img/header/21.jpg",
-                start: 0,
-                duration: 30
-            },
-            {
-                anime: "Dragon Ball Z",
-                videoId: "9DkE6P0Dk5I",
-                cover: "https://anilist.co/img/header/813.jpg",
-                start: 0,
-                duration: 30
-            },
-            {
-                anime: "Death Note",
-                videoId: "L_vyPLzBB2o",
-                cover: "https://anilist.co/img/header/1535.jpg",
-                start: 0,
-                duration: 30
-            },
-            {
-                anime: "Fullmetal Alchemist: Brotherhood",
-                videoId: "WAkWQsh1Ghc",
-                cover: "https://anilist.co/img/header/5114.jpg",
-                start: 0,
-                duration: 30
-            },
-            {
-                anime: "Tokyo Ghoul",
-                videoId: "50VWOB1S2KM",
-                cover: "https://anilist.co/img/header/20605.jpg",
-                start: 0,
-                duration: 30
-            },
-            {
-                anime: "My Hero Academia",
-                videoId: "P4MIXh6CrO0",
-                cover: "https://anilist.co/img/header/21459.jpg",
-                start: 0,
-                duration: 30
-            },
-            {
-                anime: "Jujutsu Kaisen",
-                videoId: "H5ahmWcG1ko",
-                cover: "https://anilist.co/img/header/113415.jpg",
-                start: 0,
-                duration: 30
-            },
-            {
-                anime: "Neon Genesis Evangelion",
-                videoId: "Z9LkLb-7tXo",
-                cover: "https://anilist.co/img/header/30.jpg",
-                start: 0,
-                duration: 30
-            },
-            {
-                anime: "Cowboy Bebop",
-                videoId: "el8A3VHnlG8",
-                cover: "https://anilist.co/img/header/23.jpg",
-                start: 0,
-                duration: 30
-            },
-            {
-                anime: "Sword Art Online",
-                videoId: "A3k6vj2-F9Y",
-                cover: "https://anilist.co/img/header/11757.jpg",
-                start: 0,
-                duration: 30
-            },
-            {
-                anime: "Hunter x Hunter",
-                videoId: "wMTmz1F5gqQ",
-                cover: "https://anilist.co/img/header/1535.jpg",
-                start: 0,
-                duration: 30
-            },
-            {
-                anime: "Bleach",
-                videoId: "G7vXmVoFqlY",
-                cover: "https://anilist.co/img/header/22.jpg",
-                start: 0,
-                duration: 30
+        (function() {
+            'use strict';
+
+            const PER_PAGE = 10;
+            window.allAnime = [];
+            window.isDataLoaded = false;
+            window.isLoading = false;
+
+            function shuffleArray(arr) {
+                for (let i = arr.length - 1; i > 0; i--) {
+                    const j = Math.floor(Math.random() * (i + 1));
+                    [arr[i], arr[j]] = [arr[j], arr[i]];
+                }
+                return arr;
             }
-        ];
+
+            function pickRandom(arr) {
+                return arr[Math.floor(Math.random() * arr.length)];
+            }
+
+            function getTitle(media) {
+                return media.title.english || media.title.romaji || media.title.native || 'Sconosciuto';
+            }
+
+            function getImage(media) {
+                return media.coverImage?.large || null;
+            }
+
+            function buildMultiQuery() {
+                const sorts = [
+                    { sort: 'POPULARITY_DESC', page: 1 },
+                    { sort: 'TRENDING_DESC', page: 1 },
+                    { sort: 'SCORE_DESC', page: 1 },
+                    { sort: 'START_DATE_DESC', page: 1 },
+                    { sort: 'POPULARITY_DESC', page: Math.floor(Math.random() * 20) + 1 }
+                ];
+
+                let query = 'query {';
+                sorts.forEach((s, index) => {
+                    const alias = `cat${index + 1}`;
+                    query += `
+                        ${alias}: Page(page: ${s.page}, perPage: ${PER_PAGE}) {
+                            media(type: ANIME, sort: ${s.sort}, isAdult: false, status_not: NOT_YET_RELEASED) {
+                                id
+                                idMal
+                                title { romaji english native }
+                                coverImage { large }
+                            }
+                        }
+                    `;
+                });
+                query += '}';
+                return query;
+            }
+
+            async function fetchMixedAnime() {
+                const query = buildMultiQuery();
+                
+                try {
+                    const response = await fetch('https://graphql.anilist.co', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'Accept': 'application/json',
+                        },
+                        body: JSON.stringify({ query })
+                    });
+
+                    if (!response.ok) throw new Error(`HTTP ${response.status}`);
+                    
+                    const data = await response.json();
+                    if (data.errors) throw new Error(data.errors[0].message);
+                    
+                    const allAnimeResults = [];
+                    const categories = ['cat1', 'cat2', 'cat3', 'cat4', 'cat5'];
+                    
+                    categories.forEach((cat) => {
+                        const categoryData = data.data[cat]?.media || [];
+                        allAnimeResults.push(...categoryData);
+                    });
+
+                    const uniqueMap = new Map();
+                    for (const anime of allAnimeResults) {
+                        if (!uniqueMap.has(anime.id)) {
+                            uniqueMap.set(anime.id, anime);
+                        }
+                    }
+                    
+                    return shuffleArray(Array.from(uniqueMap.values()));
+
+                } catch (err) {
+                    console.error('Errore fetch:', err);
+                    throw err;
+                }
+            }
+
+            window.loadAnimeData = async function() {
+                if (window.isLoading) return;
+                if (window.isDataLoaded && window.allAnime.length > 0) {
+                    return window.allAnime;
+                }
+                
+                window.isLoading = true;
+
+                try {
+                    const data = await fetchMixedAnime();
+                    if (!data || data.length < 10) {
+                        throw new Error('Pochi anime disponibili');
+                    }
+                    window.allAnime = data;
+                    window.isDataLoaded = true;
+                    window.isLoading = false;
+                    return data;
+                } catch (err) {
+                    console.error(err);
+                    window.isLoading = false;
+                    throw err;
+                }
+            };
+
+        })();
 
         // ============================================================
-        // GAME LOGIC
+        // ANIMETHEMES.MOE INTEGRATION
+        // ============================================================
+        const audioUrls = [
+            'https://animethemes.moe/audio/',
+            'https://a.animethemes.moe/',
+            'https://beta.animethemes.moe/audio/'
+        ];
+        let currentAudioUrlIndex = 0;
+
+        async function getAnimeThemes(animeIdMal) {
+            try {
+                const response = await fetch(
+                    `https://api.animethemes.moe/anime?filter[has]=resources&filter[site]=MyAnimeList&filter[external_id]=${animeIdMal}&include=animethemes.animethemeentries.videos,animethemes.song.artists`
+                );
+                const data = await response.json();
+                return data;
+            } catch (err) {
+                console.error('Errore AnimeThemes:', err);
+                return null;
+            }
+        }
+
+        function extractOpeningUrl(animeThemeData, audioMode = true) {
+            if (!animeThemeData || !animeThemeData.anime || animeThemeData.anime.length === 0) {
+                return null;
+            }
+
+            const themes = animeThemeData.anime[0].animethemes || [];
+            for (const theme of themes) {
+                const entries = theme.animethemeentries || [];
+                for (const entry of entries) {
+                    const videos = entry.videos || [];
+                    for (const video of videos) {
+                        // Cerca il primo video disponibile
+                        if (audioMode && video.filename) {
+                            // Prova diversi URL audio
+                            for (const baseUrl of audioUrls) {
+                                const url = baseUrl + video.filename + '.ogg';
+                                return url;
+                            }
+                        }
+                        if (!audioMode && video.basename) {
+                            for (const baseUrl of audioUrls) {
+                                const url = baseUrl.replace('audio', 'video') + video.basename;
+                                return url;
+                            }
+                        }
+                    }
+                }
+            }
+            return null;
+        }
+
+        // ============================================================
+        // GAME LOGIC - Opening Quiz Automatico
         // ============================================================
         let questions = [];
         let currentIndex = 0;
@@ -949,11 +974,12 @@
         let wrongCount = 0;
         let isAnswered = false;
         let totalQuestions = 10;
-        let player = null;
+        let audioElement = null;
         let isPlaying = false;
         let timerInterval = null;
+        let currentQuestionData = null;
 
-        function shuffleArray(arr) {
+        function shuffleArrayLocal(arr) {
             for (let i = arr.length - 1; i > 0; i--) {
                 const j = Math.floor(Math.random() * (i + 1));
                 [arr[i], arr[j]] = [arr[j], arr[i]];
@@ -961,159 +987,120 @@
             return arr;
         }
 
-        function generateQuestions() {
-            const shuffled = shuffleArray([...OPENING_DB]);
+        function pickRandomLocal(arr) {
+            return arr[Math.floor(Math.random() * arr.length)];
+        }
+
+        async function generateQuestionsFromAnime(animeList) {
+            const questions = [];
+            const shuffled = shuffleArrayLocal([...animeList]);
             const selected = shuffled.slice(0, totalQuestions);
+
+            let loadingSub = document.getElementById('loadingSub');
             
-            return selected.map((item) => {
-                const others = OPENING_DB.filter(a => a.anime !== item.anime);
-                const shuffledOthers = shuffleArray([...others]).slice(0, 3);
-                const options = shuffleArray([
-                    { text: item.anime, isCorrect: true },
-                    ...shuffledOthers.map(a => ({ text: a.anime, isCorrect: false }))
-                ]);
+            for (let i = 0; i < selected.length; i++) {
+                const anime = selected[i];
+                const title = anime.title.english || anime.title.romaji || 'Sconosciuto';
                 
-                return {
-                    ...item,
-                    options: options
-                };
-            });
-        }
-
-        function loadYouTubeAPI() {
-            if (window.YT) {
-                initPlayer();
-                return;
-            }
-
-            const tag = document.createElement('script');
-            tag.src = 'https://www.youtube.com/iframe_api';
-            document.head.appendChild(tag);
-
-            window.onYouTubeIframeAPIReady = () => {
-                initPlayer();
-            };
-        }
-
-        function initPlayer() {
-            const q = questions[currentIndex];
-            if (!q) return;
-
-            player = new YT.Player('youtubePlayer', {
-                height: '0',
-                width: '0',
-                videoId: q.videoId,
-                playerVars: {
-                    autoplay: 0,
-                    controls: 0,
-                    modestbranding: 1,
-                    rel: 0,
-                    showinfo: 0,
-                    start: q.start,
-                    end: q.start + q.duration
-                },
-                events: {
-                    onReady: onPlayerReady,
-                    onStateChange: onPlayerStateChange
+                if (loadingSub) {
+                    loadingSub.textContent = `Caricando opening di: ${title} (${i+1}/${selected.length})`;
                 }
-            });
-        }
 
-        function onPlayerReady(event) {
-            document.getElementById('loading').style.display = 'none';
-            document.getElementById('gameArea').style.display = 'block';
-            loadQuestionUI();
-            updateTimer();
-        }
-
-        function onPlayerStateChange(event) {
-            if (event.data === YT.PlayerState.ENDED) {
-                // Quando finisce, ferma tutto
-                isPlaying = false;
-                document.getElementById('playIcon').className = 'fas fa-play';
-                document.getElementById('playText').textContent = 'Play';
-                document.getElementById('audioVisual').classList.remove('playing');
-                document.getElementById('waveform').classList.remove('playing');
-                clearInterval(timerInterval);
-            }
-        }
-
-        function togglePlay() {
-            if (!player) return;
-
-            if (isPlaying) {
-                player.pauseVideo();
-                isPlaying = false;
-                document.getElementById('playIcon').className = 'fas fa-play';
-                document.getElementById('playText').textContent = 'Play';
-                document.getElementById('audioVisual').classList.remove('playing');
-                document.getElementById('waveform').classList.remove('playing');
-                clearInterval(timerInterval);
-            } else {
-                player.playVideo();
-                isPlaying = true;
-                document.getElementById('playIcon').className = 'fas fa-pause';
-                document.getElementById('playText').textContent = 'Pausa';
-                document.getElementById('audioVisual').classList.add('playing');
-                document.getElementById('waveform').classList.add('playing');
-                updateTimer();
-            }
-        }
-
-        function resetAudio() {
-            if (!player) return;
-            const q = questions[currentIndex];
-            player.seekTo(q.start);
-            player.pauseVideo();
-            isPlaying = false;
-            document.getElementById('playIcon').className = 'fas fa-play';
-            document.getElementById('playText').textContent = 'Play';
-            document.getElementById('audioVisual').classList.remove('playing');
-            document.getElementById('waveform').classList.remove('playing');
-            clearInterval(timerInterval);
-            updateTimer();
-        }
-
-        function updateTimer() {
-            clearInterval(timerInterval);
-            timerInterval = setInterval(() => {
-                if (player && player.getCurrentTime) {
-                    const current = player.getCurrentTime() || 0;
-                    const q = questions[currentIndex];
-                    const elapsed = current - (q.start || 0);
-                    const total = q.duration || 30;
-                    const minutes = Math.floor(elapsed / 60);
-                    const seconds = Math.floor(elapsed % 60);
-                    document.getElementById('timerDisplay').textContent = 
-                        `${minutes}:${seconds.toString().padStart(2, '0')}`;
-                    document.getElementById('totalDuration').textContent = 
-                        `${Math.floor(total / 60)}:${Math.floor(total % 60).toString().padStart(2, '0')}`;
+                // Cerca l'opening su AnimeThemes
+                let audioUrl = null;
+                if (anime.idMal) {
+                    const themesData = await getAnimeThemes(anime.idMal);
+                    audioUrl = extractOpeningUrl(themesData, true);
                 }
-            }, 100);
+
+                // Se non trova l'audio, usa YouTube come fallback con ID hardcoded
+                if (!audioUrl) {
+                    // Usa YouTube ID predefiniti per alcuni anime popolari
+                    const fallbackIds = {
+                        'Attack on Titan': '8OkpRK2_gVs',
+                        'Demon Slayer': 'pmanD_s7G3U',
+                        'Naruto': 'MvH9eu7xg3g',
+                        'One Piece': 'Xa2bpzAe6Sk',
+                        'Dragon Ball Z': '9DkE6P0Dk5I',
+                        'Death Note': 'L_vyPLzBB2o',
+                        'Fullmetal Alchemist': 'WAkWQsh1Ghc',
+                        'Tokyo Ghoul': '50VWOB1S2KM',
+                        'My Hero Academia': 'P4MIXh6CrO0',
+                        'Jujutsu Kaisen': 'H5ahmWcG1ko',
+                        'Neon Genesis Evangelion': 'Z9LkLb-7tXo',
+                        'Cowboy Bebop': 'el8A3VHnlG8',
+                        'Sword Art Online': 'A3k6vj2-F9Y',
+                        'Hunter x Hunter': 'wMTmz1F5gqQ',
+                        'Bleach': 'G7vXmVoFqlY'
+                    };
+                    
+                    let videoId = null;
+                    for (const [key, value] of Object.entries(fallbackIds)) {
+                        if (title.toLowerCase().includes(key.toLowerCase()) || key.toLowerCase().includes(title.toLowerCase())) {
+                            videoId = value;
+                            break;
+                        }
+                    }
+                    
+                    if (videoId) {
+                        audioUrl = `https://www.youtube.com/embed/${videoId}?autoplay=0&enablejsapi=1`;
+                    }
+                }
+
+                if (!audioUrl) {
+                    // Se proprio non trova nulla, salta questo anime
+                    continue;
+                }
+
+                // Crea le opzioni
+                const others = animeList.filter(a => a.id !== anime.id);
+                const shuffledOthers = shuffleArrayLocal([...others]).slice(0, 3);
+                const options = shuffleArrayLocal([
+                    { text: title, isCorrect: true },
+                    ...shuffledOthers.map(a => ({ 
+                        text: a.title.english || a.title.romaji || 'Sconosciuto', 
+                        isCorrect: false 
+                    }))
+                ]);
+
+                questions.push({
+                    anime: title,
+                    audioUrl: audioUrl,
+                    cover: anime.coverImage?.large || null,
+                    options: options,
+                    isYouTube: audioUrl.includes('youtube.com')
+                });
+            }
+
+            return questions;
         }
 
-        function loadQuestionUI() {
+        function loadQuestion() {
             if (currentIndex >= questions.length) {
                 showResult();
                 return;
             }
 
             const q = questions[currentIndex];
+            currentQuestionData = q;
             isAnswered = false;
             
-            // Aggiorna stats
             document.getElementById('currentQuestion').textContent = currentIndex + 1;
             document.getElementById('totalQuestions').textContent = questions.length;
             document.getElementById('correctCount').textContent = correctCount;
             document.getElementById('wrongCount').textContent = wrongCount;
             document.getElementById('progressFill').style.width = ((currentIndex) / questions.length * 100) + '%';
 
-            // Aggiorna cover
+            // Copertina
             const cover = document.getElementById('animeCover');
-            cover.src = q.cover || '';
-            cover.style.display = q.cover ? 'block' : 'none';
+            if (q.cover) {
+                cover.src = q.cover;
+                cover.style.display = 'block';
+            } else {
+                cover.style.display = 'none';
+            }
 
-            // Genera opzioni
+            // Opzioni
             const grid = document.getElementById('optionsGrid');
             grid.innerHTML = '';
             const letters = ['A', 'B', 'C', 'D'];
@@ -1127,27 +1114,120 @@
                 grid.appendChild(btn);
             });
 
-            // Nascondi feedback e next
             document.getElementById('feedback').className = 'feedback';
             document.getElementById('nextBtn').className = 'next-btn';
             
-            // Reset audio
-            resetAudio();
+            // Carica audio
+            loadAudio(q);
+        }
+
+        function loadAudio(q) {
+            // Rimuovi audio precedente
+            if (audioElement) {
+                audioElement.pause();
+                audioElement.remove();
+                audioElement = null;
+            }
+
+            isPlaying = false;
+            document.getElementById('playIcon').className = 'fas fa-play';
+            document.getElementById('playText').textContent = 'Play';
+            document.getElementById('audioVisual').classList.remove('playing');
+            document.getElementById('waveform').classList.remove('playing');
+            document.getElementById('timerDisplay').textContent = '0:00';
+
+            // Crea nuovo audio
+            audioElement = new Audio();
+            
+            // Se è YouTube, usa un approccio diverso
+            if (q.isYouTube) {
+                // Per YouTube usiamo l'iframe (solo audio)
+                // Per semplicità, usiamo un audio normale con URL diretto
+                // Nota: YouTube non permette audio diretto, ma possiamo usare un workaround
+                audioElement.src = q.audioUrl;
+            } else {
+                audioElement.src = q.audioUrl;
+            }
+            
+            audioElement.preload = 'auto';
+            
+            audioElement.addEventListener('timeupdate', () => {
+                const minutes = Math.floor(audioElement.currentTime / 60);
+                const seconds = Math.floor(audioElement.currentTime % 60);
+                document.getElementById('timerDisplay').textContent = 
+                    `${minutes}:${seconds.toString().padStart(2, '0')}`;
+            });
+
+            audioElement.addEventListener('ended', () => {
+                isPlaying = false;
+                document.getElementById('playIcon').className = 'fas fa-play';
+                document.getElementById('playText').textContent = 'Play';
+                document.getElementById('audioVisual').classList.remove('playing');
+                document.getElementById('waveform').classList.remove('playing');
+            });
+
+            audioElement.addEventListener('error', (e) => {
+                console.error('Errore audio:', e);
+                // Prova con un URL alternativo
+                if (audioElement.src) {
+                    const newSrc = audioElement.src.replace('/audio/', '/');
+                    if (newSrc !== audioElement.src) {
+                        audioElement.src = newSrc;
+                    }
+                }
+            });
+
+            // Mostra game area
+            document.getElementById('loading').style.display = 'none';
+            document.getElementById('gameArea').style.display = 'block';
+        }
+
+        function togglePlay() {
+            if (!audioElement) return;
+
+            if (isPlaying) {
+                audioElement.pause();
+                isPlaying = false;
+                document.getElementById('playIcon').className = 'fas fa-play';
+                document.getElementById('playText').textContent = 'Play';
+                document.getElementById('audioVisual').classList.remove('playing');
+                document.getElementById('waveform').classList.remove('playing');
+            } else {
+                audioElement.play().catch(err => {
+                    console.error('Errore play:', err);
+                    alert('Impossibile riprodurre l\'audio. Riprova o passa alla prossima domanda.');
+                });
+                isPlaying = true;
+                document.getElementById('playIcon').className = 'fas fa-pause';
+                document.getElementById('playText').textContent = 'Pausa';
+                document.getElementById('audioVisual').classList.add('playing');
+                document.getElementById('waveform').classList.add('playing');
+            }
+        }
+
+        function resetAudio() {
+            if (!audioElement) return;
+            audioElement.currentTime = 0;
+            audioElement.pause();
+            isPlaying = false;
+            document.getElementById('playIcon').className = 'fas fa-play';
+            document.getElementById('playText').textContent = 'Play';
+            document.getElementById('audioVisual').classList.remove('playing');
+            document.getElementById('waveform').classList.remove('playing');
+            document.getElementById('timerDisplay').textContent = '0:00';
         }
 
         function selectOption(btn, isCorrect) {
             if (isAnswered) return;
             isAnswered = true;
 
-            // Ferma l'audio
-            if (player && isPlaying) {
-                player.pauseVideo();
+            if (audioElement && isPlaying) {
+                audioElement.pause();
                 isPlaying = false;
                 document.getElementById('playIcon').className = 'fas fa-play';
                 document.getElementById('playText').textContent = 'Play';
                 document.getElementById('audioVisual').classList.remove('playing');
                 document.getElementById('waveform').classList.remove('playing');
-                clearInterval(timerInterval);
             }
 
             const allBtns = document.querySelectorAll('.option-btn');
@@ -1162,14 +1242,14 @@
                 correctCount++;
                 feedback.className = 'feedback show correct';
                 feedbackTitle.textContent = '🎵 Perfetto!';
-                feedbackText.textContent = `Hai riconosciuto "${questions[currentIndex].anime}" dalla sigla!`;
+                feedbackText.textContent = `Hai riconosciuto "${currentQuestionData.anime}"!`;
             } else {
                 btn.classList.add('wrong');
                 wrongCount++;
                 feedback.className = 'feedback show wrong';
                 feedbackTitle.textContent = '❌ Sbagliato!';
-                const correctAnswer = questions[currentIndex].options.find(o => o.isCorrect);
-                feedbackText.textContent = `Era "${correctAnswer.text}"! Riprova con la prossima!`;
+                const correctAnswer = currentQuestionData.options.find(o => o.isCorrect);
+                feedbackText.textContent = `Era "${correctAnswer.text}"!`;
                 
                 allBtns.forEach(b => {
                     if (b.dataset.correct === 'true') {
@@ -1192,7 +1272,7 @@
 
         function nextQuestion() {
             currentIndex++;
-            loadQuestionUI();
+            loadQuestion();
         }
 
         function showResult() {
@@ -1217,37 +1297,55 @@
             currentIndex = 0;
             correctCount = 0;
             wrongCount = 0;
-            questions = generateQuestions();
-            
             document.getElementById('resultScreen').className = 'result-screen';
-            document.getElementById('gameArea').style.display = 'block';
-            document.getElementById('loading').style.display = 'none';
-            
-            // Ricarica il player
-            if (player) {
-                player.destroy();
-            }
-            initPlayer();
-            loadQuestionUI();
+            document.getElementById('gameArea').style.display = 'none';
+            document.getElementById('loading').style.display = 'block';
+            document.getElementById('loadingSub').textContent = 'Ricarico le opening...';
+            initGame();
         }
 
         // ============================================================
-        // INIT
+        // INIT GAME
         // ============================================================
-        document.addEventListener('DOMContentLoaded', () => {
-            questions = generateQuestions();
-            
-            // Mostra loading
-            document.getElementById('loading').style.display = 'block';
-            document.getElementById('gameArea').style.display = 'none';
-            
-            loadYouTubeAPI();
-        });
+        async function initGame() {
+            try {
+                const animeList = await window.loadAnimeData();
+                if (!animeList || animeList.length < 10) {
+                    throw new Error('Non abbastanza anime');
+                }
 
-        // Player YouTube nascosto
-        document.body.insertAdjacentHTML('beforeend', `
-            <div id="youtubePlayer" style="position: absolute; width: 0; height: 0; opacity: 0; pointer-events: none;"></div>
-        `);
+                const generatedQuestions = await generateQuestionsFromAnime(animeList);
+                if (generatedQuestions.length < 3) {
+                    throw new Error('Poche opening trovate');
+                }
+
+                questions = generatedQuestions;
+                loadQuestion();
+
+            } catch (err) {
+                console.error('Errore init:', err);
+                document.getElementById('loading').innerHTML = `
+                    <div style="color: var(--accent-red); font-size: 2rem; margin-bottom: 16px;">❌</div>
+                    <p style="color: var(--text-primary); font-weight: 600;">Errore nel caricamento</p>
+                    <p style="color: var(--text-secondary); font-size: 0.9rem; margin-top: 8px;">${err.message}</p>
+                    <button onclick="restartGame()" style="
+                        margin-top: 20px;
+                        padding: 12px 32px;
+                        background: var(--accent-purple);
+                        border: none;
+                        border-radius: var(--radius-sm);
+                        color: #fff;
+                        font-family: 'Inter', sans-serif;
+                        font-weight: 600;
+                        cursor: pointer;
+                    ">Riprova</button>
+                `;
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            initGame();
+        });
     </script>
 
 </body>
