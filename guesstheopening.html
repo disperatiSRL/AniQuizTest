@@ -3,12 +3,13 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>AniQuiz - Indovina l'Opening (YouTube Search)</title>
+    <title>AniQuiz - Indovina l'Opening (YouTube API)</title>
     
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
     
     <style>
+        /* ... TUTTO LO STILE COME PRIMA ... */
         * {
             margin: 0;
             padding: 0;
@@ -665,7 +666,7 @@
                 <a href="../index.html" class="back-btn">
                     <i class="fas fa-arrow-left"></i> Torna indietro
                 </a>
-                <span><i class="fas fa-youtube"></i> YouTube Search</span>
+                <span><i class="fab fa-youtube"></i> YouTube API</span>
             </div>
         </div>
     </nav>
@@ -674,9 +675,9 @@
         
         <div class="game-header">
             <h1>🎵 Indovina l'Opening</h1>
-            <p>🔍 Ascolta la sigla e indovina l'anime!</p>
+            <p>🔍 Ricerca VERA su YouTube con API</p>
             <div class="audio-badge">
-                <i class="fab fa-youtube"></i> Ricerca su YouTube
+                <i class="fab fa-youtube"></i> YouTube Data API v3
             </div>
         </div>
 
@@ -777,6 +778,11 @@
 
     <script>
         // ============================================================
+        // 🔥 YOUTUBE API KEY
+        // ============================================================
+        const YOUTUBE_API_KEY = 'AIzaSyCeM7KVc9lZsdd8HM5b-PAfhx0usN8Aubo';
+
+        // ============================================================
         // ANIQUIZ CORE - Carica anime da AniList
         // ============================================================
         (function() {
@@ -798,10 +804,6 @@
             window.getTitle = function(media) {
                 return media.title.english || media.title.romaji || media.title.native || 'Sconosciuto';
             };
-
-            function getImage(media) {
-                return media.coverImage?.large || null;
-            }
 
             function buildMultiQuery() {
                 const sorts = [
@@ -897,52 +899,41 @@
         })();
 
         // ============================================================
-        // DATABASE YOUTUBE - ID delle opening
+        // 🔥 RICERCA VERA SU YOUTUBE CON API
         // ============================================================
-        const FALLBACK_VIDEOS = {
-            'Attack on Titan': '8OkpRK2_gVs',
-            'Demon Slayer': 'pmanD_s7G3U',
-            'Naruto': 'MvH9eu7xg3g',
-            'One Piece': 'Xa2bpzAe6Sk',
-            'Dragon Ball Z': '9DkE6P0Dk5I',
-            'Death Note': 'L_vyPLzBB2o',
-            'Fullmetal Alchemist': 'WAkWQsh1Ghc',
-            'Tokyo Ghoul': '50VWOB1S2KM',
-            'My Hero Academia': 'P4MIXh6CrO0',
-            'Jujutsu Kaisen': 'H5ahmWcG1ko',
-            'Neon Genesis Evangelion': 'Z9LkLb-7tXo',
-            'Cowboy Bebop': 'el8A3VHnlG8',
-            'Sword Art Online': 'A3k6vj2-F9Y',
-            'Hunter x Hunter': 'wMTmz1F5gqQ',
-            'Bleach': 'G7vXmVoFqlY',
-            'Spy x Family': '3lTLefquL4g',
-            'Chainsaw Man': 'dfl7A8R5pYk',
-            'Mob Psycho 100': 'mJ9N8PYzK7M',
-            'One Punch Man': 'hRl9Acs16HE',
-            'Re:Zero': 'L0o3qvWEj40',
-            'Vinland Saga': 'o0anfI8m-G0',
-            'Steins;Gate': 'AJSrsTkD0E0',
-            'Code Geass': 'pDmXKQh0Jzo',
-            'Gintama': 'IikPdzg0JpM',
-            'Fate/Zero': 'LhB2Y9Y7cK8',
-            'Kaguya-sama': 'I2g4bBYCzMk',
-            'Dr. Stone': 'jI4bJtSgZAs',
-            'Fire Force': 'YzD_0hzYz0I',
-            'The Promised Neverland': 'jJzSqI0p1WQ',
-            'Black Clover': 'kTtzECg2C7g',
-            'Fairy Tail': 'n8Zv-AxofXw',
-            'Boruto': 'iWXjA8qIXXA',
-            'Dragon Ball Super': 'UuVGFWgRjDU'
-        };
-
-        function getFirstVideoId(animeName) {
-            for (const [key, value] of Object.entries(FALLBACK_VIDEOS)) {
-                if (animeName.toLowerCase().includes(key.toLowerCase()) || 
-                    key.toLowerCase().includes(animeName.toLowerCase())) {
-                    return value;
+        async function searchYouTubeOpening(animeName) {
+            try {
+                // Cerca "nome anime opening"
+                const searchQuery = `${animeName} opening`;
+                const url = `https://www.googleapis.com/youtube/v3/search?part=snippet&maxResults=1&q=${encodeURIComponent(searchQuery)}&key=${YOUTUBE_API_KEY}&type=video&videoCategoryId=10`;
+                
+                console.log(`🔍 Cerco su YouTube: ${searchQuery}`);
+                const response = await fetch(url);
+                const data = await response.json();
+                
+                if (data.error) {
+                    console.error('Errore API YouTube:', data.error);
+                    return null;
                 }
+                
+                if (data.items && data.items.length > 0) {
+                    const video = data.items[0];
+                    const videoId = video.id.videoId;
+                    const title = video.snippet.title;
+                    console.log(`✅ Trovato: ${title} (${videoId})`);
+                    return {
+                        videoId: videoId,
+                        title: title,
+                        duration: 30
+                    };
+                } else {
+                    console.log(`❌ Nessun risultato per: ${animeName}`);
+                    return null;
+                }
+            } catch (error) {
+                console.error('Errore ricerca YouTube:', error);
+                return null;
             }
-            return null;
         }
 
         // ============================================================
@@ -971,67 +962,78 @@
             const questions = [];
             const shuffled = shuffleArrayLocal([...animeList]);
             
-            // Prendi SOLO anime che hanno un video su YouTube
-            let selected = [];
-            for (const anime of shuffled) {
-                const title = window.getTitle(anime);
-                const videoId = getFirstVideoId(title);
-                if (videoId) {
-                    selected.push({
-                        ...anime,
-                        _videoId: videoId,
-                        _title: title
-                    });
-                }
-                if (selected.length >= totalQuestions) break;
-            }
-
             let loadingSub = document.getElementById('loadingSub');
             
-            for (let i = 0; i < selected.length; i++) {
-                const anime = selected[i];
-                const title = anime._title;
-                const videoId = anime._videoId;
+            for (let i = 0; i < shuffled.length && questions.length < totalQuestions; i++) {
+                const anime = shuffled[i];
+                const title = window.getTitle(anime);
                 
                 if (loadingSub) {
-                    loadingSub.textContent = `Preparando: ${title} (${i+1}/${selected.length})`;
+                    loadingSub.textContent = `🔍 Cercando su YouTube: ${title} (${questions.length + 1}/${totalQuestions})`;
                 }
 
-                // 🔥 CERCA ALTRI ANIME PER LE OPZIONI (MA NON USARE LO STESSO)
+                // 🔥 FA LA RICERCA VERA SU YOUTUBE CON API
+                const searchResult = await searchYouTubeOpening(title);
+                
+                if (!searchResult || !searchResult.videoId) {
+                    console.log(`❌ Nessun risultato per: ${title}`);
+                    continue;
+                }
+
+                const videoId = searchResult.videoId;
+
+                // Trova distrattori
                 const others = animeList.filter(a => a.id !== anime.id);
                 const shuffledOthers = shuffleArrayLocal([...others]);
                 
-                // Prendi 3 distrattori che HANNO un video su YouTube
                 let distractors = [];
                 for (const other of shuffledOthers) {
                     const otherTitle = window.getTitle(other);
-                    const otherVideoId = getFirstVideoId(otherTitle);
-                    if (otherVideoId && otherVideoId !== videoId) {
+                    if (distractors.length >= 3) break;
+                    
+                    // Cerca anche i distrattori su YouTube
+                    const otherSearch = await searchYouTubeOpening(otherTitle);
+                    if (otherSearch && otherSearch.videoId && otherSearch.videoId !== videoId) {
                         distractors.push({
                             text: otherTitle,
                             isCorrect: false,
-                            videoId: otherVideoId
+                            videoId: otherSearch.videoId
                         });
                     }
-                    if (distractors.length >= 3) break;
+                    // Aspetta un po' per non fare troppe richieste
+                    await new Promise(r => setTimeout(r, 100));
                 }
 
-                // Se non abbiamo abbastanza distrattori, salta questa domanda
+                if (distractors.length < 3) {
+                    // Se non ha abbastanza distrattori, usa dei placeholder
+                    const fallbackTitles = ['Naruto', 'One Piece', 'Dragon Ball Z', 'Bleach', 'Death Note', 'Attack on Titan'];
+                    for (const fb of fallbackTitles) {
+                        if (fb !== title && !distractors.some(d => d.text === fb)) {
+                            const fbSearch = await searchYouTubeOpening(fb);
+                            if (fbSearch && fbSearch.videoId && fbSearch.videoId !== videoId) {
+                                distractors.push({
+                                    text: fb,
+                                    isCorrect: false,
+                                    videoId: fbSearch.videoId
+                                });
+                            }
+                        }
+                        if (distractors.length >= 3) break;
+                        await new Promise(r => setTimeout(r, 100));
+                    }
+                }
+
                 if (distractors.length < 3) continue;
 
-                // 🔥 OPZIONI: il corretto + 3 distrattori
                 const options = shuffleArrayLocal([
                     { text: title, isCorrect: true, videoId: videoId },
                     ...distractors
                 ]);
 
-                // 🔥 MOSTRA LA COPERTINA DELL'ANIME CORRETTO
-                const coverImage = anime.coverImage?.large || null;
-
                 questions.push({
                     anime: title,
                     videoId: videoId,
-                    cover: coverImage,
+                    cover: anime.coverImage?.large || null,
                     options: options,
                     start: 0,
                     duration: 30
@@ -1041,6 +1043,9 @@
             return questions;
         }
 
+        // ============================================================
+        // YOUTUBE PLAYER
+        // ============================================================
         function loadYouTubeAPI() {
             if (window.YT) {
                 initPlayer();
@@ -1063,7 +1068,7 @@
             }
 
             const q = questions[currentIndex];
-            if (!q) {
+            if (!q || !q.videoId) {
                 nextQuestion();
                 return;
             }
@@ -1114,17 +1119,10 @@
 
         function onPlayerError(event) {
             console.error('Errore YouTube:', event.data);
-            document.getElementById('loading').style.display = 'none';
-            document.getElementById('gameArea').style.display = 'block';
-            
-            const feedback = document.getElementById('feedback');
-            feedback.className = 'feedback show wrong';
-            document.getElementById('feedbackTitle').textContent = '⚠️ Errore audio';
-            document.getElementById('feedbackText').textContent = 'Impossibile caricare l\'audio. Passa alla prossima domanda.';
-            
-            const nextBtn = document.getElementById('nextBtn');
-            nextBtn.textContent = 'Prossima domanda →';
-            nextBtn.className = 'next-btn show';
+            // Passa alla prossima domanda automaticamente
+            setTimeout(() => {
+                nextQuestion();
+            }, 1000);
         }
 
         function togglePlay() {
@@ -1196,7 +1194,6 @@
             document.getElementById('wrongCount').textContent = wrongCount;
             document.getElementById('progressFill').style.width = ((currentIndex) / questions.length * 100) + '%';
 
-            // 🔥 MOSTRA LA COPERTINA DELL'ANIME CORRETTO
             const cover = document.getElementById('animeCover');
             if (q.cover) {
                 cover.src = q.cover;
