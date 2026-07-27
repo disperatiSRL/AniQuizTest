@@ -3,14 +3,14 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>AniQuiz - Indovina l'Opening</title>
+    <title>AniQuiz - Indovina l'Opening (Solo Audio)</title>
     
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
     
     <style>
         /* ============================================================
-           RESET & VARIABILI (stessi dell'index)
+           RESET & VARIABILI
            ============================================================ */
         * {
             margin: 0;
@@ -35,6 +35,12 @@
             --radius: 16px;
             --radius-sm: 10px;
             --transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
         }
 
         body {
@@ -66,7 +72,7 @@
         }
 
         /* ============================================================
-           NAVBAR (uguale all'index)
+           NAVBAR
            ============================================================ */
         .navbar {
             background: rgba(10, 10, 15, 0.85);
@@ -177,6 +183,21 @@
             font-size: 1.05rem;
         }
 
+        .game-header .audio-badge {
+            display: inline-block;
+            margin-top: 12px;
+            background: rgba(168, 85, 247, 0.15);
+            color: var(--accent-purple);
+            padding: 6px 20px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 600;
+        }
+
+        .game-header .audio-badge i {
+            margin-right: 8px;
+        }
+
         /* Stats bar */
         .stats-bar {
             display: flex;
@@ -209,45 +230,134 @@
             font-size: 1.1rem;
         }
 
-        /* Video Player */
-        .video-wrapper {
+        /* Audio Player - STILE SPETTACOLARE */
+        .audio-wrapper {
             background: var(--bg-card);
             border-radius: var(--radius);
-            overflow: hidden;
-            border: 1px solid rgba(255, 255, 255, 0.04);
+            padding: 30px;
             margin-bottom: 24px;
-            position: relative;
+            border: 1px solid rgba(255, 255, 255, 0.04);
+            text-align: center;
         }
 
-        .video-wrapper .video-container {
+        .audio-visual {
             position: relative;
-            padding-bottom: 56.25%; /* 16:9 */
-            height: 0;
-            overflow: hidden;
+            width: 200px;
+            height: 200px;
+            margin: 0 auto 24px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, rgba(168, 85, 247, 0.1), rgba(255, 107, 157, 0.1));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 2px solid rgba(168, 85, 247, 0.2);
+            transition: var(--transition);
         }
 
-        .video-wrapper .video-container iframe {
+        .audio-visual.playing {
+            animation: pulse 1.5s ease-in-out infinite;
+            border-color: var(--accent-purple);
+            box-shadow: 0 0 60px rgba(168, 85, 247, 0.15);
+        }
+
+        @keyframes pulse {
+            0%, 100% {
+                transform: scale(1);
+                box-shadow: 0 0 40px rgba(168, 85, 247, 0.1);
+            }
+            50% {
+                transform: scale(1.03);
+                box-shadow: 0 0 60px rgba(168, 85, 247, 0.2);
+            }
+        }
+
+        .audio-visual .anime-cover {
+            width: 160px;
+            height: 160px;
+            border-radius: 50%;
+            object-fit: cover;
+            background: var(--bg-secondary);
+            border: 3px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .audio-visual .play-icon {
             position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--accent-purple), #7c3aed);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.6rem;
+            color: #fff;
+            cursor: pointer;
+            transition: var(--transition);
+            box-shadow: 0 0 40px rgba(168, 85, 247, 0.3);
         }
 
-        .video-controls {
+        .audio-visual .play-icon:hover {
+            transform: scale(1.1);
+            box-shadow: 0 0 60px rgba(168, 85, 247, 0.5);
+        }
+
+        .audio-visual .play-icon i {
+            margin-left: 4px;
+        }
+
+        /* Waveform animato */
+        .waveform {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 4px;
+            height: 40px;
+            margin-top: 16px;
+        }
+
+        .waveform .bar {
+            width: 4px;
+            height: 10px;
+            background: var(--accent-purple);
+            border-radius: 2px;
+            transition: height 0.3s ease;
+        }
+
+        .waveform.playing .bar {
+            animation: wave 0.8s ease-in-out infinite alternate;
+        }
+
+        .waveform.playing .bar:nth-child(1) { animation-delay: 0s; height: 20px; }
+        .waveform.playing .bar:nth-child(2) { animation-delay: 0.1s; height: 35px; }
+        .waveform.playing .bar:nth-child(3) { animation-delay: 0.2s; height: 25px; }
+        .waveform.playing .bar:nth-child(4) { animation-delay: 0.3s; height: 40px; }
+        .waveform.playing .bar:nth-child(5) { animation-delay: 0.4s; height: 30px; }
+        .waveform.playing .bar:nth-child(6) { animation-delay: 0.5s; height: 45px; }
+        .waveform.playing .bar:nth-child(7) { animation-delay: 0.6s; height: 20px; }
+        .waveform.playing .bar:nth-child(8) { animation-delay: 0.7s; height: 35px; }
+        .waveform.playing .bar:nth-child(9) { animation-delay: 0.8s; height: 25px; }
+        .waveform.playing .bar:nth-child(10) { animation-delay: 0.9s; height: 40px; }
+        .waveform.playing .bar:nth-child(11) { animation-delay: 0.2s; height: 30px; }
+        .waveform.playing .bar:nth-child(12) { animation-delay: 0.5s; height: 20px; }
+
+        @keyframes wave {
+            0% { height: 10px; }
+            100% { height: 45px; }
+        }
+
+        .audio-controls {
             display: flex;
             justify-content: center;
             gap: 12px;
-            padding: 16px;
-            background: var(--bg-secondary);
+            margin-top: 16px;
             flex-wrap: wrap;
         }
 
-        .video-controls button {
+        .audio-controls button {
             background: var(--bg-card);
             border: 1px solid rgba(255, 255, 255, 0.06);
             color: var(--text-primary);
-            padding: 10px 20px;
+            padding: 10px 24px;
             border-radius: var(--radius-sm);
             cursor: pointer;
             font-family: 'Inter', sans-serif;
@@ -259,39 +369,41 @@
             gap: 8px;
         }
 
-        .video-controls button:hover {
+        .audio-controls button:hover {
             background: var(--bg-card-hover);
             border-color: rgba(255, 255, 255, 0.1);
         }
 
-        .video-controls button.primary {
+        .audio-controls button.primary {
             background: linear-gradient(135deg, var(--accent-purple), #7c3aed);
             border: none;
         }
 
-        .video-controls button.primary:hover {
+        .audio-controls button.primary:hover {
             transform: scale(1.05);
             box-shadow: 0 0 30px rgba(168, 85, 247, 0.3);
         }
 
-        .video-controls button.danger {
+        .audio-controls button.danger {
             background: linear-gradient(135deg, var(--accent-red), #dc2626);
             border: none;
         }
 
-        .video-controls button.danger:hover {
+        .audio-controls button.danger:hover {
             transform: scale(1.05);
             box-shadow: 0 0 30px rgba(248, 113, 113, 0.3);
         }
 
-        .video-controls button.success {
-            background: linear-gradient(135deg, var(--accent-green), #16a34a);
-            border: none;
+        /* Timer */
+        .timer {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+            margin-top: 12px;
         }
 
-        .video-controls button.success:hover {
-            transform: scale(1.05);
-            box-shadow: 0 0 30px rgba(74, 222, 128, 0.3);
+        .timer .time {
+            color: var(--text-primary);
+            font-weight: 700;
         }
 
         /* Options */
@@ -530,11 +642,18 @@
             .stats-bar .stat {
                 justify-content: center;
             }
-            .video-controls {
-                flex-direction: column;
+            .audio-visual {
+                width: 150px;
+                height: 150px;
             }
-            .video-controls button {
-                justify-content: center;
+            .audio-visual .anime-cover {
+                width: 120px;
+                height: 120px;
+            }
+            .audio-visual .play-icon {
+                width: 50px;
+                height: 50px;
+                font-size: 1.2rem;
             }
             .navbar .container {
                 flex-direction: column;
@@ -557,6 +676,9 @@
             .option-btn {
                 font-size: 0.85rem;
                 padding: 12px 16px;
+            }
+            .audio-wrapper {
+                padding: 20px 16px;
             }
         }
     </style>
@@ -591,7 +713,10 @@
         <!-- Header -->
         <div class="game-header">
             <h1>🎵 Indovina l'Opening</h1>
-            <p>Ascolta la sigla e indovina l'anime!</p>
+            <p>🎧 Ascolta la sigla a occhi chiusi... indovina l'anime!</p>
+            <div class="audio-badge">
+                <i class="fas fa-headphones"></i> Solo Audio · Nessun video
+            </div>
         </div>
 
         <!-- Stats -->
@@ -624,27 +749,47 @@
         <!-- Game Area -->
         <div id="gameArea" style="display: none;">
             
-            <!-- Video -->
-            <div class="video-wrapper">
-                <div class="video-container">
-                    <iframe
-                        id="youtubePlayer"
-                        src=""
-                        title="YouTube video player"
-                        frameborder="0"
-                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-                        allowfullscreen>
-                    </iframe>
+            <!-- Audio Player -->
+            <div class="audio-wrapper">
+                <div class="audio-visual" id="audioVisual">
+                    <img 
+                        class="anime-cover" 
+                        id="animeCover" 
+                        src="" 
+                        alt="Copertina anime"
+                        onerror="this.style.display='none'"
+                    />
+                    <div class="play-icon" id="playBtn" onclick="togglePlay()">
+                        <i class="fas fa-play"></i>
+                    </div>
                 </div>
-                <div class="video-controls">
-                    <button onclick="playVideo()" class="primary">
-                        <i class="fas fa-play"></i> Play
+
+                <!-- Waveform -->
+                <div class="waveform" id="waveform">
+                    <div class="bar"></div>
+                    <div class="bar"></div>
+                    <div class="bar"></div>
+                    <div class="bar"></div>
+                    <div class="bar"></div>
+                    <div class="bar"></div>
+                    <div class="bar"></div>
+                    <div class="bar"></div>
+                    <div class="bar"></div>
+                    <div class="bar"></div>
+                    <div class="bar"></div>
+                    <div class="bar"></div>
+                </div>
+
+                <div class="timer">
+                    ⏱️ <span class="time" id="timerDisplay">0:00</span> / <span id="totalDuration">0:30</span>
+                </div>
+
+                <div class="audio-controls">
+                    <button class="primary" onclick="togglePlay()">
+                        <i class="fas fa-play" id="playIcon"></i> <span id="playText">Play</span>
                     </button>
-                    <button onclick="pauseVideo()">
-                        <i class="fas fa-pause"></i> Pausa
-                    </button>
-                    <button onclick="resetVideo()">
-                        <i class="fas fa-undo"></i> Reset
+                    <button onclick="resetAudio()">
+                        <i class="fas fa-undo"></i> Ripeti
                     </button>
                 </div>
             </div>
@@ -685,96 +830,111 @@
     ============================================================ -->
     <script>
         // ============================================================
-        // DATABASE OPENING (esempio - tu puoi espanderlo)
+        // DATABASE OPENING (con copertine anime)
         // ============================================================
         const OPENING_DB = [
             {
                 anime: "Attack on Titan",
-                videoId: "8OkpRK2_gVs", // Guren no Yumiya
+                videoId: "8OkpRK2_gVs",
+                cover: "https://anilist.co/img/header/16498.jpg",
                 start: 0,
                 duration: 30
             },
             {
                 anime: "Demon Slayer",
-                videoId: "pmanD_s7G3U", // Gurenge
+                videoId: "pmanD_s7G3U",
+                cover: "https://anilist.co/img/header/101922.jpg",
                 start: 0,
                 duration: 30
             },
             {
                 anime: "Naruto",
-                videoId: "MvH9eu7xg3g", // Haruka Kanata
+                videoId: "MvH9eu7xg3g",
+                cover: "https://anilist.co/img/header/20.jpg",
                 start: 0,
                 duration: 30
             },
             {
                 anime: "One Piece",
-                videoId: "Xa2bpzAe6Sk", // We Are!
+                videoId: "Xa2bpzAe6Sk",
+                cover: "https://anilist.co/img/header/21.jpg",
                 start: 0,
                 duration: 30
             },
             {
                 anime: "Dragon Ball Z",
-                videoId: "9DkE6P0Dk5I", // Cha-La Head-Cha-La
+                videoId: "9DkE6P0Dk5I",
+                cover: "https://anilist.co/img/header/813.jpg",
                 start: 0,
                 duration: 30
             },
             {
                 anime: "Death Note",
-                videoId: "L_vyPLzBB2o", // The WORLD
+                videoId: "L_vyPLzBB2o",
+                cover: "https://anilist.co/img/header/1535.jpg",
                 start: 0,
                 duration: 30
             },
             {
                 anime: "Fullmetal Alchemist: Brotherhood",
-                videoId: "WAkWQsh1Ghc", // Again
+                videoId: "WAkWQsh1Ghc",
+                cover: "https://anilist.co/img/header/5114.jpg",
                 start: 0,
                 duration: 30
             },
             {
                 anime: "Tokyo Ghoul",
-                videoId: "50VWOB1S2KM", // Unravel
+                videoId: "50VWOB1S2KM",
+                cover: "https://anilist.co/img/header/20605.jpg",
                 start: 0,
                 duration: 30
             },
             {
                 anime: "My Hero Academia",
-                videoId: "P4MIXh6CrO0", // The Day
+                videoId: "P4MIXh6CrO0",
+                cover: "https://anilist.co/img/header/21459.jpg",
                 start: 0,
                 duration: 30
             },
             {
                 anime: "Jujutsu Kaisen",
-                videoId: "H5ahmWcG1ko", // Kaikai Kitan
+                videoId: "H5ahmWcG1ko",
+                cover: "https://anilist.co/img/header/113415.jpg",
                 start: 0,
                 duration: 30
             },
             {
                 anime: "Neon Genesis Evangelion",
-                videoId: "Z9LkLb-7tXo", // Zankoku na Tenshi no Thesis
+                videoId: "Z9LkLb-7tXo",
+                cover: "https://anilist.co/img/header/30.jpg",
                 start: 0,
                 duration: 30
             },
             {
                 anime: "Cowboy Bebop",
-                videoId: "el8A3VHnlG8", // Tank!
+                videoId: "el8A3VHnlG8",
+                cover: "https://anilist.co/img/header/23.jpg",
                 start: 0,
                 duration: 30
             },
             {
                 anime: "Sword Art Online",
-                videoId: "A3k6vj2-F9Y", // Crossing Field
+                videoId: "A3k6vj2-F9Y",
+                cover: "https://anilist.co/img/header/11757.jpg",
                 start: 0,
                 duration: 30
             },
             {
                 anime: "Hunter x Hunter",
-                videoId: "wMTmz1F5gqQ", // Departure!
+                videoId: "wMTmz1F5gqQ",
+                cover: "https://anilist.co/img/header/1535.jpg",
                 start: 0,
                 duration: 30
             },
             {
                 anime: "Bleach",
-                videoId: "G7vXmVoFqlY", // *~Asterisk~
+                videoId: "G7vXmVoFqlY",
+                cover: "https://anilist.co/img/header/22.jpg",
                 start: 0,
                 duration: 30
             }
@@ -789,6 +949,9 @@
         let wrongCount = 0;
         let isAnswered = false;
         let totalQuestions = 10;
+        let player = null;
+        let isPlaying = false;
+        let timerInterval = null;
 
         function shuffleArray(arr) {
             for (let i = arr.length - 1; i > 0; i--) {
@@ -802,7 +965,7 @@
             const shuffled = shuffleArray([...OPENING_DB]);
             const selected = shuffled.slice(0, totalQuestions);
             
-            return selected.map((item, index) => {
+            return selected.map((item) => {
                 const others = OPENING_DB.filter(a => a.anime !== item.anime);
                 const shuffledOthers = shuffleArray([...others]).slice(0, 3);
                 const options = shuffleArray([
@@ -812,13 +975,124 @@
                 
                 return {
                     ...item,
-                    id: index,
                     options: options
                 };
             });
         }
 
-        function loadQuestion() {
+        function loadYouTubeAPI() {
+            if (window.YT) {
+                initPlayer();
+                return;
+            }
+
+            const tag = document.createElement('script');
+            tag.src = 'https://www.youtube.com/iframe_api';
+            document.head.appendChild(tag);
+
+            window.onYouTubeIframeAPIReady = () => {
+                initPlayer();
+            };
+        }
+
+        function initPlayer() {
+            const q = questions[currentIndex];
+            if (!q) return;
+
+            player = new YT.Player('youtubePlayer', {
+                height: '0',
+                width: '0',
+                videoId: q.videoId,
+                playerVars: {
+                    autoplay: 0,
+                    controls: 0,
+                    modestbranding: 1,
+                    rel: 0,
+                    showinfo: 0,
+                    start: q.start,
+                    end: q.start + q.duration
+                },
+                events: {
+                    onReady: onPlayerReady,
+                    onStateChange: onPlayerStateChange
+                }
+            });
+        }
+
+        function onPlayerReady(event) {
+            document.getElementById('loading').style.display = 'none';
+            document.getElementById('gameArea').style.display = 'block';
+            loadQuestionUI();
+            updateTimer();
+        }
+
+        function onPlayerStateChange(event) {
+            if (event.data === YT.PlayerState.ENDED) {
+                // Quando finisce, ferma tutto
+                isPlaying = false;
+                document.getElementById('playIcon').className = 'fas fa-play';
+                document.getElementById('playText').textContent = 'Play';
+                document.getElementById('audioVisual').classList.remove('playing');
+                document.getElementById('waveform').classList.remove('playing');
+                clearInterval(timerInterval);
+            }
+        }
+
+        function togglePlay() {
+            if (!player) return;
+
+            if (isPlaying) {
+                player.pauseVideo();
+                isPlaying = false;
+                document.getElementById('playIcon').className = 'fas fa-play';
+                document.getElementById('playText').textContent = 'Play';
+                document.getElementById('audioVisual').classList.remove('playing');
+                document.getElementById('waveform').classList.remove('playing');
+                clearInterval(timerInterval);
+            } else {
+                player.playVideo();
+                isPlaying = true;
+                document.getElementById('playIcon').className = 'fas fa-pause';
+                document.getElementById('playText').textContent = 'Pausa';
+                document.getElementById('audioVisual').classList.add('playing');
+                document.getElementById('waveform').classList.add('playing');
+                updateTimer();
+            }
+        }
+
+        function resetAudio() {
+            if (!player) return;
+            const q = questions[currentIndex];
+            player.seekTo(q.start);
+            player.pauseVideo();
+            isPlaying = false;
+            document.getElementById('playIcon').className = 'fas fa-play';
+            document.getElementById('playText').textContent = 'Play';
+            document.getElementById('audioVisual').classList.remove('playing');
+            document.getElementById('waveform').classList.remove('playing');
+            clearInterval(timerInterval);
+            updateTimer();
+        }
+
+        function updateTimer() {
+            clearInterval(timerInterval);
+            timerInterval = setInterval(() => {
+                if (player && player.getCurrentTime) {
+                    const current = player.getCurrentTime() || 0;
+                    const q = questions[currentIndex];
+                    const elapsed = current - (q.start || 0);
+                    const total = q.duration || 30;
+                    const minutes = Math.floor(elapsed / 60);
+                    const seconds = Math.floor(elapsed % 60);
+                    document.getElementById('timerDisplay').textContent = 
+                        `${minutes}:${seconds.toString().padStart(2, '0')}`;
+                    document.getElementById('totalDuration').textContent = 
+                        `${Math.floor(total / 60)}:${Math.floor(total % 60).toString().padStart(2, '0')}`;
+                }
+            }, 100);
+        }
+
+        function loadQuestionUI() {
             if (currentIndex >= questions.length) {
                 showResult();
                 return;
@@ -834,10 +1108,11 @@
             document.getElementById('wrongCount').textContent = wrongCount;
             document.getElementById('progressFill').style.width = ((currentIndex) / questions.length * 100) + '%';
 
-            // Carica video
-            const player = document.getElementById('youtubePlayer');
-            player.src = `https://www.youtube.com/embed/${q.videoId}?start=${q.start}&autoplay=1&enablejsapi=1`;
-            
+            // Aggiorna cover
+            const cover = document.getElementById('animeCover');
+            cover.src = q.cover || '';
+            cover.style.display = q.cover ? 'block' : 'none';
+
             // Genera opzioni
             const grid = document.getElementById('optionsGrid');
             grid.innerHTML = '';
@@ -856,15 +1131,24 @@
             document.getElementById('feedback').className = 'feedback';
             document.getElementById('nextBtn').className = 'next-btn';
             
-            // Mostra game area
-            document.getElementById('loading').style.display = 'none';
-            document.getElementById('gameArea').style.display = 'block';
-            document.getElementById('resultScreen').className = 'result-screen';
+            // Reset audio
+            resetAudio();
         }
 
         function selectOption(btn, isCorrect) {
             if (isAnswered) return;
             isAnswered = true;
+
+            // Ferma l'audio
+            if (player && isPlaying) {
+                player.pauseVideo();
+                isPlaying = false;
+                document.getElementById('playIcon').className = 'fas fa-play';
+                document.getElementById('playText').textContent = 'Play';
+                document.getElementById('audioVisual').classList.remove('playing');
+                document.getElementById('waveform').classList.remove('playing');
+                clearInterval(timerInterval);
+            }
 
             const allBtns = document.querySelectorAll('.option-btn');
             allBtns.forEach(b => b.classList.add('disabled'));
@@ -877,17 +1161,16 @@
                 btn.classList.add('correct');
                 correctCount++;
                 feedback.className = 'feedback show correct';
-                feedbackTitle.textContent = '✅ Corretto!';
-                feedbackText.textContent = `Hai riconosciuto "${questions[currentIndex].anime}"!`;
+                feedbackTitle.textContent = '🎵 Perfetto!';
+                feedbackText.textContent = `Hai riconosciuto "${questions[currentIndex].anime}" dalla sigla!`;
             } else {
                 btn.classList.add('wrong');
                 wrongCount++;
                 feedback.className = 'feedback show wrong';
                 feedbackTitle.textContent = '❌ Sbagliato!';
                 const correctAnswer = questions[currentIndex].options.find(o => o.isCorrect);
-                feedbackText.textContent = `L'anime corretto era "${correctAnswer.text}"`;
+                feedbackText.textContent = `Era "${correctAnswer.text}"! Riprova con la prossima!`;
                 
-                // Mostra la risposta corretta
                 allBtns.forEach(b => {
                     if (b.dataset.correct === 'true') {
                         b.classList.add('correct');
@@ -895,11 +1178,9 @@
                 });
             }
 
-            // Aggiorna stats
             document.getElementById('correctCount').textContent = correctCount;
             document.getElementById('wrongCount').textContent = wrongCount;
 
-            // Mostra next button
             const nextBtn = document.getElementById('nextBtn');
             if (currentIndex < questions.length - 1) {
                 nextBtn.textContent = 'Prossima domanda →';
@@ -911,7 +1192,7 @@
 
         function nextQuestion() {
             currentIndex++;
-            loadQuestion();
+            loadQuestionUI();
         }
 
         function showResult() {
@@ -923,11 +1204,11 @@
             
             let message = '';
             const pct = correctCount / questions.length;
-            if (pct === 1) message = '🔥 Perfetto! Sei un vero otaku!';
-            else if (pct >= 0.8) message = '🌟 Ottimo! Conosci bene le opening!';
-            else if (pct >= 0.6) message = '👏 Buon lavoro! Continua così!';
-            else if (pct >= 0.4) message = '📺 Non male, ma puoi fare di più!';
-            else message = '🎧 Ascolta più opening e riprova!';
+            if (pct === 1) message = '🔥 Perfetto! Hai l\'orecchio di un vero otaku!';
+            else if (pct >= 0.8) message = '🌟 Ottimo! Riconosci le opening come un pro!';
+            else if (pct >= 0.6) message = '👏 Buon lavoro! Continua ad allenare l\'orecchio!';
+            else if (pct >= 0.4) message = '📺 Non male, ma ascolta più sigle!';
+            else message = '🎧 Allenati con più opening e riprova!';
             
             document.getElementById('resultMessage').textContent = message;
         }
@@ -942,28 +1223,12 @@
             document.getElementById('gameArea').style.display = 'block';
             document.getElementById('loading').style.display = 'none';
             
-            loadQuestion();
-        }
-
-        // ============================================================
-        // YOUTUBE CONTROLS
-        // ============================================================
-        function playVideo() {
-            const player = document.getElementById('youtubePlayer');
-            player.contentWindow.postMessage('{"event":"command","func":"playVideo","args":""}', '*');
-        }
-
-        function pauseVideo() {
-            const player = document.getElementById('youtubePlayer');
-            player.contentWindow.postMessage('{"event":"command","func":"pauseVideo","args":""}', '*');
-        }
-
-        function resetVideo() {
-            const player = document.getElementById('youtubePlayer');
-            const q = questions[currentIndex];
-            if (q) {
-                player.src = `https://www.youtube.com/embed/${q.videoId}?start=${q.start}&autoplay=1&enablejsapi=1`;
+            // Ricarica il player
+            if (player) {
+                player.destroy();
             }
+            initPlayer();
+            loadQuestionUI();
         }
 
         // ============================================================
@@ -971,14 +1236,18 @@
         // ============================================================
         document.addEventListener('DOMContentLoaded', () => {
             questions = generateQuestions();
-            loadQuestion();
+            
+            // Mostra loading
+            document.getElementById('loading').style.display = 'block';
+            document.getElementById('gameArea').style.display = 'none';
+            
+            loadYouTubeAPI();
         });
 
-        // Gestisci il caricamento del video
-        document.getElementById('youtubePlayer').addEventListener('load', () => {
-            document.getElementById('loading').style.display = 'none';
-            document.getElementById('gameArea').style.display = 'block';
-        });
+        // Player YouTube nascosto
+        document.body.insertAdjacentHTML('beforeend', `
+            <div id="youtubePlayer" style="position: absolute; width: 0; height: 0; opacity: 0; pointer-events: none;"></div>
+        `);
     </script>
 
 </body>
