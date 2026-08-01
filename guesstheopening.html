@@ -83,21 +83,18 @@
         .player-wrapper {
             position: relative;
             width: 100%;
-            padding-bottom: 30px;
-            margin-bottom: 10px;
+            padding: 10px 0 20px;
             display: flex;
-            justify-content: center;
-            align-items: center;
             flex-direction: column;
+            align-items: center;
         }
 
-        #youtube-player {
+        #youtube-player-container {
             width: 0;
             height: 0;
-            border: none;
             opacity: 0;
-            position: absolute;
             pointer-events: none;
+            position: absolute;
         }
 
         .audio-visual {
@@ -126,10 +123,49 @@
 
         .now-playing {
             text-align: center;
-            font-size: 0.85rem;
+            font-size: 0.95rem;
             color: #7a82aa;
             margin-top: 5px;
-            min-height: 24px;
+            min-height: 28px;
+        }
+
+        .controls {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin: 12px 0 8px;
+        }
+
+        .controls button {
+            background: rgba(255, 255, 255, 0.07);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 60px;
+            color: #f0f0f0;
+            font-size: 1.2rem;
+            padding: 8px 20px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            backdrop-filter: blur(4px);
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .controls button:hover:not(:disabled) {
+            background: rgba(79, 172, 254, 0.2);
+            border-color: #4facfe;
+            transform: scale(1.05);
+        }
+
+        .controls button:disabled {
+            opacity: 0.4;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .controls .play-btn {
+            min-width: 100px;
+            justify-content: center;
         }
 
         .cover-image {
@@ -280,6 +316,17 @@
             h1 {
                 font-size: 1.8rem;
             }
+            .controls {
+                gap: 10px;
+                flex-wrap: wrap;
+            }
+            .controls button {
+                font-size: 1rem;
+                padding: 6px 14px;
+            }
+            .controls .play-btn {
+                min-width: 70px;
+            }
         }
     </style>
 </head>
@@ -296,8 +343,14 @@
 
     <div class="player-wrapper">
         <div class="audio-visual" id="audioVisual">🔊</div>
-        <div class="now-playing" id="nowPlaying">🎶 In riproduzione...</div>
-        <iframe id="youtube-player" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+        <div class="now-playing" id="nowPlaying">🎶 Ascolta l'opening...</div>
+        <div id="youtube-player-container"></div>
+
+        <div class="controls">
+            <button id="seekBackBtn" title="Indietro 10s">⏪ -10</button>
+            <button id="playPauseBtn" class="play-btn" disabled>▶️ Riproduci</button>
+            <button id="seekForwardBtn" title="Avanti 10s">+10 ⏩</button>
+        </div>
     </div>
 
     <img id="coverImage" class="cover-image" src="" alt="Copertina anime" style="display: none;">
@@ -311,6 +364,8 @@
     <div id="errorMsg" class="error-msg hidden"></div>
 </div>
 
+<script src="https://www.youtube.com/iframe_api"></script>
+
 <script>
     // ---------- CONFIG ----------
     const YOUTUBE_API_KEY = 'AIzaSyCXsFDpO4dYRiwlTPA4s5rbaIpCG4_7EB4';
@@ -319,20 +374,25 @@
     const OPTIONS_COUNT = 4;
 
     // ---------- STATO ----------
-    let animeList = [];          // tutti gli anime caricati
+    let animeList = [];
     let currentQuestion = 0;
     let score = 0;
-    let correctAnime = null;     // anime corrente (oggetto)
-    let currentOptions = [];     // array di oggetti anime (4)
+    let correctAnime = null;
+    let currentOptions = [];
     let isAnswered = false;
     let isPlaying = false;
-    let youtubeIframe = null;
-    let currentVideoId = null;
-    let questionsQueue = [];     // coda di domande pronte
+    let questionsQueue = [];
     let isLoading = false;
 
+    // YouTube player
+    let ytPlayer = null;
+    let currentVideoId = null;
+    let playerReady = false;
+    let isPaused = false;
+    let pendingVideoId = null; // video da caricare quando player è pronto
+
     // DOM refs
-    const playerIframe = document.getElementById('youtube-player');
+    const playerContainer = document.getElementById('youtube-player-container');
     const audioVisual = document.getElementById('audioVisual');
     const nowPlaying = document.getElementById('nowPlaying');
     const coverImage = document.getElementById('coverImage');
@@ -343,6 +403,9 @@
     const errorMsg = document.getElementById('errorMsg');
     const scoreDisplay = document.getElementById('scoreDisplay');
     const questionCounter = document.getElementById('questionCounter');
+    const playPauseBtn = document.getElementById('playPauseBtn');
+    const seekBackBtn = document.getElementById('seekBackBtn');
+    const seekForwardBtn = document.getElementById('seekForwardBtn');
 
     // ---------- FUNZIONI DI UTILITÀ ----------
     function shuffleArray(arr) {
@@ -409,7 +472,6 @@
     // ---------- API YOUTUBE ----------
     async function searchYouTubeOpening(anime) {
         const title = getAnimeTitle(anime);
-        // Prova con "opening" e "OP"
         const queries = [
             `${title} opening`,
             `${title} OP`,
@@ -421,8 +483,6 @@
                 const response = await fetch(url);
                 const data = await response.json();
                 if (data.items && data.items.length > 0) {
-                    // Prendiamo il primo video che sembra essere un opening (escludiamo trailer, etc?)
-                    // Per semplicità prendiamo il primo
                     const item = data.items[0];
                     if (item.id && item.id.videoId) {
                         return item.id.videoId;
@@ -431,7 +491,6 @@
             } catch (e) {
                 console.warn(`Ricerca fallita per "${query}"`, e);
             }
-            // Piccola pausa per evitare rate limit
             await sleep(200);
         }
         return null;
@@ -445,7 +504,6 @@
                 if (!animeList || animeList.length === 0) {
                     throw new Error('Nessun anime trovato.');
                 }
-                // Mescoliamo per varietà
                 shuffleArray(animeList);
             } catch (e) {
                 showError(e.message);
@@ -453,7 +511,6 @@
             }
         }
 
-        // Prepariamo MAX_QUESTIONS domande
         questionsQueue = [];
         let attempts = 0;
         const maxAttempts = animeList.length * 3;
@@ -465,15 +522,12 @@
             if (usedAnimeIds.has(candidate.id)) continue;
             usedAnimeIds.add(candidate.id);
 
-            // Cerchiamo il video su YouTube
             const videoId = await searchYouTubeOpening(candidate);
             if (!videoId) {
-                // Se non troviamo video, saltiamo questo anime
                 usedAnimeIds.delete(candidate.id);
                 continue;
             }
 
-            // Selezioniamo 3 distrattori (anime diversi)
             const distractors = [];
             const available = animeList.filter(a => a.id !== candidate.id && !usedAnimeIds.has(a.id));
             shuffleArray(available);
@@ -481,12 +535,10 @@
                 distractors.push(available[i]);
             }
             if (distractors.length < 3) {
-                // Se non abbiamo abbastanza distrattori, riproviamo
                 usedAnimeIds.delete(candidate.id);
                 continue;
             }
 
-            // Costruiamo l'array di opzioni (mescolato)
             const options = [candidate, ...distractors];
             shuffleArray(options);
 
@@ -501,7 +553,6 @@
             throw new Error('Impossibile preparare abbastanza domande. Riprova più tardi.');
         }
 
-        // Reset stato
         currentQuestion = 0;
         score = 0;
         updateScoreAndCounter();
@@ -511,14 +562,18 @@
     // ---------- CARICARE UNA DOMANDA ----------
     function loadQuestion() {
         if (currentQuestion >= questionsQueue.length) {
-            // Fine del quiz
             feedbackDiv.innerHTML = `🎉 Complimenti! Hai completato il quiz. Punteggio: ${score}/${MAX_QUESTIONS}`;
             optionsContainer.innerHTML = '';
             nextBtn.disabled = true;
-            playerIframe.src = '';
             audioVisual.className = 'audio-visual';
             nowPlaying.textContent = '🏁 Quiz finito!';
             coverImage.style.display = 'none';
+            playPauseBtn.disabled = true;
+            seekBackBtn.disabled = true;
+            seekForwardBtn.disabled = true;
+            if (ytPlayer) {
+                ytPlayer.stopVideo();
+            }
             return;
         }
 
@@ -527,59 +582,172 @@
         currentOptions = q.options;
         currentVideoId = q.videoId;
         isAnswered = false;
-        isPlaying = false;
+        isPaused = false;
 
-        // Aggiorna UI
         updateScoreAndCounter();
         feedbackDiv.innerHTML = '';
         nextBtn.disabled = true;
-
-        // Carica il player YouTube
-        loadYouTubePlayer(q.videoId);
-
-        // Mostra cover image dell'anime corretto (opzionale, ma lo mostriamo dopo che ha risposto?)
-        // Lo mostriamo subito come hint visivo? Meglio nasconderlo finché non si risponde.
         coverImage.style.display = 'none';
 
-        // Genera opzioni
-        renderOptions(q.options);
+        // Disabilita controlli finché il player non è pronto
+        playPauseBtn.disabled = true;
+        seekBackBtn.disabled = true;
+        seekForwardBtn.disabled = true;
+        playPauseBtn.textContent = '⏳ Caricamento...';
 
-        // Reset visuale audio
-        audioVisual.className = 'audio-visual';
-        audioVisual.textContent = '⏳';
-        nowPlaying.textContent = '🎶 Caricamento...';
+        // Carica il video
+        if (ytPlayer && playerReady) {
+            // Player pronto, carica subito
+            ytPlayer.loadVideoById(q.videoId);
+            // Forza la riproduzione dopo un breve ritardo per evitare il blocco dell'autoplay
+            setTimeout(() => {
+                if (ytPlayer && playerReady) {
+                    ytPlayer.playVideo();
+                }
+            }, 300);
+            audioVisual.className = 'audio-visual playing';
+            audioVisual.textContent = '🔊';
+            nowPlaying.textContent = '🎵 Ascolta l\'opening...';
+            isPlaying = true;
+            playPauseBtn.textContent = '⏸️ Pausa';
+            playPauseBtn.disabled = false;
+            seekBackBtn.disabled = false;
+            seekForwardBtn.disabled = false;
+        } else {
+            // Player non pronto, metti in coda
+            pendingVideoId = q.videoId;
+            nowPlaying.textContent = '🎶 Caricamento player...';
+            // Se il player non esiste, verrà creato da onYouTubeIframeAPIReady
+            // e poi gestirà il pending
+        }
+
+        renderOptions(q.options);
     }
 
     // ---------- PLAYER YOUTUBE ----------
-    function loadYouTubePlayer(videoId) {
-        // Usiamo iframe con autoplay e parametri per nascondere controlli
-        const src = `https://www.youtube.com/embed/${videoId}?autoplay=1&controls=0&disablekb=1&modestbranding=1&rel=0&showinfo=0&loop=1&playlist=${videoId}&mute=0`;
-        playerIframe.src = src;
+    function onYouTubeIframeAPIReady() {
+        ytPlayer = new YT.Player('youtube-player-container', {
+            height: '0',
+            width: '0',
+            playerVars: {
+                controls: 0,
+                disablekb: 1,
+                modestbranding: 1,
+                rel: 0,
+                showinfo: 0,
+                loop: 1,
+                playlist: '',
+                autoplay: 1,
+                mute: 0,
+            },
+            events: {
+                onReady: onPlayerReady,
+                onStateChange: onPlayerStateChange,
+                onError: onPlayerError,
+            }
+        });
+    }
 
-        // Quando il video è caricato, cambiamo icona
-        playerIframe.onload = () => {
-            // Non possiamo sapere quando l'audio è realmente partito, ma diamo per buono
+    function onPlayerReady(event) {
+        playerReady = true;
+        // Se c'è un video in attesa, caricalo
+        if (pendingVideoId) {
+            const vid = pendingVideoId;
+            pendingVideoId = null;
+            ytPlayer.loadVideoById(vid);
+            setTimeout(() => {
+                if (ytPlayer && playerReady) {
+                    ytPlayer.playVideo();
+                }
+            }, 300);
             audioVisual.className = 'audio-visual playing';
             audioVisual.textContent = '🔊';
-            nowPlaying.textContent = `🎵 In riproduzione: ${getAnimeTitle(correctAnime)}`;
+            nowPlaying.textContent = '🎵 Ascolta l\'opening...';
             isPlaying = true;
-        };
-
-        // Se l'iframe non si carica (errore), gestiamo
-        playerIframe.onerror = () => {
-            audioVisual.className = 'audio-visual';
-            audioVisual.textContent = '⚠️';
-            nowPlaying.textContent = '❌ Errore di riproduzione';
-            feedbackDiv.innerHTML = '❌ Impossibile riprodurre l\'audio. Riprova.';
-            // Permettiamo di passare alla prossima dopo un po'
+            playPauseBtn.textContent = '⏸️ Pausa';
+            playPauseBtn.disabled = false;
+            seekBackBtn.disabled = false;
+            seekForwardBtn.disabled = false;
+        } else if (currentVideoId) {
+            // Caso in cui il player si è pronto dopo che loadQuestion è già stata chiamata
+            // ma non c'era pending perché forse era già stato impostato
+            // Ricarichiamo il video corrente
+            ytPlayer.loadVideoById(currentVideoId);
             setTimeout(() => {
-                if (!isAnswered) {
-                    // Saltiamo questa domanda?
-                    // meglio dare all'utente la possibilità di andare avanti
-                    nextBtn.disabled = false;
+                if (ytPlayer && playerReady) {
+                    ytPlayer.playVideo();
                 }
-            }, 2000);
-        };
+            }, 300);
+            audioVisual.className = 'audio-visual playing';
+            audioVisual.textContent = '🔊';
+            nowPlaying.textContent = '🎵 Ascolta l\'opening...';
+            isPlaying = true;
+            playPauseBtn.textContent = '⏸️ Pausa';
+            playPauseBtn.disabled = false;
+            seekBackBtn.disabled = false;
+            seekForwardBtn.disabled = false;
+        }
+    }
+
+    function onPlayerStateChange(event) {
+        const state = event.data;
+        if (state === YT.PlayerState.PLAYING) {
+            isPlaying = true;
+            isPaused = false;
+            audioVisual.className = 'audio-visual playing';
+            audioVisual.textContent = '🔊';
+            playPauseBtn.textContent = '⏸️ Pausa';
+            playPauseBtn.disabled = false;
+            seekBackBtn.disabled = false;
+            seekForwardBtn.disabled = false;
+        } else if (state === YT.PlayerState.PAUSED) {
+            isPlaying = false;
+            isPaused = true;
+            audioVisual.className = 'audio-visual';
+            audioVisual.textContent = '⏸️';
+            playPauseBtn.textContent = '▶️ Riproduci';
+        } else if (state === YT.PlayerState.ENDED) {
+            isPlaying = false;
+            isPaused = true;
+            audioVisual.className = 'audio-visual';
+            audioVisual.textContent = '⏹️';
+            playPauseBtn.textContent = '▶️ Riproduci';
+        } else if (state === YT.PlayerState.UNSTARTED || state === YT.PlayerState.BUFFERING) {
+            // Non facciamo nulla
+        }
+    }
+
+    function onPlayerError(event) {
+        console.error('Errore YouTube:', event.data);
+        audioVisual.className = 'audio-visual';
+        audioVisual.textContent = '⚠️';
+        nowPlaying.textContent = '❌ Errore di riproduzione';
+        feedbackDiv.innerHTML = '❌ Impossibile riprodurre l\'audio. Riprova.';
+        playPauseBtn.disabled = true;
+        seekBackBtn.disabled = true;
+        seekForwardBtn.disabled = true;
+        setTimeout(() => {
+            if (!isAnswered) {
+                nextBtn.disabled = false;
+            }
+        }, 2000);
+    }
+
+    // ---------- CONTROLLI ----------
+    function togglePlayPause() {
+        if (!ytPlayer || !playerReady) return;
+        if (isPaused || !isPlaying) {
+            ytPlayer.playVideo();
+        } else {
+            ytPlayer.pauseVideo();
+        }
+    }
+
+    function seekBy(seconds) {
+        if (!ytPlayer || !playerReady) return;
+        const currentTime = ytPlayer.getCurrentTime();
+        const newTime = Math.max(0, currentTime + seconds);
+        ytPlayer.seekTo(newTime, true);
     }
 
     // ---------- RENDER OPZIONI ----------
@@ -603,7 +771,6 @@
         const selectedAnime = currentOptions[index];
         const isCorrect = selectedAnime.id === correctAnime.id;
 
-        // Disabilita tutti i pulsanti
         const buttons = document.querySelectorAll('.option-btn');
         buttons.forEach((btn, i) => {
             btn.disabled = true;
@@ -615,7 +782,6 @@
             }
         });
 
-        // Aggiorna punteggio
         if (isCorrect) {
             score++;
             feedbackDiv.innerHTML = '✅ Corretto! +1 punto';
@@ -627,15 +793,11 @@
 
         updateScoreAndCounter();
 
-        // Mostra la cover dell'anime corretto
         if (correctAnime.coverImage && correctAnime.coverImage.large) {
             coverImage.src = correctAnime.coverImage.large;
             coverImage.style.display = 'block';
         }
 
-        // Ferma l'audio? Lo lasciamo continuare, ma possiamo fermarlo? Non importante.
-
-        // Abilita il pulsante "Prossima"
         nextBtn.disabled = false;
     }
 
@@ -646,8 +808,7 @@
         if (currentQuestion < questionsQueue.length) {
             loadQuestion();
         } else {
-            // Fine quiz
-            loadQuestion(); // gestisce il caso fine
+            loadQuestion(); // gestisce fine
         }
     }
 
@@ -663,6 +824,9 @@
         errorMsg.classList.remove('hidden');
         loader.classList.add('hidden');
         nextBtn.disabled = true;
+        playPauseBtn.disabled = true;
+        seekBackBtn.disabled = true;
+        seekForwardBtn.disabled = true;
     }
 
     function hideError() {
@@ -676,12 +840,19 @@
         nextBtn.disabled = true;
         optionsContainer.innerHTML = '';
         feedbackDiv.innerHTML = '';
+        playPauseBtn.disabled = true;
+        seekBackBtn.disabled = true;
+        seekForwardBtn.disabled = true;
 
         try {
             await prepareQuestions();
             loader.classList.add('hidden');
             if (questionsQueue.length > 0) {
+                // Se il player non è ancora pronto, loadQuestion metterà in coda il video
+                // e onPlayerReady lo avvierà
                 loadQuestion();
+                // Se il player è già pronto, loadQuestion avvia la riproduzione
+                // Se non lo è, il pending verrà gestito
             } else {
                 showError('Nessuna domanda disponibile. Riprova più tardi.');
             }
@@ -693,22 +864,49 @@
 
     // ---------- EVENTI ----------
     nextBtn.addEventListener('click', goToNextQuestion);
+    playPauseBtn.addEventListener('click', togglePlayPause);
+    seekBackBtn.addEventListener('click', () => seekBy(-10));
+    seekForwardBtn.addEventListener('click', () => seekBy(10));
 
     // ---------- AVVIO ----------
+    window.onYouTubeIframeAPIReady = onYouTubeIframeAPIReady;
+
+    // Gestione del caso in cui l'API è già caricata (es. se lo script è stato eseguito dopo)
+    if (typeof YT !== 'undefined' && YT.loaded) {
+        onYouTubeIframeAPIReady();
+    }
+
     window.addEventListener('load', () => {
-        initGame();
+        // Se dopo 2 secondi il player non è ancora pronto, proviamo a crearlo manualmente
+        setTimeout(() => {
+            if (!ytPlayer && typeof YT !== 'undefined' && YT.Player) {
+                onYouTubeIframeAPIReady();
+            }
+            // Avvia il gioco (se non è già stato avviato)
+            if (!isLoading && questionsQueue.length === 0) {
+                initGame();
+            }
+        }, 1000);
     });
 
-    // Gestione errore iframe (se non si carica)
-    playerIframe.addEventListener('error', () => {
-        // Già gestito in onerror
-    });
-
-    // Se l'utente clicca su "Prossima" mentre è ancora in caricamento, non fare nulla
-    // (già gestito da isLoading)
-
-    // Funzione per ricaricare il gioco (se necessario)
-    window.restartGame = initGame;
+    // Fallback: se l'API non si carica affatto, iniziamo comunque dopo 5 secondi
+    setTimeout(() => {
+        if (!ytPlayer) {
+            // Forziamo la creazione del player se possibile
+            if (typeof YT !== 'undefined' && YT.Player) {
+                onYouTubeIframeAPIReady();
+            } else {
+                // Se proprio non funziona, mostriamo un errore ma permettiamo di proseguire
+                // (ma il player non funzionerà)
+                console.warn('YouTube API non caricata, impossibile riprodurre audio.');
+                showError('Impossibile caricare il player YouTube. Verifica la connessione.');
+            }
+        }
+        // Avvia il gioco se non ancora avviato
+        if (!isLoading && questionsQueue.length === 0) {
+            initGame();
+        }
+    }, 5000);
 </script>
 
 </body>
