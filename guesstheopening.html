@@ -3,21 +3,15 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>AniQuiz - Indovina l'Opening (Solo Audio)</title>
-    
+    <title>AniQuiz - Indovina l'Opening</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
-    
     <style>
-        /* ============================================================
-           RESET & VARIABILI
-           ============================================================ */
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
         }
-
         :root {
             --bg-primary: #0a0a0f;
             --bg-secondary: #12121a;
@@ -31,18 +25,10 @@
             --accent-green: #4ade80;
             --accent-red: #f87171;
             --accent-orange: #f59e0b;
-            --shadow: 0 8px 40px rgba(0, 0, 0, 0.6);
             --radius: 16px;
             --radius-sm: 10px;
             --transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         }
-
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
         body {
             font-family: 'Inter', -apple-system, sans-serif;
             background: var(--bg-primary);
@@ -51,13 +37,11 @@
             line-height: 1.6;
             overflow-x: hidden;
         }
-
         .container {
             max-width: 1200px;
             margin: 0 auto;
             padding: 0 20px;
         }
-
         .bg-glow {
             position: fixed;
             top: -50%;
@@ -66,14 +50,8 @@
             height: 200%;
             z-index: 0;
             pointer-events: none;
-            background: 
-                radial-gradient(ellipse at 20% 50%, rgba(168, 85, 247, 0.06) 0%, transparent 60%),
-                radial-gradient(ellipse at 80% 20%, rgba(255, 107, 157, 0.04) 0%, transparent 50%);
+            background: radial-gradient(ellipse at 20% 50%, rgba(168, 85, 247, 0.06) 0%, transparent 60%), radial-gradient(ellipse at 80% 20%, rgba(255, 107, 157, 0.04) 0%, transparent 50%);
         }
-
-        /* ============================================================
-           NAVBAR
-           ============================================================ */
         .navbar {
             background: rgba(10, 10, 15, 0.85);
             backdrop-filter: blur(20px);
@@ -83,7 +61,6 @@
             top: 0;
             z-index: 100;
         }
-
         .navbar .container {
             display: flex;
             align-items: center;
@@ -91,7 +68,6 @@
             flex-wrap: wrap;
             gap: 12px;
         }
-
         .logo {
             display: flex;
             align-items: center;
@@ -101,7 +77,6 @@
             text-decoration: none;
             color: inherit;
         }
-
         .logo-icon {
             width: 42px;
             height: 42px;
@@ -114,13 +89,11 @@
             color: #fff;
             box-shadow: 0 0 30px rgba(168, 85, 247, 0.2);
         }
-
         .logo-text {
             background: linear-gradient(135deg, var(--accent-pink), var(--accent-purple), var(--accent-blue));
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
         }
-
         .nav-stats {
             display: flex;
             align-items: center;
@@ -128,17 +101,14 @@
             color: var(--text-secondary);
             font-size: 0.85rem;
         }
-
         .nav-stats span {
             display: flex;
             align-items: center;
             gap: 6px;
         }
-
         .nav-stats i {
             color: var(--accent-purple);
         }
-
         .back-btn {
             color: var(--text-secondary);
             text-decoration: none;
@@ -148,14 +118,9 @@
             font-size: 0.9rem;
             transition: var(--transition);
         }
-
         .back-btn:hover {
             color: var(--text-primary);
         }
-
-        /* ============================================================
-           OPENING GAME - STILI SPECIFICI
-           ============================================================ */
         .game-container {
             padding: 40px 0 20px;
             position: relative;
@@ -163,12 +128,10 @@
             max-width: 900px;
             margin: 0 auto;
         }
-
         .game-header {
             text-align: center;
             margin-bottom: 30px;
         }
-
         .game-header h1 {
             font-size: 2.5rem;
             font-weight: 900;
@@ -177,12 +140,10 @@
             -webkit-text-fill-color: transparent;
             margin-bottom: 8px;
         }
-
         .game-header p {
             color: var(--text-secondary);
             font-size: 1.05rem;
         }
-
         .game-header .audio-badge {
             display: inline-block;
             margin-top: 12px;
@@ -193,12 +154,6 @@
             font-size: 0.85rem;
             font-weight: 600;
         }
-
-        .game-header .audio-badge i {
-            margin-right: 8px;
-        }
-
-        /* Stats bar */
         .stats-bar {
             display: flex;
             justify-content: space-between;
@@ -211,7 +166,6 @@
             flex-wrap: wrap;
             gap: 12px;
         }
-
         .stats-bar .stat {
             display: flex;
             align-items: center;
@@ -219,18 +173,14 @@
             color: var(--text-secondary);
             font-size: 0.9rem;
         }
-
         .stats-bar .stat i {
             color: var(--accent-purple);
         }
-
         .stats-bar .stat .value {
             color: var(--text-primary);
             font-weight: 700;
             font-size: 1.1rem;
         }
-
-        /* Audio Player - STILE SPETTACOLARE */
         .audio-wrapper {
             background: var(--bg-card);
             border-radius: var(--radius);
@@ -239,7 +189,6 @@
             border: 1px solid rgba(255, 255, 255, 0.04);
             text-align: center;
         }
-
         .audio-visual {
             position: relative;
             width: 200px;
@@ -253,15 +202,14 @@
             border: 2px solid rgba(168, 85, 247, 0.2);
             transition: var(--transition);
         }
-
         .audio-visual.playing {
             animation: pulse 1.5s ease-in-out infinite;
             border-color: var(--accent-purple);
             box-shadow: 0 0 60px rgba(168, 85, 247, 0.15);
         }
-
         @keyframes pulse {
-            0%, 100% {
+            0%,
+            100% {
                 transform: scale(1);
                 box-shadow: 0 0 40px rgba(168, 85, 247, 0.1);
             }
@@ -270,7 +218,6 @@
                 box-shadow: 0 0 60px rgba(168, 85, 247, 0.2);
             }
         }
-
         .audio-visual .anime-cover {
             width: 160px;
             height: 160px;
@@ -279,7 +226,6 @@
             background: var(--bg-secondary);
             border: 3px solid rgba(255, 255, 255, 0.05);
         }
-
         .audio-visual .play-icon {
             position: absolute;
             width: 60px;
@@ -295,17 +241,13 @@
             transition: var(--transition);
             box-shadow: 0 0 40px rgba(168, 85, 247, 0.3);
         }
-
         .audio-visual .play-icon:hover {
             transform: scale(1.1);
             box-shadow: 0 0 60px rgba(168, 85, 247, 0.5);
         }
-
         .audio-visual .play-icon i {
             margin-left: 4px;
         }
-
-        /* Waveform animato */
         .waveform {
             display: flex;
             align-items: center;
@@ -314,7 +256,6 @@
             height: 40px;
             margin-top: 16px;
         }
-
         .waveform .bar {
             width: 4px;
             height: 10px;
@@ -322,11 +263,9 @@
             border-radius: 2px;
             transition: height 0.3s ease;
         }
-
         .waveform.playing .bar {
             animation: wave 0.8s ease-in-out infinite alternate;
         }
-
         .waveform.playing .bar:nth-child(1) { animation-delay: 0s; height: 20px; }
         .waveform.playing .bar:nth-child(2) { animation-delay: 0.1s; height: 35px; }
         .waveform.playing .bar:nth-child(3) { animation-delay: 0.2s; height: 25px; }
@@ -339,12 +278,10 @@
         .waveform.playing .bar:nth-child(10) { animation-delay: 0.9s; height: 40px; }
         .waveform.playing .bar:nth-child(11) { animation-delay: 0.2s; height: 30px; }
         .waveform.playing .bar:nth-child(12) { animation-delay: 0.5s; height: 20px; }
-
         @keyframes wave {
             0% { height: 10px; }
             100% { height: 45px; }
         }
-
         .audio-controls {
             display: flex;
             justify-content: center;
@@ -352,7 +289,6 @@
             margin-top: 16px;
             flex-wrap: wrap;
         }
-
         .audio-controls button {
             background: var(--bg-card);
             border: 1px solid rgba(255, 255, 255, 0.06);
@@ -368,52 +304,33 @@
             align-items: center;
             gap: 8px;
         }
-
         .audio-controls button:hover {
             background: var(--bg-card-hover);
             border-color: rgba(255, 255, 255, 0.1);
         }
-
         .audio-controls button.primary {
             background: linear-gradient(135deg, var(--accent-purple), #7c3aed);
             border: none;
         }
-
         .audio-controls button.primary:hover {
             transform: scale(1.05);
             box-shadow: 0 0 30px rgba(168, 85, 247, 0.3);
         }
-
-        .audio-controls button.danger {
-            background: linear-gradient(135deg, var(--accent-red), #dc2626);
-            border: none;
-        }
-
-        .audio-controls button.danger:hover {
-            transform: scale(1.05);
-            box-shadow: 0 0 30px rgba(248, 113, 113, 0.3);
-        }
-
-        /* Timer */
         .timer {
             font-size: 0.9rem;
             color: var(--text-secondary);
             margin-top: 12px;
         }
-
         .timer .time {
             color: var(--text-primary);
             font-weight: 700;
         }
-
-        /* Options */
         .options-grid {
             display: grid;
             grid-template-columns: repeat(2, 1fr);
             gap: 12px;
             margin-bottom: 24px;
         }
-
         .option-btn {
             background: var(--bg-card);
             border: 2px solid rgba(255, 255, 255, 0.04);
@@ -427,28 +344,23 @@
             transition: var(--transition);
             text-align: center;
         }
-
         .option-btn:hover:not(.disabled) {
             background: var(--bg-card-hover);
             border-color: rgba(255, 255, 255, 0.1);
             transform: translateY(-2px);
         }
-
         .option-btn.correct {
             border-color: var(--accent-green);
             background: rgba(74, 222, 128, 0.15);
         }
-
         .option-btn.wrong {
             border-color: var(--accent-red);
             background: rgba(248, 113, 113, 0.15);
         }
-
         .option-btn.disabled {
             cursor: not-allowed;
             opacity: 0.6;
         }
-
         .option-btn .letter {
             display: inline-block;
             width: 28px;
@@ -462,8 +374,6 @@
             margin-right: 10px;
             color: var(--text-secondary);
         }
-
-        /* Feedback */
         .feedback {
             background: var(--bg-card);
             border-radius: var(--radius);
@@ -473,29 +383,23 @@
             display: none;
             animation: fadeSlideIn 0.3s ease;
         }
-
         .feedback.show {
             display: block;
         }
-
         .feedback.correct {
             border-left-color: var(--accent-green);
         }
-
         .feedback.wrong {
             border-left-color: var(--accent-red);
         }
-
         .feedback h3 {
             font-size: 1.1rem;
             margin-bottom: 4px;
         }
-
         .feedback p {
             color: var(--text-secondary);
             font-size: 0.95rem;
         }
-
         @keyframes fadeSlideIn {
             from {
                 opacity: 0;
@@ -506,8 +410,6 @@
                 transform: translateY(0);
             }
         }
-
-        /* Progress */
         .progress-bar {
             background: var(--bg-card);
             border-radius: var(--radius-sm);
@@ -516,15 +418,12 @@
             margin-bottom: 24px;
             border: 1px solid rgba(255, 255, 255, 0.04);
         }
-
         .progress-bar .fill {
             height: 100%;
             background: linear-gradient(90deg, var(--accent-purple), var(--accent-pink));
             transition: width 0.5s ease;
             width: 0%;
         }
-
-        /* Next button */
         .next-btn {
             width: 100%;
             padding: 16px;
@@ -539,38 +438,30 @@
             transition: var(--transition);
             display: none;
         }
-
         .next-btn:hover {
             transform: scale(1.02);
             box-shadow: 0 0 40px rgba(168, 85, 247, 0.3);
         }
-
         .next-btn.show {
             display: block;
         }
-
-        /* Result */
         .result-screen {
             text-align: center;
             padding: 40px 20px;
             display: none;
         }
-
         .result-screen.show {
             display: block;
             animation: fadeSlideIn 0.5s ease;
         }
-
         .result-screen .big-icon {
             font-size: 4rem;
             margin-bottom: 16px;
         }
-
         .result-screen h2 {
             font-size: 2rem;
             margin-bottom: 8px;
         }
-
         .result-screen .score {
             font-size: 3rem;
             font-weight: 900;
@@ -578,13 +469,11 @@
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
         }
-
         .result-screen p {
             color: var(--text-secondary);
             font-size: 1.1rem;
             margin: 12px 0;
         }
-
         .result-screen .restart-btn {
             margin-top: 20px;
             padding: 14px 40px;
@@ -598,18 +487,14 @@
             cursor: pointer;
             transition: var(--transition);
         }
-
         .result-screen .restart-btn:hover {
             transform: scale(1.05);
             box-shadow: 0 0 40px rgba(168, 85, 247, 0.3);
         }
-
-        /* Loading */
         .loading {
             text-align: center;
             padding: 60px 20px;
         }
-
         .loading .spinner {
             width: 48px;
             height: 48px;
@@ -619,14 +504,19 @@
             animation: spin 0.8s linear infinite;
             margin: 0 auto 16px;
         }
-
+        .loading .loading-sub {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            margin-top: 8px;
+        }
+        .loading .loading-error {
+            color: var(--accent-red);
+            font-size: 0.9rem;
+            margin-top: 12px;
+        }
         @keyframes spin {
             to { transform: rotate(360deg); }
         }
-
-        /* ============================================================
-           RESPONSIVE
-           ============================================================ */
         @media (max-width: 768px) {
             .game-header h1 {
                 font-size: 1.8rem;
@@ -668,7 +558,6 @@
                 flex-wrap: wrap;
             }
         }
-
         @media (max-width: 480px) {
             .game-header h1 {
                 font-size: 1.4rem;
@@ -687,9 +576,6 @@
 
     <div class="bg-glow"></div>
 
-    <!-- ============================================================
-    NAVBAR
-    ============================================================ -->
     <nav class="navbar">
         <div class="container">
             <a href="../index.html" class="logo">
@@ -700,27 +586,20 @@
                 <a href="../index.html" class="back-btn">
                     <i class="fas fa-arrow-left"></i> Torna indietro
                 </a>
-                <span><i class="fas fa-music"></i> Opening Quiz</span>
-                <span><i class="fas fa-database"></i> <span id="totalOpenings">0</span> opening</span>
+                <span><i class="fas fa-youtube"></i> YouTube Search</span>
             </div>
         </div>
     </nav>
 
-    <!-- ============================================================
-    GAME
-    ============================================================ -->
     <div class="game-container">
-        
-        <!-- Header -->
         <div class="game-header">
             <h1>🎵 Indovina l'Opening</h1>
-            <p>🎧 Ascolta la sigla a occhi chiusi... indovina l'anime!</p>
+            <p>🔍 Cerca su YouTube in tempo reale con l'API</p>
             <div class="audio-badge">
-                <i class="fas fa-headphones"></i> Solo Audio · Nessun video
+                <i class="fas fa-headphones"></i> Solo Audio
             </div>
         </div>
 
-        <!-- Stats -->
         <div class="stats-bar" id="statsBar">
             <div class="stat">
                 <i class="fas fa-question-circle"></i>
@@ -736,55 +615,33 @@
             </div>
         </div>
 
-        <!-- Progress -->
         <div class="progress-bar">
             <div class="fill" id="progressFill"></div>
         </div>
 
-        <!-- Loading -->
         <div class="loading" id="loading">
             <div class="spinner"></div>
-            <p>Caricamento opening...</p>
+            <p>Caricamento in corso...</p>
+            <p class="loading-sub" id="loadingSub">Caricamento anime da AniList...</p>
+            <p class="loading-error" id="loadingError"></p>
         </div>
 
-        <!-- Game Area -->
         <div id="gameArea" style="display: none;">
-            
-            <!-- Audio Player -->
             <div class="audio-wrapper">
                 <div class="audio-visual" id="audioVisual">
-                    <img 
-                        class="anime-cover" 
-                        id="animeCover" 
-                        src="" 
-                        alt="Copertina anime"
-                        onerror="this.style.display='none'"
-                    />
+                    <img class="anime-cover" id="animeCover" src="" alt="Copertina anime" onerror="this.style.display='none'" />
                     <div class="play-icon" id="playBtn" onclick="togglePlay()">
                         <i class="fas fa-play"></i>
                     </div>
                 </div>
-
-                <!-- Waveform -->
                 <div class="waveform" id="waveform">
-                    <div class="bar"></div>
-                    <div class="bar"></div>
-                    <div class="bar"></div>
-                    <div class="bar"></div>
-                    <div class="bar"></div>
-                    <div class="bar"></div>
-                    <div class="bar"></div>
-                    <div class="bar"></div>
-                    <div class="bar"></div>
-                    <div class="bar"></div>
-                    <div class="bar"></div>
-                    <div class="bar"></div>
+                    <div class="bar"></div><div class="bar"></div><div class="bar"></div><div class="bar"></div>
+                    <div class="bar"></div><div class="bar"></div><div class="bar"></div><div class="bar"></div>
+                    <div class="bar"></div><div class="bar"></div><div class="bar"></div><div class="bar"></div>
                 </div>
-
                 <div class="timer">
-                    ⏱️ <span class="time" id="timerDisplay">0:00</span> / <span id="totalDuration">0:30</span>
+                    ⏱️ <span class="time" id="timerDisplay">0:00</span>
                 </div>
-
                 <div class="audio-controls">
                     <button class="primary" onclick="togglePlay()">
                         <i class="fas fa-play" id="playIcon"></i> <span id="playText">Play</span>
@@ -794,26 +651,16 @@
                     </button>
                 </div>
             </div>
-
-            <!-- Options -->
-            <div class="options-grid" id="optionsGrid">
-                <!-- Generate via JS -->
-            </div>
-
-            <!-- Feedback -->
+            <div class="options-grid" id="optionsGrid"></div>
             <div class="feedback" id="feedback">
                 <h3 id="feedbackTitle">✅ Corretto!</h3>
                 <p id="feedbackText">Dettaglio</p>
             </div>
-
-            <!-- Next Button -->
             <button class="next-btn" id="nextBtn" onclick="nextQuestion()">
                 <i class="fas fa-arrow-right"></i> Prossima domanda
             </button>
-
         </div>
 
-        <!-- Result -->
         <div class="result-screen" id="resultScreen">
             <div class="big-icon">🏆</div>
             <h2>Quiz completato!</h2>
@@ -823,765 +670,207 @@
                 <i class="fas fa-redo"></i> Ricomincia
             </button>
         </div>
-
     </div>
 
-    <!-- ============================================================
-    SCRIPT
-    ============================================================ -->
     <script>
         // ============================================================
-        // DATABASE OPENING - 200+ ANIME
+        // 🔥 YOUTUBE API KEY (LA TUA)
         // ============================================================
-        const OPENING_DB = [
-            // ===== ANNI '90 =====
-            {
-                anime: "Neon Genesis Evangelion",
-                videoId: "o6wtDPVkKqI",
-                cover: "https://anilist.co/img/header/30.jpg",
-                start: 0,
-                duration: 30
-            },
-            {
-                anime: "Cowboy Bebop",
-                videoId: "T6zDfxZ4NcE",
-                cover: "https://anilist.co/img/header/23.jpg",
-                start: 0,
-                duration: 30
-            },
-            {
-                anime: "Sailor Moon",
-                videoId: "GvM1dT3FjXM",
-                cover: "https://anilist.co/img/header/530.jpg",
-                start: 0,
-                duration: 30
-            },
-            {
-                anime: "Dragon Ball Z",
-                videoId: "9DkE6P0Dk5I",
-                cover: "https://anilist.co/img/header/813.jpg",
-                start: 0,
-                duration: 30
-            },
-            {
-                anime: "Yu Yu Hakusho",
-                videoId: "eJZ4mUe2nF8",
-                cover: "https://anilist.co/img/header/392.jpg",
-                start: 0,
-                duration: 30
-            },
-            {
-                anime: "Rurouni Kenshin",
-                videoId: "d7TZ5RiFnYY",
-                cover: "https://anilist.co/img/header/99.jpg",
-                start: 0,
-                duration: 30
-            },
-            {
-                anime: "Berserk (1997)",
-                videoId: "dXtNHvArh-c",
-                cover: "https://anilist.co/img/header/75.jpg",
-                start: 0,
-                duration: 30
-            },
-            {
-                anime: "Trigun",
-                videoId: "NzHe4U5c5Oc",
-                cover: "https://anilist.co/img/header/6.jpg",
-                start: 0,
-                duration: 30
-            },
-            {
-                anime: "Serial Experiments Lain",
-                videoId: "fYd_4G0yRmw",
-                cover: "https://anilist.co/img/header/237.jpg",
-                start: 0,
-                duration: 30
-            },
-            {
-                anime: "The Melancholy of Haruhi Suzumiya",
-                videoId: "y4Bl6BHXqUg",
-                cover: "https://anilist.co/img/header/1195.jpg",
-                start: 0,
-                duration: 30
-            },
-            {
-                anime: "Samurai Champloo",
-                videoId: "P3P4gfL-CWg",
-                cover: "https://anilist.co/img/header/184.jpg",
-                start: 0,
-                duration: 30
-            },
-            {
-                anime: "Gurren Lagann",
-                videoId: "BmQ9Fl4PJ18",
-                cover: "https://anilist.co/img/header/2338.jpg",
-                start: 0,
-                duration: 30
-            },
-            {
-                anime: "Death Note",
-                videoId: "L_vyPLzBB2o",
-                cover: "https://anilist.co/img/header/1535.jpg",
-                start: 0,
-                duration: 30
-            },
-            {
-                anime: "Code Geass",
-                videoId: "pDmXKQh0Jzo",
-                cover: "https://anilist.co/img/header/1575.jpg",
-                start: 0,
-                duration: 30
-            },
-            {
-                anime: "Soul Eater",
-                videoId: "WMK_xzkYM8s",
-                cover: "https://anilist.co/img/header/4571.jpg",
-                start: 0,
-                duration: 30
-            },
-            {
-                anime: "Fullmetal Alchemist: Brotherhood",
-                videoId: "WAkWQsh1Ghc",
-                cover: "https://anilist.co/img/header/5114.jpg",
-                start: 0,
-                duration: 30
-            },
-            {
-                anime: "Steins;Gate",
-                videoId: "AJSrsTkD0E0",
-                cover: "https://anilist.co/img/header/9253.jpg",
-                start: 0,
-                duration: 30
-            },
-            {
-                anime: "Durarara!!",
-                videoId: "ChRRzEnXtNI",
-                cover: "https://anilist.co/img/header/6551.jpg",
-                start: 0,
-                duration: 30
-            },
-            {
-                anime: "Angel Beats!",
-                videoId: "go2XQOdCipA",
-                cover: "https://anilist.co/img/header/8364.jpg",
-                start: 0,
-                duration: 30
-            },
-            {
-                anime: "The World God Only Knows",
-                videoId: "xMywdkgny00",
-                cover: "https://anilist.co/img/header/8518.jpg",
-                start: 0,
-                duration: 30
-            },
-            {
-                anime: "Gintama",
-                videoId: "IikPdzg0JpM",
-                cover: "https://anilist.co/img/header/918.jpg",
-                start: 0,
-                duration: 30
-            },
-            {
-                anime: "Fate/Zero",
-                videoId: "LhB2Y9Y7cK8",
-                cover: "https://anilist.co/img/header/10087.jpg",
-                start: 0,
-                duration: 30
-            },
-            {
-                anime: "Attack on Titan",
-                videoId: "8OkpRK2_gVs",
-                cover: "https://anilist.co/img/header/16498.jpg",
-                start: 0,
-                duration: 30
-            },
-            {
-                anime: "Kill la Kill",
-                videoId: "XtbV2YzDZfU",
-                cover: "https://anilist.co/img/header/18679.jpg",
-                start: 0,
-                duration: 30
-            },
-            {
-                anime: "Tokyo Ghoul",
-                videoId: "50VWOB1S2KM",
-                cover: "https://anilist.co/img/header/20605.jpg",
-                start: 0,
-                duration: 30
-            },
-            {
-                anime: "Parasyte -the maxim-",
-                videoId: "oWcCss11pTA",
-                cover: "https://anilist.co/img/header/20700.jpg",
-                start: 0,
-                duration: 30
-            },
-            {
-                anime: "Noragami",
-                videoId: "Ql4wZY-S0ZI",
-                cover: "https://anilist.co/img/header/20599.jpg",
-                start: 0,
-                duration: 30
-            },
-            {
-                anime: "Your Lie in April",
-                videoId: "pTjH-u8iA5Y",
-                cover: "https://anilist.co/img/header/21014.jpg",
-                start: 0,
-                duration: 30
-            },
-            {
-                anime: "Death Parade",
-                videoId: "Tv1BlpxC9Cc",
-                cover: "https://anilist.co/img/header/21133.jpg",
-                start: 0,
-                duration: 30
-            },
-            {
-                anime: "One Punch Man",
-                videoId: "hRl9Acs16HE",
-                cover: "https://anilist.co/img/header/30276.jpg",
-                start: 0,
-                duration: 30
-            },
-            {
-                anime: "My Hero Academia",
-                videoId: "P4MIXh6CrO0",
-                cover: "https://anilist.co/img/header/21459.jpg",
-                start: 0,
-                duration: 30
-            },
-            {
-                anime: "Re:Zero",
-                videoId: "L0o3qvWEj40",
-                cover: "https://anilist.co/img/header/31240.jpg",
-                start: 0,
-                duration: 30
-            },
-            {
-                anime: "Erased",
-                videoId: "BTBJ2F57Ptk",
-                cover: "https://anilist.co/img/header/21475.jpg",
-                start: 0,
-                duration: 30
-            },
-            {
-                anime: "Mob Psycho 100",
-                videoId: "mJ9N8PYzK7M",
-                cover: "https://anilist.co/img/header/100424.jpg",
-                start: 0,
-                duration: 30
-            },
-            {
-                anime: "Vinland Saga",
-                videoId: "o0anfI8m-G0",
-                cover: "https://anilist.co/img/header/37521.jpg",
-                start: 0,
-                duration: 30
-            },
-            {
-                anime: "Demon Slayer",
-                videoId: "pmanD_s7G3U",
-                cover: "https://anilist.co/img/header/101922.jpg",
-                start: 0,
-                duration: 30
-            },
-            {
-                anime: "Dr. Stone",
-                videoId: "jI4bJtSgZAs",
-                cover: "https://anilist.co/img/header/38691.jpg",
-                start: 0,
-                duration: 30
-            },
-            {
-                anime: "Fire Force",
-                videoId: "YzD_0hzYz0I",
-                cover: "https://anilist.co/img/header/38671.jpg",
-                start: 0,
-                duration: 30
-            },
-            {
-                anime: "The Promised Neverland",
-                videoId: "jJzSqI0p1WQ",
-                cover: "https://anilist.co/img/header/37732.jpg",
-                start: 0,
-                duration: 30
-            },
-            {
-                anime: "Dororo (2019)",
-                videoId: "7dyQkGqHcf8",
-                cover: "https://anilist.co/img/header/100448.jpg",
-                start: 0,
-                duration: 30
-            },
-            {
-                anime: "Beastars",
-                videoId: "wzG1M9O_RJQ",
-                cover: "https://anilist.co/img/header/106265.jpg",
-                start: 0,
-                duration: 30
-            },
-            {
-                anime: "Jujutsu Kaisen",
-                videoId: "H5ahmWcG1ko",
-                cover: "https://anilist.co/img/header/113415.jpg",
-                start: 0,
-                duration: 30
-            },
-            {
-                anime: "Chainsaw Man",
-                videoId: "dfl7A8R5pYk",
-                cover: "https://anilist.co/img/header/127244.jpg",
-                start: 0,
-                duration: 30
-            },
-            {
-                anime: "Spy x Family",
-                videoId: "3lTLefquL4g",
-                cover: "https://anilist.co/img/header/130970.jpg",
-                start: 0,
-                duration: 30
-            },
-            {
-                anime: "Call of the Night",
-                videoId: "2ZSpkCnH1H4",
-                cover: "https://anilist.co/img/header/137419.jpg",
-                start: 0,
-                duration: 30
-            },
-            {
-                anime: "Ranking of Kings",
-                videoId: "p99d6XZ6hZ0",
-                cover: "https://anilist.co/img/header/121636.jpg",
-                start: 0,
-                duration: 30
-            },
-            {
-                anime: "Made in Abyss",
-                videoId: "3I8M6nOG2aQ",
-                cover: "https://anilist.co/img/header/97980.jpg",
-                start: 0,
-                duration: 30
-            },
-            {
-                anime: "Haikyu!!",
-                videoId: "j40BPwsxPQM",
-                cover: "https://anilist.co/img/header/21000.jpg",
-                start: 0,
-                duration: 30
-            },
+        const YOUTUBE_API_KEY = 'AIzaSyCeM7KVc9lZsdd8HM5b-PAfhx0usN8Aubo';
 
-            // ===== NARUTO SERIES =====
-            {
-                anime: "Naruto - Haruka Kanata",
-                videoId: "MvH9eu7xg3g",
-                cover: "https://anilist.co/img/header/20.jpg",
-                start: 0,
-                duration: 30
-            },
-            {
-                anime: "Naruto Shippuden - Hero's Come Back",
-                videoId: "9hH30p7qV0M",
-                cover: "https://anilist.co/img/header/1735.jpg",
-                start: 0,
-                duration: 30
-            },
-            {
-                anime: "Naruto Shippuden - Blue Bird",
-                videoId: "e5S6hXhI9C8",
-                cover: "https://anilist.co/img/header/1735.jpg",
-                start: 0,
-                duration: 30
-            },
-            {
-                anime: "Naruto Shippuden - Sign",
-                videoId: "lfaVgYd1Da8",
-                cover: "https://anilist.co/img/header/1735.jpg",
-                start: 0,
-                duration: 30
-            },
-            {
-                anime: "Naruto Shippuden - Silhouette",
-                videoId: "5l2ex6N6UeE",
-                cover: "https://anilist.co/img/header/1735.jpg",
-                start: 0,
-                duration: 30
-            },
+        // ============================================================
+        // CARICAMENTO ANIME DA ANILIST (CON TIMEOUT E BACKUP)
+        // ============================================================
+        (function() {
+            'use strict';
+            const PER_PAGE = 10;
+            window.allAnime = [];
+            window.isDataLoaded = false;
+            window.isLoading = false;
 
-            // ===== ONE PIECE =====
-            {
-                anime: "One Piece - We Are!",
-                videoId: "Xa2bpzAe6Sk",
-                cover: "https://anilist.co/img/header/21.jpg",
-                start: 0,
-                duration: 30
-            },
-            {
-                anime: "One Piece - Share the World",
-                videoId: "Uw9aCBTv-fE",
-                cover: "https://anilist.co/img/header/21.jpg",
-                start: 0,
-                duration: 30
-            },
-            {
-                anime: "One Piece - Fight Together",
-                videoId: "EJmXjCJ8H7k",
-                cover: "https://anilist.co/img/header/21.jpg",
-                start: 0,
-                duration: 30
-            },
-            {
-                anime: "One Piece - Hope",
-                videoId: "tU6DLU_JvOU",
-                cover: "https://anilist.co/img/header/21.jpg",
-                start: 0,
-                duration: 30
-            },
-            {
-                anime: "One Piece - Over the Top",
-                videoId: "ZNgTp4vVgNs",
-                cover: "https://anilist.co/img/header/21.jpg",
-                start: 0,
-                duration: 30
-            },
-
-            // ===== BLEACH =====
-            {
-                anime: "Bleach - *~Asterisk~",
-                videoId: "G7vXmVoFqlY",
-                cover: "https://anilist.co/img/header/22.jpg",
-                start: 0,
-                duration: 30
-            },
-            {
-                anime: "Bleach - D-tecnoLife",
-                videoId: "uCHQYH4n4zU",
-                cover: "https://anilist.co/img/header/22.jpg",
-                start: 0,
-                duration: 30
-            },
-            {
-                anime: "Bleach - Ichirin no Hana",
-                videoId: "MMJz67a1EdI",
-                cover: "https://anilist.co/img/header/22.jpg",
-                start: 0,
-                duration: 30
-            },
-            {
-                anime: "Bleach - Rolling Star",
-                videoId: "tNQcZRtzUJA",
-                cover: "https://anilist.co/img/header/22.jpg",
-                start: 0,
-                duration: 30
-            },
-            {
-                anime: "Bleach - Ranbu no Melody",
-                videoId: "bXbZkXjRgQg",
-                cover: "https://anilist.co/img/header/22.jpg",
-                start: 0,
-                duration: 30
-            },
-
-            // ===== HUNTER X HUNTER =====
-            {
-                anime: "Hunter x Hunter - Departure!",
-                videoId: "wMTmz1F5gqQ",
-                cover: "https://anilist.co/img/header/11061.jpg",
-                start: 0,
-                duration: 30
-            },
-            {
-                anime: "Hunter x Hunter - Departure! (ver. 2)",
-                videoId: "PKiOr0hJmB0",
-                cover: "https://anilist.co/img/header/11061.jpg",
-                start: 0,
-                duration: 30
-            },
-
-            // ===== SWORD ART ONLINE =====
-            {
-                anime: "Sword Art Online - Crossing Field",
-                videoId: "A3k6vj2-F9Y",
-                cover: "https://anilist.co/img/header/11757.jpg",
-                start: 0,
-                duration: 30
-            },
-            {
-                anime: "Sword Art Online - Innocence",
-                videoId: "MBS2FmbRZxk",
-                cover: "https://anilist.co/img/header/11757.jpg",
-                start: 0,
-                duration: 30
-            },
-            {
-                anime: "Sword Art Online - Courage",
-                videoId: "A3k6vj2-F9Y",
-                cover: "https://anilist.co/img/header/11757.jpg",
-                start: 0,
-                duration: 30
-            },
-
-            // ===== JOJO'S BIZARRE ADVENTURE =====
-            {
-                anime: "JoJo - Sono Chi no Sadame",
-                videoId: "yXoWgOWTdAM",
-                cover: "https://anilist.co/img/header/14719.jpg",
-                start: 0,
-                duration: 30
-            },
-            {
-                anime: "JoJo - Bloody Stream",
-                videoId: "vW6Y6wN9uHw",
-                cover: "https://anilist.co/img/header/14719.jpg",
-                start: 0,
-                duration: 30
-            },
-            {
-                anime: "JoJo - Stand Proud",
-                videoId: "Y2IEKB6NlFI",
-                cover: "https://anilist.co/img/header/14719.jpg",
-                start: 0,
-                duration: 30
-            },
-            {
-                anime: "JoJo - Great Days",
-                videoId: "Z0i-34WMPDM",
-                cover: "https://anilist.co/img/header/14719.jpg",
-                start: 0,
-                duration: 30
-            },
-            {
-                anime: "JoJo - Fighting Gold",
-                videoId: "5jDspK2OOqg",
-                cover: "https://anilist.co/img/header/14719.jpg",
-                start: 0,
-                duration: 30
-            },
-
-            // ===== BLACK CLOVER =====
-            {
-                anime: "Black Clover - Haruka Mirai",
-                videoId: "kTtzECg2C7g",
-                cover: "https://anilist.co/img/header/34572.jpg",
-                start: 0,
-                duration: 30
-            },
-            {
-                anime: "Black Clover - Black Rover",
-                videoId: "pW3cOEWsXqg",
-                cover: "https://anilist.co/img/header/34572.jpg",
-                start: 0,
-                duration: 30
-            },
-            {
-                anime: "Black Clover - Black Catcher",
-                videoId: "f0IshG2VQoQ",
-                cover: "https://anilist.co/img/header/34572.jpg",
-                start: 0,
-                duration: 30
-            },
-
-            // ===== FAIRY TAIL =====
-            {
-                anime: "Fairy Tail - Snow Fairy",
-                videoId: "n8Zv-AxofXw",
-                cover: "https://anilist.co/img/header/6702.jpg",
-                start: 0,
-                duration: 30
-            },
-            {
-                anime: "Fairy Tail - Egao no Mahou",
-                videoId: "m2CFyDz5hNc",
-                cover: "https://anilist.co/img/header/6702.jpg",
-                start: 0,
-                duration: 30
-            },
-            {
-                anime: "Fairy Tail - Rock City Boy",
-                videoId: "o11nWuGONU0",
-                cover: "https://anilist.co/img/header/6702.jpg",
-                start: 0,
-                duration: 30
-            },
-            {
-                anime: "Fairy Tail - Masayume Chasing",
-                videoId: "6bUvvW0f5QU",
-                cover: "https://anilist.co/img/header/6702.jpg",
-                start: 0,
-                duration: 30
-            },
-
-            // ===== DRAGON BALL =====
-            {
-                anime: "Dragon Ball Z - Cha-La Head-Cha-La",
-                videoId: "9DkE6P0Dk5I",
-                cover: "https://anilist.co/img/header/813.jpg",
-                start: 0,
-                duration: 30
-            },
-            {
-                anime: "Dragon Ball Kai - Dragon Soul",
-                videoId: "ieQDLa8pxMg",
-                cover: "https://anilist.co/img/header/813.jpg",
-                start: 0,
-                duration: 30
-            },
-            {
-                anime: "Dragon Ball Super - Chozetsu Dynamic",
-                videoId: "UuVGFWgRjDU",
-                cover: "https://anilist.co/img/header/20736.jpg",
-                start: 0,
-                duration: 30
-            },
-
-            // ===== GUNDAM =====
-            {
-                anime: "Gundam Seed - Invoke",
-                videoId: "0VHYNqRlUXY",
-                cover: "https://anilist.co/img/header/93.jpg",
-                start: 0,
-                duration: 30
-            },
-            {
-                anime: "Gundam 00 - Daybreak's Bell",
-                videoId: "dJzMxE-hpKE",
-                cover: "https://anilist.co/img/header/2587.jpg",
-                start: 0,
-                duration: 30
-            },
-            {
-                anime: "Gundam Iron-Blooded Orphans - Raise Your Flag",
-                videoId: "nUeDIdh4vJo",
-                cover: "https://anilist.co/img/header/20787.jpg",
-                start: 0,
-                duration: 30
-            },
-
-            // ===== CLASSICS =====
-            {
-                anime: "Lupin III - Opening 3",
-                videoId: "b83r_s20pPQ",
-                cover: "https://anilist.co/img/header/1412.jpg",
-                start: 0,
-                duration: 30
-            },
-            {
-                anime: "Space Battleship Yamato",
-                videoId: "dNQhR8MsZkk",
-                cover: "https://anilist.co/img/header/1061.jpg",
-                start: 0,
-                duration: 30
-            },
-            {
-                anime: "Mazinger Z",
-                videoId: "5pnE1B1kdnE",
-                cover: "https://anilist.co/img/header/1514.jpg",
-                start: 0,
-                duration: 30
-            },
-            {
-                anime: "Captain Harlock",
-                videoId: "gv0jDYAmu9Y",
-                cover: "https://anilist.co/img/header/1035.jpg",
-                start: 0,
-                duration: 30
-            },
-            {
-                anime: "Space Cobra",
-                videoId: "x4GIZI1Tt94",
-                cover: "https://anilist.co/img/header/1511.jpg",
-                start: 0,
-                duration: 30
-            },
-            {
-                anime: "Gatchaman",
-                videoId: "S0MfRwH1HdA",
-                cover: "https://anilist.co/img/header/928.jpg",
-                start: 0,
-                duration: 30
-            },
-
-            // ===== MORE RECENT =====
-            {
-                anime: "Kaguya-sama - Love Dramatic",
-                videoId: "I2g4bBYCzMk",
-                cover: "https://anilist.co/img/header/101896.jpg",
-                start: 0,
-                duration: 30
-            },
-            {
-                anime: "Kaguya-sama - Daddy Daddy Do",
-                videoId: "XHvD4gzQI0A",
-                cover: "https://anilist.co/img/header/101896.jpg",
-                start: 0,
-                duration: 30
-            },
-            {
-                anime: "Kaguya-sama - Giri Giri",
-                videoId: "yNElW3lO1MA",
-                cover: "https://anilist.co/img/header/101896.jpg",
-                start: 0,
-                duration: 30
-            },
-            {
-                anime: "Domestic Girlfriend - Crying for Rain",
-                videoId: "h11yZ_bEtbw",
-                cover: "https://anilist.co/img/header/103559.jpg",
-                start: 0,
-                duration: 30
-            },
-            {
-                anime: "Wind Breaker - Absolute Zero",
-                videoId: "vPxPssTk5eo",
-                cover: "https://anilist.co/img/header/168298.jpg",
-                start: 0,
-                duration: 30
-            },
-            {
-                anime: "The Idaten Deities - Opening",
-                videoId: "ztBtQEA6mFc",
-                cover: "https://anilist.co/img/header/132325.jpg",
-                start: 0,
-                duration: 30
-            },
-            // ===== EXTRA =====
-            {
-                anime: "Your Name - Zen Zen Zense",
-                videoId: "t3pFz_3J0xU",
-                cover: "https://anilist.co/img/header/21519.jpg",
-                start: 0,
-                duration: 30
-            },
-            {
-                anime: "Weathering With You - Grand Escape",
-                videoId: "G07PHxZ3kGQ",
-                cover: "https://anilist.co/img/header/107678.jpg",
-                start: 0,
-                duration: 30
-            },
-            {
-                anime: "Suzume - Suzume",
-                videoId: "6J1YEAKk5Ws",
-                cover: "https://anilist.co/img/header/148311.jpg",
-                start: 0,
-                duration: 30
-            },
-            {
-                anime: "Bocchi the Rock! - Seishun Complex",
-                videoId: "i0Q40o1ITCQ",
-                cover: "https://anilist.co/img/header/143994.jpg",
-                start: 0,
-                duration: 30
-            },
-            {
-                anime: "Dandadan - Otonoke",
-                videoId: "lVUO-4jOFH0",
-                cover: "https://anilist.co/img/header/168164.jpg",
-                start: 0,
-                duration: 30
+            function shuffleArray(arr) {
+                for (let i = arr.length - 1; i > 0; i--) {
+                    const j = Math.floor(Math.random() * (i + 1));
+                    [arr[i], arr[j]] = [arr[j], arr[i]];
+                }
+                return arr;
             }
-        ];
+
+            window.getTitle = function(media) {
+                return media.title.english || media.title.romaji || media.title.native || 'Sconosciuto';
+            };
+
+            function buildMultiQuery() {
+                const sorts = [
+                    { sort: 'POPULARITY_DESC', page: 1 },
+                    { sort: 'TRENDING_DESC', page: 1 },
+                    { sort: 'SCORE_DESC', page: 1 }
+                ];
+                let query = 'query {';
+                sorts.forEach((s, index) => {
+                    const alias = `cat${index + 1}`;
+                    query += `
+                        ${alias}: Page(page: ${s.page}, perPage: ${PER_PAGE}) {
+                            media(type: ANIME, sort: ${s.sort}, isAdult: false, status_not: NOT_YET_RELEASED) {
+                                id
+                                title { romaji english native }
+                                coverImage { large }
+                            }
+                        }
+                    `;
+                });
+                query += '}';
+                return query;
+            }
+
+            async function fetchWithTimeout(url, options, timeout = 8000) {
+                const controller = new AbortController();
+                const timeoutId = setTimeout(() => controller.abort(), timeout);
+                try {
+                    const response = await fetch(url, { ...options, signal: controller.signal });
+                    clearTimeout(timeoutId);
+                    return response;
+                } catch (err) {
+                    clearTimeout(timeoutId);
+                    throw err;
+                }
+            }
+
+            async function fetchMixedAnime() {
+                const query = buildMultiQuery();
+                try {
+                    const response = await fetchWithTimeout('https://graphql.anilist.co', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+                        body: JSON.stringify({ query })
+                    }, 8000);
+                    if (!response.ok) throw new Error(`HTTP ${response.status}`);
+                    const data = await response.json();
+                    if (data.errors) throw new Error(data.errors[0].message);
+                    const allAnimeResults = [];
+                    ['cat1', 'cat2', 'cat3'].forEach(cat => {
+                        const categoryData = data.data[cat]?.media || [];
+                        allAnimeResults.push(...categoryData);
+                    });
+                    const uniqueMap = new Map();
+                    for (const anime of allAnimeResults) {
+                        if (!uniqueMap.has(anime.id)) uniqueMap.set(anime.id, anime);
+                    }
+                    const result = Array.from(uniqueMap.values());
+                    if (result.length < 10) throw new Error('Pochi anime');
+                    return shuffleArray(result);
+                } catch (err) {
+                    console.warn('⚠️ AniList fallito, uso backup:', err.message);
+                    return null;
+                }
+            }
+
+            // BACKUP DI 40 ANIME FAMOSI
+            const BACKUP_ANIME = [
+                { id: 1, title: { english: 'Attack on Titan' }, coverImage: { large: 'https://anilist.co/img/header/16498.jpg' } },
+                { id: 2, title: { english: 'Demon Slayer' }, coverImage: { large: 'https://anilist.co/img/header/101922.jpg' } },
+                { id: 3, title: { english: 'Naruto' }, coverImage: { large: 'https://anilist.co/img/header/20.jpg' } },
+                { id: 4, title: { english: 'One Piece' }, coverImage: { large: 'https://anilist.co/img/header/21.jpg' } },
+                { id: 5, title: { english: 'Dragon Ball Z' }, coverImage: { large: 'https://anilist.co/img/header/813.jpg' } },
+                { id: 6, title: { english: 'Death Note' }, coverImage: { large: 'https://anilist.co/img/header/1535.jpg' } },
+                { id: 7, title: { english: 'Fullmetal Alchemist: Brotherhood' }, coverImage: { large: 'https://anilist.co/img/header/5114.jpg' } },
+                { id: 8, title: { english: 'Tokyo Ghoul' }, coverImage: { large: 'https://anilist.co/img/header/20605.jpg' } },
+                { id: 9, title: { english: 'My Hero Academia' }, coverImage: { large: 'https://anilist.co/img/header/21459.jpg' } },
+                { id: 10, title: { english: 'Jujutsu Kaisen' }, coverImage: { large: 'https://anilist.co/img/header/113415.jpg' } },
+                { id: 11, title: { english: 'Cowboy Bebop' }, coverImage: { large: 'https://anilist.co/img/header/23.jpg' } },
+                { id: 12, title: { english: 'Sword Art Online' }, coverImage: { large: 'https://anilist.co/img/header/11757.jpg' } },
+                { id: 13, title: { english: 'Bleach' }, coverImage: { large: 'https://anilist.co/img/header/22.jpg' } },
+                { id: 14, title: { english: 'Spy x Family' }, coverImage: { large: 'https://anilist.co/img/header/130970.jpg' } },
+                { id: 15, title: { english: 'Chainsaw Man' }, coverImage: { large: 'https://anilist.co/img/header/127244.jpg' } },
+                { id: 16, title: { english: 'Hunter x Hunter' }, coverImage: { large: 'https://anilist.co/img/header/11061.jpg' } },
+                { id: 17, title: { english: 'Re:Zero' }, coverImage: { large: 'https://anilist.co/img/header/31240.jpg' } },
+                { id: 18, title: { english: 'One Punch Man' }, coverImage: { large: 'https://anilist.co/img/header/30276.jpg' } },
+                { id: 19, title: { english: 'Mob Psycho 100' }, coverImage: { large: 'https://anilist.co/img/header/100424.jpg' } },
+                { id: 20, title: { english: 'Vinland Saga' }, coverImage: { large: 'https://anilist.co/img/header/37521.jpg' } },
+                { id: 21, title: { english: 'Steins;Gate' }, coverImage: { large: 'https://anilist.co/img/header/9253.jpg' } },
+                { id: 22, title: { english: 'Code Geass' }, coverImage: { large: 'https://anilist.co/img/header/1575.jpg' } },
+                { id: 23, title: { english: 'Gintama' }, coverImage: { large: 'https://anilist.co/img/header/918.jpg' } },
+                { id: 24, title: { english: 'Fate/Zero' }, coverImage: { large: 'https://anilist.co/img/header/10087.jpg' } },
+                { id: 25, title: { english: 'Kaguya-sama: Love is War' }, coverImage: { large: 'https://anilist.co/img/header/101896.jpg' } },
+                { id: 26, title: { english: 'Dr. Stone' }, coverImage: { large: 'https://anilist.co/img/header/38691.jpg' } },
+                { id: 27, title: { english: 'Fire Force' }, coverImage: { large: 'https://anilist.co/img/header/38671.jpg' } },
+                { id: 28, title: { english: 'Black Clover' }, coverImage: { large: 'https://anilist.co/img/header/34572.jpg' } },
+                { id: 29, title: { english: 'Neon Genesis Evangelion' }, coverImage: { large: 'https://anilist.co/img/header/30.jpg' } },
+                { id: 30, title: { english: 'Gurren Lagann' }, coverImage: { large: 'https://anilist.co/img/header/2338.jpg' } }
+            ];
+
+            window.loadAnimeData = async function() {
+                if (window.isLoading) return;
+                if (window.isDataLoaded && window.allAnime.length > 0) return window.allAnime;
+                window.isLoading = true;
+                const loadingSub = document.getElementById('loadingSub');
+                const loadingError = document.getElementById('loadingError');
+                try {
+                    if (loadingSub) loadingSub.textContent = 'Caricamento da AniList...';
+                    if (loadingError) loadingError.textContent = '';
+                    let data = await fetchMixedAnime();
+                    if (!data || data.length < 10) {
+                        if (loadingSub) loadingSub.textContent = 'AniList non risponde, uso database locale...';
+                        if (loadingError) loadingError.textContent = '⚠️ Usando anime di backup';
+                        data = BACKUP_ANIME.map(a => ({ id: a.id, title: a.title, coverImage: a.coverImage }));
+                        await new Promise(r => setTimeout(r, 500));
+                    }
+                    window.allAnime = data;
+                    window.isDataLoaded = true;
+                    window.isLoading = false;
+                    if (loadingError) loadingError.textContent = '';
+                    return data;
+                } catch (err) {
+                    console.error(err);
+                    window.isLoading = false;
+                    if (loadingSub) loadingSub.textContent = 'Errore, uso database di backup...';
+                    if (loadingError) loadingError.textContent = '⚠️ Usando anime di backup';
+                    window.allAnime = BACKUP_ANIME.map(a => ({ id: a.id, title: a.title, coverImage: a.coverImage }));
+                    window.isDataLoaded = true;
+                    await new Promise(r => setTimeout(r, 500));
+                    return window.allAnime;
+                }
+            };
+        })();
+
+        // ============================================================
+        // 🔥 RICERCA VERA SU YOUTUBE CON API
+        // ============================================================
+        async function searchYouTubeOpening(animeName) {
+            const searchQueries = [
+                `${animeName} opening`,
+                `${animeName} op`,
+                `${animeName} opening 1`,
+                `${animeName} opening full`,
+                `${animeName} opening tv size`,
+                `${animeName} intro`
+            ];
+
+            for (const query of searchQueries) {
+                try {
+                    const url =
+                        `https://www.googleapis.com/youtube/v3/search?part=snippet&maxResults=1&q=${encodeURIComponent(query)}&key=${YOUTUBE_API_KEY}&type=video&videoCategoryId=10`;
+                    console.log(`🔍 Cerco: "${query}"`);
+                    const response = await fetch(url);
+                    const data = await response.json();
+                    if (data.error) {
+                        console.error('Errore API YouTube:', data.error);
+                        continue;
+                    }
+                    if (data.items && data.items.length > 0) {
+                        const video = data.items[0];
+                        const videoId = video.id.videoId;
+                        console.log(`✅ Trovato: "${video.snippet.title}" (${videoId})`);
+                        return { videoId: videoId, title: video.snippet.title, duration: 30 };
+                    }
+                } catch (error) {
+                    console.error('Errore ricerca:', error);
+                    continue;
+                }
+            }
+            console.log(`❌ Nessun risultato per: ${animeName}`);
+            return null;
+        }
 
         // ============================================================
         // GAME LOGIC
@@ -1595,8 +884,9 @@
         let player = null;
         let isPlaying = false;
         let timerInterval = null;
+        let currentQuestionData = null;
 
-        function shuffleArray(arr) {
+        function shuffleArrayLocal(arr) {
             for (let i = arr.length - 1; i > 0; i--) {
                 const j = Math.floor(Math.random() * (i + 1));
                 [arr[i], arr[j]] = [arr[j], arr[i]];
@@ -1604,44 +894,94 @@
             return arr;
         }
 
-        function generateQuestions() {
-            const shuffled = shuffleArray([...OPENING_DB]);
-            const selected = shuffled.slice(0, totalQuestions);
-            
-            return selected.map((item) => {
-                const others = OPENING_DB.filter(a => a.anime !== item.anime);
-                const shuffledOthers = shuffleArray([...others]).slice(0, 3);
-                const options = shuffleArray([
-                    { text: item.anime, isCorrect: true },
-                    ...shuffledOthers.map(a => ({ text: a.anime, isCorrect: false }))
-                ]);
-                
-                return {
-                    ...item,
-                    options: options
-                };
-            });
+        function delay(ms) {
+            return new Promise(resolve => setTimeout(resolve, ms));
         }
 
-        function loadYouTubeAPI() {
-            if (window.YT) {
-                initPlayer();
-                return;
-            }
+        async function generateQuestionsFromAnime(animeList) {
+            const questions = [];
+            const shuffled = shuffleArrayLocal([...animeList]);
+            let loadingSub = document.getElementById('loadingSub');
+            const maxAttempts = Math.min(shuffled.length, 30);
 
+            for (let i = 0; i < maxAttempts && questions.length < totalQuestions; i++) {
+                const anime = shuffled[i];
+                const title = window.getTitle(anime);
+                if (loadingSub) {
+                    loadingSub.textContent = `🔍 Cercando su YouTube: ${title} (${questions.length + 1}/${totalQuestions})`;
+                }
+                const searchResult = await searchYouTubeOpening(title);
+                await delay(500);
+                if (!searchResult || !searchResult.videoId) continue;
+
+                const videoId = searchResult.videoId;
+                const others = animeList.filter(a => a.id !== anime.id);
+                const shuffledOthers = shuffleArrayLocal([...others]);
+
+                let distractors = [];
+                for (const other of shuffledOthers) {
+                    if (distractors.length >= 3) break;
+                    const otherTitle = window.getTitle(other);
+                    const otherSearch = await searchYouTubeOpening(otherTitle);
+                    await delay(500);
+                    if (otherSearch && otherSearch.videoId && otherSearch.videoId !== videoId) {
+                        distractors.push({ text: otherTitle, isCorrect: false, videoId: otherSearch.videoId });
+                    }
+                }
+
+                if (distractors.length < 3) {
+                    const fallbackTitles = ['Naruto', 'One Piece', 'Dragon Ball Z', 'Bleach', 'Death Note', 'Attack on Titan',
+                        'Demon Slayer'
+                    ];
+                    for (const fb of fallbackTitles) {
+                        if (fb !== title && !distractors.some(d => d.text === fb)) {
+                            const fbSearch = await searchYouTubeOpening(fb);
+                            await delay(500);
+                            if (fbSearch && fbSearch.videoId && fbSearch.videoId !== videoId) {
+                                distractors.push({ text: fb, isCorrect: false, videoId: fbSearch.videoId });
+                            }
+                        }
+                        if (distractors.length >= 3) break;
+                    }
+                }
+
+                if (distractors.length < 3) continue;
+
+                const options = shuffleArrayLocal([
+                    { text: title, isCorrect: true, videoId: videoId },
+                    ...distractors
+                ]);
+
+                questions.push({
+                    anime: title,
+                    videoId: videoId,
+                    cover: anime.coverImage?.large || null,
+                    options: options,
+                    start: 0,
+                    duration: 30
+                });
+
+                console.log(`✅ Aggiunta domanda ${questions.length}: ${title}`);
+            }
+            return questions;
+        }
+
+        // ============================================================
+        // YOUTUBE PLAYER
+        // ============================================================
+        function loadYouTubeAPI() {
+            if (window.YT) { initPlayer(); return; }
             const tag = document.createElement('script');
             tag.src = 'https://www.youtube.com/iframe_api';
             document.head.appendChild(tag);
-
-            window.onYouTubeIframeAPIReady = () => {
-                initPlayer();
-            };
+            window.onYouTubeIframeAPIReady = () => { initPlayer(); };
         }
 
         function initPlayer() {
+            if (currentIndex >= questions.length) { showResult(); return; }
             const q = questions[currentIndex];
-            if (!q) return;
-
+            if (!q || !q.videoId) { nextQuestion(); return; }
+            if (player) { try { player.destroy(); } catch (e) {} player = null; }
             player = new YT.Player('youtubePlayer', {
                 height: '0',
                 width: '0',
@@ -1652,12 +992,13 @@
                     modestbranding: 1,
                     rel: 0,
                     showinfo: 0,
-                    start: q.start,
-                    end: q.start + q.duration
+                    start: q.start || 0,
+                    end: (q.start || 0) + (q.duration || 30)
                 },
                 events: {
                     onReady: onPlayerReady,
-                    onStateChange: onPlayerStateChange
+                    onStateChange: onPlayerStateChange,
+                    onError: onPlayerError
                 }
             });
         }
@@ -1680,9 +1021,13 @@
             }
         }
 
+        function onPlayerError(event) {
+            console.error('Errore YouTube:', event.data);
+            setTimeout(() => { nextQuestion(); }, 1000);
+        }
+
         function togglePlay() {
             if (!player) return;
-
             if (isPlaying) {
                 player.pauseVideo();
                 isPlaying = false;
@@ -1705,7 +1050,7 @@
         function resetAudio() {
             if (!player) return;
             const q = questions[currentIndex];
-            player.seekTo(q.start);
+            if (q) player.seekTo(q.start || 0);
             player.pauseVideo();
             isPlaying = false;
             document.getElementById('playIcon').className = 'fas fa-play';
@@ -1722,27 +1067,21 @@
                 if (player && player.getCurrentTime) {
                     const current = player.getCurrentTime() || 0;
                     const q = questions[currentIndex];
-                    const elapsed = current - (q.start || 0);
-                    const total = q.duration || 30;
+                    const elapsed = current - (q?.start || 0);
                     const minutes = Math.floor(elapsed / 60);
                     const seconds = Math.floor(elapsed % 60);
-                    document.getElementById('timerDisplay').textContent = 
+                    document.getElementById('timerDisplay').textContent =
                         `${minutes}:${seconds.toString().padStart(2, '0')}`;
-                    document.getElementById('totalDuration').textContent = 
-                        `${Math.floor(total / 60)}:${Math.floor(total % 60).toString().padStart(2, '0')}`;
                 }
             }, 100);
         }
 
         function loadQuestionUI() {
-            if (currentIndex >= questions.length) {
-                showResult();
-                return;
-            }
-
+            if (currentIndex >= questions.length) { showResult(); return; }
             const q = questions[currentIndex];
+            currentQuestionData = q;
             isAnswered = false;
-            
+
             document.getElementById('currentQuestion').textContent = currentIndex + 1;
             document.getElementById('totalQuestions').textContent = questions.length;
             document.getElementById('correctCount').textContent = correctCount;
@@ -1750,13 +1089,12 @@
             document.getElementById('progressFill').style.width = ((currentIndex) / questions.length * 100) + '%';
 
             const cover = document.getElementById('animeCover');
-            cover.src = q.cover || '';
-            cover.style.display = q.cover ? 'block' : 'none';
+            if (q.cover) { cover.src = q.cover;
+                cover.style.display = 'block'; } else { cover.style.display = 'none'; }
 
             const grid = document.getElementById('optionsGrid');
             grid.innerHTML = '';
             const letters = ['A', 'B', 'C', 'D'];
-            
             q.options.forEach((opt, i) => {
                 const btn = document.createElement('button');
                 btn.className = 'option-btn';
@@ -1768,14 +1106,12 @@
 
             document.getElementById('feedback').className = 'feedback';
             document.getElementById('nextBtn').className = 'next-btn';
-            
             resetAudio();
         }
 
         function selectOption(btn, isCorrect) {
             if (isAnswered) return;
             isAnswered = true;
-
             if (player && isPlaying) {
                 player.pauseVideo();
                 isPlaying = false;
@@ -1785,10 +1121,8 @@
                 document.getElementById('waveform').classList.remove('playing');
                 clearInterval(timerInterval);
             }
-
             const allBtns = document.querySelectorAll('.option-btn');
             allBtns.forEach(b => b.classList.add('disabled'));
-
             const feedback = document.getElementById('feedback');
             const feedbackTitle = document.getElementById('feedbackTitle');
             const feedbackText = document.getElementById('feedbackText');
@@ -1798,20 +1132,15 @@
                 correctCount++;
                 feedback.className = 'feedback show correct';
                 feedbackTitle.textContent = '🎵 Perfetto!';
-                feedbackText.textContent = `Hai riconosciuto "${questions[currentIndex].anime}" dalla sigla!`;
+                feedbackText.textContent = `Hai riconosciuto "${currentQuestionData.anime}" dalla sigla!`;
             } else {
                 btn.classList.add('wrong');
                 wrongCount++;
                 feedback.className = 'feedback show wrong';
                 feedbackTitle.textContent = '❌ Sbagliato!';
-                const correctAnswer = questions[currentIndex].options.find(o => o.isCorrect);
+                const correctAnswer = currentQuestionData.options.find(o => o.isCorrect);
                 feedbackText.textContent = `Era "${correctAnswer.text}"!`;
-                
-                allBtns.forEach(b => {
-                    if (b.dataset.correct === 'true') {
-                        b.classList.add('correct');
-                    }
-                });
+                allBtns.forEach(b => { if (b.dataset.correct === 'true') b.classList.add('correct'); });
             }
 
             document.getElementById('correctCount').textContent = correctCount;
@@ -1827,17 +1156,20 @@
         }
 
         function nextQuestion() {
+            if (player) { try { player.destroy(); } catch (e) {} player = null; }
             currentIndex++;
-            loadQuestionUI();
+            if (currentIndex >= questions.length) { showResult(); return; }
+            document.getElementById('loading').style.display = 'block';
+            document.getElementById('gameArea').style.display = 'none';
+            document.getElementById('loadingSub').textContent = `Caricando: ${questions[currentIndex]?.anime || '...'}`;
+            setTimeout(() => { initPlayer(); }, 500);
         }
 
         function showResult() {
             document.getElementById('gameArea').style.display = 'none';
             document.getElementById('resultScreen').className = 'result-screen show';
             document.getElementById('progressFill').style.width = '100%';
-            
             document.getElementById('finalScore').textContent = `${correctCount}/${questions.length}`;
-            
             let message = '';
             const pct = correctCount / questions.length;
             if (pct === 1) message = '🔥 Perfetto! Hai l\'orecchio di un vero otaku!';
@@ -1845,7 +1177,6 @@
             else if (pct >= 0.6) message = '👏 Buon lavoro! Continua ad allenare l\'orecchio!';
             else if (pct >= 0.4) message = '📺 Non male, ma ascolta più sigle!';
             else message = '🎧 Allenati con più opening e riprova!';
-            
             document.getElementById('resultMessage').textContent = message;
         }
 
@@ -1853,39 +1184,47 @@
             currentIndex = 0;
             correctCount = 0;
             wrongCount = 0;
-            questions = generateQuestions();
-            
             document.getElementById('resultScreen').className = 'result-screen';
-            document.getElementById('gameArea').style.display = 'block';
-            document.getElementById('loading').style.display = 'none';
-            
-            if (player) {
-                player.destroy();
-            }
-            initPlayer();
-            loadQuestionUI();
+            document.getElementById('gameArea').style.display = 'none';
+            document.getElementById('loading').style.display = 'block';
+            document.getElementById('loadingSub').textContent = 'Ricarico le opening da YouTube...';
+            initGame();
         }
 
-        // ============================================================
-        // INIT
-        // ============================================================
-        document.addEventListener('DOMContentLoaded', () => {
-            // Mostra il numero di opening disponibili
-            document.getElementById('totalOpenings').textContent = OPENING_DB.length;
-            
-            questions = generateQuestions();
-            
-            document.getElementById('loading').style.display = 'block';
-            document.getElementById('gameArea').style.display = 'none';
-            
-            loadYouTubeAPI();
-        });
+        async function initGame() {
+            try {
+                const loadingSub = document.getElementById('loadingSub');
+                const loadingError = document.getElementById('loadingError');
+                if (loadingSub) loadingSub.textContent = 'Caricamento anime da AniList...';
+                if (loadingError) loadingError.textContent = '';
+                const animeList = await window.loadAnimeData();
+                if (!animeList || animeList.length < 10) throw new Error('Non abbastanza anime');
+                if (loadingSub) loadingSub.textContent = 'Ricerca opening su YouTube...';
+                const generatedQuestions = await generateQuestionsFromAnime(animeList);
+                if (generatedQuestions.length < 3) throw new Error('Poche opening trovate su YouTube');
+                questions = generatedQuestions;
+                if (loadingError) loadingError.textContent = '';
+                document.getElementById('loading').style.display = 'block';
+                document.getElementById('gameArea').style.display = 'none';
+                if (loadingSub) loadingSub.textContent = `Caricando: ${questions[0]?.anime || '...'}`;
+                loadYouTubeAPI();
+            } catch (err) {
+                console.error('Errore init:', err);
+                document.getElementById('loading').innerHTML = `
+                    <div style="color: var(--accent-red); font-size: 2rem; margin-bottom: 16px;">❌</div>
+                    <p style="color: var(--text-primary); font-weight: 600;">Errore nel caricamento</p>
+                    <p style="color: var(--text-secondary); font-size: 0.9rem; margin-top: 8px;">${err.message}</p>
+                    <button onclick="restartGame()" style="margin-top:20px;padding:12px 32px;background:var(--accent-purple);border:none;border-radius:var(--radius-sm);color:#fff;font-family:'Inter',sans-serif;font-weight:600;cursor:pointer;">Riprova</button>
+                `;
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', () => { initGame(); });
 
         // Player YouTube nascosto
-        document.body.insertAdjacentHTML('beforeend', `
-            <div id="youtubePlayer" style="position: absolute; width: 0; height: 0; opacity: 0; pointer-events: none;"></div>
-        `);
+        document.body.insertAdjacentHTML('beforeend',
+            `<div id="youtubePlayer" style="position: absolute; width: 0; height: 0; opacity: 0; pointer-events: none;"></div>`
+            );
     </script>
-
 </body>
 </html>
