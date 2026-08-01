@@ -3,12 +3,13 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>AniQuiz - Indovina l'Opening (YouTube API)</title>
+    <title>AniQuiz - Indovina l'Opening</title>
     
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
     
     <style>
+        /* ... STESSO STILE DI PRIMA ... */
         * {
             margin: 0;
             padding: 0;
@@ -366,17 +367,6 @@
             box-shadow: 0 0 30px rgba(168, 85, 247, 0.3);
         }
 
-        .audio-controls button.skip-btn {
-            background: linear-gradient(135deg, var(--accent-orange), #ea580c);
-            border: none;
-            color: #fff;
-        }
-
-        .audio-controls button.skip-btn:hover {
-            transform: scale(1.05);
-            box-shadow: 0 0 30px rgba(245, 158, 11, 0.3);
-        }
-
         .timer {
             font-size: 0.9rem;
             color: var(--text-secondary);
@@ -464,10 +454,6 @@
 
         .feedback.wrong {
             border-left-color: var(--accent-red);
-        }
-
-        .feedback.error {
-            border-left-color: var(--accent-orange);
         }
 
         .feedback h3 {
@@ -686,7 +672,7 @@
                 <a href="../index.html" class="back-btn">
                     <i class="fas fa-arrow-left"></i> Torna indietro
                 </a>
-                <span><i class="fas fa-youtube"></i> YouTube Search</span>
+                <span><i class="fas fa-youtube"></i> YouTube</span>
             </div>
         </div>
     </nav>
@@ -769,9 +755,6 @@
                     <button onclick="resetAudio()">
                         <i class="fas fa-undo"></i> Ripeti
                     </button>
-                    <button class="skip-btn" onclick="skipQuestion()">
-                        <i class="fas fa-forward"></i> Salta
-                    </button>
                 </div>
             </div>
 
@@ -802,7 +785,7 @@
 
     <script>
         // ============================================================
-        // 🔥 YOUTUBE API KEY
+        // 🔥 YOUTUBE API KEY (QUELLA DI KITSUSTREAM)
         // ============================================================
         const YOUTUBE_API_KEY = 'AIzaSyCXsFDpO4dYRiwlTPA4s5rbaIpCG4_7EB4';
 
@@ -962,67 +945,40 @@
         })();
 
         // ============================================================
-        // 🔥 RICERCA VERA SU YOUTUBE CON API
+        // 🔥 RICERCA VERA SU YOUTUBE (METODO KITSUSTREAM)
         // ============================================================
         async function searchYouTubeOpening(animeName) {
-            const cleanName = animeName
-                .replace(/:.+$/, '')
-                .replace(/\([^)]*\)/g, '')
-                .trim();
+            // 🔥 STESSO METODO DEL BOTTONE TRAILER
+            const searchQuery = `${animeName} opening`;
             
-            const searchQueries = [
-                `${cleanName} opening`,
-                `${cleanName} op`,
-                `${cleanName} opening 1`,
-                `${cleanName} opening full`,
-                `${cleanName} opening tv size`,
-                `${cleanName} intro`
-            ];
-
-            for (const query of searchQueries) {
-                try {
-                    const url = `https://www.googleapis.com/youtube/v3/search?part=snippet&maxResults=3&q=${encodeURIComponent(query)}&key=${YOUTUBE_API_KEY}&type=video&videoCategoryId=10`;
-                    
-                    console.log(`🔍 Cerco: "${query}"`);
-                    const response = await fetch(url);
-                    const data = await response.json();
-                    
-                    if (data.error) {
-                        console.error('Errore API YouTube:', data.error);
-                        continue;
-                    }
-                    
-                    if (data.items && data.items.length > 0) {
-                        for (const video of data.items) {
-                            const title = video.snippet.title.toLowerCase();
-                            const videoId = video.id.videoId;
-                            
-                            if (title.includes('opening') || title.includes('op ') || title.includes('tv size')) {
-                                console.log(`✅ Trovato: "${video.snippet.title}" (${videoId})`);
-                                return {
-                                    videoId: videoId,
-                                    title: video.snippet.title,
-                                    duration: 30
-                                };
-                            }
-                        }
-                        
-                        const video = data.items[0];
-                        console.log(`✅ Trovato (fallback): "${video.snippet.title}" (${video.id.videoId})`);
-                        return {
-                            videoId: video.id.videoId,
-                            title: video.snippet.title,
-                            duration: 30
-                        };
-                    }
-                } catch (error) {
-                    console.error('Errore ricerca:', error);
-                    continue;
+            try {
+                const url = `https://www.googleapis.com/youtube/v3/search?part=snippet&maxResults=1&q=${encodeURIComponent(searchQuery)}&key=${YOUTUBE_API_KEY}&type=video`;
+                console.log(`🔍 Cerco: "${searchQuery}"`);
+                const response = await fetch(url);
+                const data = await response.json();
+                
+                if (data.error) {
+                    console.error('Errore API YouTube:', data.error);
+                    return null;
                 }
+                
+                if (data.items && data.items.length > 0) {
+                    const video = data.items[0];
+                    const videoId = video.id.videoId;
+                    console.log(`✅ Trovato: "${video.snippet.title}" (${videoId})`);
+                    return {
+                        videoId: videoId,
+                        title: video.snippet.title,
+                        duration: 30
+                    };
+                } else {
+                    console.log(`❌ Nessun risultato per: ${animeName}`);
+                    return null;
+                }
+            } catch (error) {
+                console.error('Errore ricerca YouTube:', error);
+                return null;
             }
-            
-            console.log(`❌ Nessun risultato per: ${animeName}`);
-            return null;
         }
 
         // ============================================================
@@ -1038,7 +994,6 @@
         let isPlaying = false;
         let timerInterval = null;
         let currentQuestionData = null;
-        let isGameOver = false;
 
         function shuffleArrayLocal(arr) {
             for (let i = arr.length - 1; i > 0; i--) {
@@ -1130,13 +1085,9 @@
         }
 
         function initPlayer() {
-            if (isGameOver) return;
             if (currentIndex >= questions.length) { showResult(); return; }
             const q = questions[currentIndex];
-            if (!q || !q.videoId) { 
-                showError("Impossibile caricare l'audio. Prova a saltare la domanda.");
-                return; 
-            }
+            if (!q || !q.videoId) { nextQuestion(); return; }
             if (player) { try { player.destroy(); } catch (e) {} player = null; }
             player = new YT.Player('youtubePlayer', {
                 height: '0',
@@ -1179,19 +1130,7 @@
 
         function onPlayerError(event) {
             console.error('Errore YouTube:', event.data);
-            showError("Impossibile riprodurre l'audio. Usa il pulsante Salta.");
-        }
-
-        function showError(message) {
-            const feedback = document.getElementById('feedback');
-            feedback.className = 'feedback show error';
-            document.getElementById('feedbackTitle').textContent = '⚠️ Errore';
-            document.getElementById('feedbackText').textContent = message;
-            
-            const nextBtn = document.getElementById('nextBtn');
-            nextBtn.textContent = 'Salta →';
-            nextBtn.className = 'next-btn show';
-            nextBtn.onclick = () => { skipQuestion(); };
+            setTimeout(() => { nextQuestion(); }, 1000);
         }
 
         function togglePlay() {
@@ -1244,26 +1183,7 @@
             }, 100);
         }
 
-        function skipQuestion() {
-            if (player) { try { player.destroy(); } catch (e) {} player = null; }
-            isAnswered = true;
-            const feedback = document.getElementById('feedback');
-            feedback.className = 'feedback show error';
-            document.getElementById('feedbackTitle').textContent = '⏭️ Saltato';
-            document.getElementById('feedbackText').textContent = 'Hai saltato questa domanda.';
-            
-            const nextBtn = document.getElementById('nextBtn');
-            if (currentIndex < questions.length - 1) {
-                nextBtn.textContent = 'Prossima domanda →';
-            } else {
-                nextBtn.textContent = 'Vedi risultati 🏆';
-            }
-            nextBtn.className = 'next-btn show';
-            nextBtn.onclick = () => { nextQuestion(); };
-        }
-
         function loadQuestionUI() {
-            if (isGameOver) return;
             if (currentIndex >= questions.length) { showResult(); return; }
             const q = questions[currentIndex];
             currentQuestionData = q;
@@ -1340,7 +1260,6 @@
                 nextBtn.textContent = 'Vedi risultati 🏆';
             }
             nextBtn.className = 'next-btn show';
-            nextBtn.onclick = () => { nextQuestion(); };
         }
 
         function nextQuestion() {
@@ -1354,7 +1273,6 @@
         }
 
         function showResult() {
-            isGameOver = true;
             document.getElementById('gameArea').style.display = 'none';
             document.getElementById('resultScreen').className = 'result-screen show';
             document.getElementById('progressFill').style.width = '100%';
@@ -1370,7 +1288,6 @@
         }
 
         function restartGame() {
-            isGameOver = false;
             currentIndex = 0;
             correctCount = 0;
             wrongCount = 0;
