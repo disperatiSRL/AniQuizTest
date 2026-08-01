@@ -1,42 +1,10 @@
 <!DOCTYPE html>
 <html lang="it">
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>AniQuiz - Indovina l'Opening</title>
-    
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
-    
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🎵 Anime Opening Quiz</title>
     <style>
-        /* ============================================================
-           RESET & VARIABILI
-           ============================================================ */
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        :root {
-            --bg-primary: #0a0a0f;
-            --bg-secondary: #12121a;
-            --bg-card: #1a1a2e;
-            --bg-card-hover: #22223a;
-            --text-primary: #ffffff;
-            --text-secondary: #8a8aa0;
-            --accent-pink: #ff6b9d;
-            --accent-purple: #a855f7;
-            --accent-blue: #4cc9f0;
-            --accent-green: #4ade80;
-            --accent-red: #f87171;
-            --accent-orange: #f59e0b;
-            --shadow: 0 8px 40px rgba(0, 0, 0, 0.6);
-            --radius: 16px;
-            --radius-sm: 10px;
-            --transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-        }
-
         * {
             margin: 0;
             padding: 0;
@@ -44,1519 +12,863 @@
         }
 
         body {
-            font-family: 'Inter', -apple-system, sans-serif;
-            background: var(--bg-primary);
-            color: var(--text-primary);
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(145deg, #0b0e1a 0%, #1a1e2f 100%);
             min-height: 100vh;
-            line-height: 1.6;
-            overflow-x: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: #f0f0f0;
+            padding: 20px;
         }
 
         .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 0 20px;
+            background: rgba(30, 34, 56, 0.85);
+            backdrop-filter: blur(12px);
+            border-radius: 40px;
+            padding: 40px 30px;
+            max-width: 720px;
+            width: 100%;
+            box-shadow: 0 25px 50px -10px rgba(0, 0, 0, 0.8);
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            transition: all 0.3s ease;
         }
 
-        .bg-glow {
-            position: fixed;
-            top: -50%;
-            left: -50%;
-            width: 200%;
-            height: 200%;
-            z-index: 0;
-            pointer-events: none;
-            background: 
-                radial-gradient(ellipse at 20% 50%, rgba(168, 85, 247, 0.06) 0%, transparent 60%),
-                radial-gradient(ellipse at 80% 20%, rgba(255, 107, 157, 0.04) 0%, transparent 50%);
-        }
-
-        /* ============================================================
-           NAVBAR
-           ============================================================ */
-        .navbar {
-            background: rgba(10, 10, 15, 0.85);
-            backdrop-filter: blur(20px);
-            border-bottom: 1px solid rgba(255, 255, 255, 0.04);
-            padding: 16px 0;
-            position: sticky;
-            top: 0;
-            z-index: 100;
-        }
-
-        .navbar .container {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            flex-wrap: wrap;
-            gap: 12px;
-        }
-
-        .logo {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            font-size: 1.6rem;
-            font-weight: 900;
-            text-decoration: none;
-            color: inherit;
-        }
-
-        .logo-icon {
-            width: 42px;
-            height: 42px;
-            background: linear-gradient(135deg, var(--accent-pink), var(--accent-purple));
-            border-radius: 12px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 1.2rem;
-            color: #fff;
-            box-shadow: 0 0 30px rgba(168, 85, 247, 0.2);
-        }
-
-        .logo-text {
-            background: linear-gradient(135deg, var(--accent-pink), var(--accent-purple), var(--accent-blue));
+        h1 {
+            font-size: 2.2rem;
+            font-weight: 700;
+            text-align: center;
+            margin-bottom: 10px;
+            background: linear-gradient(135deg, #f093fb, #f5576c, #4facfe);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
+            background-clip: text;
+            letter-spacing: 1px;
         }
 
-        .nav-stats {
+        .subtitle {
+            text-align: center;
+            color: #a0a6c7;
+            font-size: 0.95rem;
+            margin-bottom: 30px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            padding-bottom: 15px;
+        }
+
+        .status-bar {
             display: flex;
+            justify-content: space-between;
             align-items: center;
-            gap: 20px;
-            color: var(--text-secondary);
-            font-size: 0.85rem;
+            font-size: 1rem;
+            background: rgba(0, 0, 0, 0.3);
+            padding: 12px 20px;
+            border-radius: 60px;
+            margin-bottom: 30px;
+            border: 1px solid rgba(255, 255, 255, 0.04);
         }
 
-        .nav-stats span {
+        .score {
+            background: #4facfe;
+            padding: 4px 16px;
+            border-radius: 40px;
+            font-weight: 600;
+            color: #fff;
+            font-size: 1.1rem;
+        }
+
+        .question-counter {
+            color: #b0b7d9;
+        }
+
+        /* Player audio */
+        .player-wrapper {
+            position: relative;
+            width: 100%;
+            padding: 10px 0 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        #youtube-player-container {
+            width: 0;
+            height: 0;
+            opacity: 0;
+            pointer-events: none;
+            position: absolute;
+        }
+
+        .audio-visual {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            background: radial-gradient(circle at 30% 30%, #4facfe, #1a1e2f);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 3rem;
+            box-shadow: 0 0 40px rgba(79, 172, 254, 0.3);
+            transition: box-shadow 0.3s ease;
+            margin: 0 auto 10px;
+        }
+
+        .audio-visual.playing {
+            box-shadow: 0 0 80px rgba(245, 87, 108, 0.5);
+            animation: pulse 1.5s infinite alternate;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            100% { transform: scale(1.05); }
+        }
+
+        .now-playing {
+            text-align: center;
+            font-size: 0.95rem;
+            color: #7a82aa;
+            margin-top: 5px;
+            min-height: 28px;
+        }
+
+        /* Controlli */
+        .controls {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin: 12px 0 8px;
+        }
+
+        .controls button {
+            background: rgba(255, 255, 255, 0.07);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 60px;
+            color: #f0f0f0;
+            font-size: 1.2rem;
+            padding: 8px 20px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            backdrop-filter: blur(4px);
             display: flex;
             align-items: center;
             gap: 6px;
         }
 
-        .nav-stats i {
-            color: var(--accent-purple);
-        }
-
-        .back-btn {
-            color: var(--text-secondary);
-            text-decoration: none;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            font-size: 0.9rem;
-            transition: var(--transition);
-        }
-
-        .back-btn:hover {
-            color: var(--text-primary);
-        }
-
-        /* ============================================================
-           OPENING GAME - STILI SPECIFICI
-           ============================================================ */
-        .game-container {
-            padding: 40px 0 20px;
-            position: relative;
-            z-index: 1;
-            max-width: 900px;
-            margin: 0 auto;
-        }
-
-        .game-header {
-            text-align: center;
-            margin-bottom: 30px;
-        }
-
-        .game-header h1 {
-            font-size: 2.5rem;
-            font-weight: 900;
-            background: linear-gradient(135deg, #f59e0b, #ef4444);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            margin-bottom: 8px;
-        }
-
-        .game-header p {
-            color: var(--text-secondary);
-            font-size: 1.05rem;
-        }
-
-        .game-header .audio-badge {
-            display: inline-block;
-            margin-top: 12px;
-            background: rgba(168, 85, 247, 0.15);
-            color: var(--accent-purple);
-            padding: 6px 20px;
-            border-radius: 20px;
-            font-size: 0.85rem;
-            font-weight: 600;
-        }
-
-        .game-header .audio-badge i {
-            margin-right: 8px;
-        }
-
-        /* Stats bar */
-        .stats-bar {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            background: var(--bg-card);
-            border-radius: var(--radius);
-            padding: 16px 24px;
-            margin-bottom: 24px;
-            border: 1px solid rgba(255, 255, 255, 0.04);
-            flex-wrap: wrap;
-            gap: 12px;
-        }
-
-        .stats-bar .stat {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            color: var(--text-secondary);
-            font-size: 0.9rem;
-        }
-
-        .stats-bar .stat i {
-            color: var(--accent-purple);
-        }
-
-        .stats-bar .stat .value {
-            color: var(--text-primary);
-            font-weight: 700;
-            font-size: 1.1rem;
-        }
-
-        /* Audio Player */
-        .audio-wrapper {
-            background: var(--bg-card);
-            border-radius: var(--radius);
-            padding: 30px;
-            margin-bottom: 24px;
-            border: 1px solid rgba(255, 255, 255, 0.04);
-            text-align: center;
-        }
-
-        .audio-visual {
-            position: relative;
-            width: 200px;
-            height: 200px;
-            margin: 0 auto 24px;
-            border-radius: 50%;
-            background: linear-gradient(135deg, rgba(168, 85, 247, 0.1), rgba(255, 107, 157, 0.1));
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            border: 2px solid rgba(168, 85, 247, 0.2);
-            transition: var(--transition);
-        }
-
-        .audio-visual.playing {
-            animation: pulse 1.5s ease-in-out infinite;
-            border-color: var(--accent-purple);
-            box-shadow: 0 0 60px rgba(168, 85, 247, 0.15);
-        }
-
-        @keyframes pulse {
-            0%, 100% {
-                transform: scale(1);
-                box-shadow: 0 0 40px rgba(168, 85, 247, 0.1);
-            }
-            50% {
-                transform: scale(1.03);
-                box-shadow: 0 0 60px rgba(168, 85, 247, 0.2);
-            }
-        }
-
-        .audio-visual .anime-cover {
-            width: 160px;
-            height: 160px;
-            border-radius: 50%;
-            object-fit: cover;
-            background: var(--bg-secondary);
-            border: 3px solid rgba(255, 255, 255, 0.05);
-        }
-
-        .audio-visual .play-icon {
-            position: absolute;
-            width: 60px;
-            height: 60px;
-            border-radius: 50%;
-            background: linear-gradient(135deg, var(--accent-purple), #7c3aed);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 1.6rem;
-            color: #fff;
-            cursor: pointer;
-            transition: var(--transition);
-            box-shadow: 0 0 40px rgba(168, 85, 247, 0.3);
-        }
-
-        .audio-visual .play-icon:hover {
-            transform: scale(1.1);
-            box-shadow: 0 0 60px rgba(168, 85, 247, 0.5);
-        }
-
-        .audio-visual .play-icon i {
-            margin-left: 4px;
-        }
-
-        /* Waveform animato */
-        .waveform {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 4px;
-            height: 40px;
-            margin-top: 16px;
-        }
-
-        .waveform .bar {
-            width: 4px;
-            height: 10px;
-            background: var(--accent-purple);
-            border-radius: 2px;
-            transition: height 0.3s ease;
-        }
-
-        .waveform.playing .bar {
-            animation: wave 0.8s ease-in-out infinite alternate;
-        }
-
-        .waveform.playing .bar:nth-child(1) { animation-delay: 0s; height: 20px; }
-        .waveform.playing .bar:nth-child(2) { animation-delay: 0.1s; height: 35px; }
-        .waveform.playing .bar:nth-child(3) { animation-delay: 0.2s; height: 25px; }
-        .waveform.playing .bar:nth-child(4) { animation-delay: 0.3s; height: 40px; }
-        .waveform.playing .bar:nth-child(5) { animation-delay: 0.4s; height: 30px; }
-        .waveform.playing .bar:nth-child(6) { animation-delay: 0.5s; height: 45px; }
-        .waveform.playing .bar:nth-child(7) { animation-delay: 0.6s; height: 20px; }
-        .waveform.playing .bar:nth-child(8) { animation-delay: 0.7s; height: 35px; }
-        .waveform.playing .bar:nth-child(9) { animation-delay: 0.8s; height: 25px; }
-        .waveform.playing .bar:nth-child(10) { animation-delay: 0.9s; height: 40px; }
-        .waveform.playing .bar:nth-child(11) { animation-delay: 0.2s; height: 30px; }
-        .waveform.playing .bar:nth-child(12) { animation-delay: 0.5s; height: 20px; }
-
-        @keyframes wave {
-            0% { height: 10px; }
-            100% { height: 45px; }
-        }
-
-        .audio-controls {
-            display: flex;
-            justify-content: center;
-            gap: 12px;
-            margin-top: 16px;
-            flex-wrap: wrap;
-        }
-
-        .audio-controls button {
-            background: var(--bg-card);
-            border: 1px solid rgba(255, 255, 255, 0.06);
-            color: var(--text-primary);
-            padding: 10px 24px;
-            border-radius: var(--radius-sm);
-            cursor: pointer;
-            font-family: 'Inter', sans-serif;
-            font-weight: 600;
-            font-size: 0.85rem;
-            transition: var(--transition);
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-        .audio-controls button:hover {
-            background: var(--bg-card-hover);
-            border-color: rgba(255, 255, 255, 0.1);
-        }
-
-        .audio-controls button.primary {
-            background: linear-gradient(135deg, var(--accent-purple), #7c3aed);
-            border: none;
-        }
-
-        .audio-controls button.primary:hover {
+        .controls button:hover:not(:disabled) {
+            background: rgba(79, 172, 254, 0.2);
+            border-color: #4facfe;
             transform: scale(1.05);
-            box-shadow: 0 0 30px rgba(168, 85, 247, 0.3);
         }
 
-        .timer {
-            font-size: 0.9rem;
-            color: var(--text-secondary);
-            margin-top: 12px;
+        .controls button:disabled {
+            opacity: 0.4;
+            cursor: not-allowed;
+            transform: none;
         }
 
-        .timer .time {
-            color: var(--text-primary);
-            font-weight: 700;
+        .controls .play-btn {
+            min-width: 100px;
+            justify-content: center;
         }
 
-        /* Options */
+        .cover-image {
+            display: block;
+            margin: 10px auto 20px;
+            width: 180px;
+            height: 250px;
+            object-fit: cover;
+            border-radius: 20px;
+            box-shadow: 0 15px 30px -8px rgba(0, 0, 0, 0.7);
+            border: 2px solid rgba(255, 255, 255, 0.06);
+        }
+
         .options-grid {
             display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 12px;
-            margin-bottom: 24px;
+            grid-template-columns: 1fr 1fr;
+            gap: 14px;
+            margin: 20px 0 10px;
         }
 
         .option-btn {
-            background: var(--bg-card);
-            border: 2px solid rgba(255, 255, 255, 0.04);
-            border-radius: var(--radius-sm);
-            padding: 16px 20px;
-            color: var(--text-primary);
-            font-family: 'Inter', sans-serif;
-            font-weight: 600;
+            background: rgba(255, 255, 255, 0.04);
+            border: 2px solid rgba(255, 255, 255, 0.06);
+            border-radius: 20px;
+            padding: 16px 10px;
+            color: #f0f0f0;
             font-size: 1rem;
+            font-weight: 500;
             cursor: pointer;
-            transition: var(--transition);
+            transition: all 0.2s ease;
+            backdrop-filter: blur(4px);
             text-align: center;
+            word-break: break-word;
+            line-height: 1.4;
+            min-height: 60px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
 
-        .option-btn:hover:not(.disabled) {
-            background: var(--bg-card-hover);
-            border-color: rgba(255, 255, 255, 0.1);
-            transform: translateY(-2px);
+        .option-btn:hover:not(:disabled) {
+            background: rgba(79, 172, 254, 0.15);
+            border-color: #4facfe;
+            transform: scale(1.02);
+        }
+
+        .option-btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
         }
 
         .option-btn.correct {
-            border-color: var(--accent-green);
-            background: rgba(74, 222, 128, 0.15);
+            background: rgba(46, 204, 113, 0.25);
+            border-color: #2ecc71;
+            box-shadow: 0 0 20px rgba(46, 204, 113, 0.2);
         }
 
         .option-btn.wrong {
-            border-color: var(--accent-red);
-            background: rgba(248, 113, 113, 0.15);
+            background: rgba(231, 76, 60, 0.25);
+            border-color: #e74c3c;
+            box-shadow: 0 0 20px rgba(231, 76, 60, 0.2);
         }
 
-        .option-btn.disabled {
-            cursor: not-allowed;
-            opacity: 0.6;
-        }
-
-        .option-btn .letter {
-            display: inline-block;
-            width: 28px;
-            height: 28px;
-            border-radius: 50%;
-            background: rgba(255, 255, 255, 0.06);
-            line-height: 28px;
-            text-align: center;
-            font-size: 0.75rem;
-            font-weight: 700;
-            margin-right: 10px;
-            color: var(--text-secondary);
-        }
-
-        /* Feedback */
-        .feedback {
-            background: var(--bg-card);
-            border-radius: var(--radius);
-            padding: 20px 24px;
-            margin-bottom: 24px;
-            border-left: 4px solid var(--accent-purple);
-            display: none;
-            animation: fadeSlideIn 0.3s ease;
-        }
-
-        .feedback.show {
-            display: block;
-        }
-
-        .feedback.correct {
-            border-left-color: var(--accent-green);
-        }
-
-        .feedback.wrong {
-            border-left-color: var(--accent-red);
-        }
-
-        .feedback h3 {
-            font-size: 1.1rem;
-            margin-bottom: 4px;
-        }
-
-        .feedback p {
-            color: var(--text-secondary);
-            font-size: 0.95rem;
-        }
-
-        @keyframes fadeSlideIn {
-            from {
-                opacity: 0;
-                transform: translateY(-10px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        /* Progress */
-        .progress-bar {
-            background: var(--bg-card);
-            border-radius: var(--radius-sm);
-            height: 6px;
-            overflow: hidden;
-            margin-bottom: 24px;
-            border: 1px solid rgba(255, 255, 255, 0.04);
-        }
-
-        .progress-bar .fill {
-            height: 100%;
-            background: linear-gradient(90deg, var(--accent-purple), var(--accent-pink));
-            transition: width 0.5s ease;
-            width: 0%;
-        }
-
-        /* Next button */
         .next-btn {
+            display: block;
             width: 100%;
-            padding: 16px;
-            background: linear-gradient(135deg, var(--accent-purple), #7c3aed);
+            margin: 20px auto 0;
+            padding: 18px 20px;
+            background: linear-gradient(135deg, #f5576c, #4facfe);
             border: none;
-            border-radius: var(--radius-sm);
+            border-radius: 60px;
             color: #fff;
-            font-family: 'Inter', sans-serif;
+            font-size: 1.2rem;
             font-weight: 700;
-            font-size: 1rem;
             cursor: pointer;
-            transition: var(--transition);
-            display: none;
+            transition: all 0.25s ease;
+            letter-spacing: 0.5px;
+            box-shadow: 0 8px 25px -5px rgba(245, 87, 108, 0.4);
         }
 
-        .next-btn:hover {
+        .next-btn:hover:not(:disabled) {
             transform: scale(1.02);
-            box-shadow: 0 0 40px rgba(168, 85, 247, 0.3);
+            box-shadow: 0 12px 35px -5px rgba(79, 172, 254, 0.5);
         }
 
-        .next-btn.show {
-            display: block;
+        .next-btn:disabled {
+            opacity: 0.4;
+            cursor: not-allowed;
+            transform: none;
         }
 
-        /* Result */
-        .result-screen {
+        .feedback {
             text-align: center;
-            padding: 40px 20px;
-            display: none;
-        }
-
-        .result-screen.show {
-            display: block;
-            animation: fadeSlideIn 0.5s ease;
-        }
-
-        .result-screen .big-icon {
-            font-size: 4rem;
-            margin-bottom: 16px;
-        }
-
-        .result-screen h2 {
-            font-size: 2rem;
-            margin-bottom: 8px;
-        }
-
-        .result-screen .score {
-            font-size: 3rem;
-            font-weight: 900;
-            background: linear-gradient(135deg, var(--accent-orange), var(--accent-red));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
-
-        .result-screen p {
-            color: var(--text-secondary);
             font-size: 1.1rem;
-            margin: 12px 0;
+            font-weight: 600;
+            margin: 10px 0 0;
+            min-height: 30px;
+            padding: 8px;
+            border-radius: 40px;
+            background: rgba(0, 0, 0, 0.2);
         }
 
-        .result-screen .restart-btn {
-            margin-top: 20px;
-            padding: 14px 40px;
-            background: linear-gradient(135deg, var(--accent-purple), #7c3aed);
-            border: none;
-            border-radius: var(--radius-sm);
-            color: #fff;
-            font-family: 'Inter', sans-serif;
-            font-weight: 700;
-            font-size: 1rem;
-            cursor: pointer;
-            transition: var(--transition);
-        }
-
-        .result-screen .restart-btn:hover {
-            transform: scale(1.05);
-            box-shadow: 0 0 40px rgba(168, 85, 247, 0.3);
-        }
-
-        /* Loading */
-        .loading {
-            text-align: center;
-            padding: 60px 20px;
-        }
-
-        .loading .spinner {
-            width: 48px;
-            height: 48px;
-            border: 4px solid var(--bg-card);
-            border-top-color: var(--accent-purple);
+        .loader {
+            display: inline-block;
+            width: 30px;
+            height: 30px;
+            border: 4px solid rgba(255, 255, 255, 0.1);
+            border-top-color: #4facfe;
             border-radius: 50%;
-            animation: spin 0.8s linear infinite;
-            margin: 0 auto 16px;
-        }
-
-        .loading .loading-sub {
-            color: var(--text-secondary);
-            font-size: 0.9rem;
-            margin-top: 8px;
+            animation: spin 0.9s linear infinite;
+            margin: 20px auto;
         }
 
         @keyframes spin {
             to { transform: rotate(360deg); }
         }
 
-        @media (max-width: 768px) {
-            .game-header h1 {
-                font-size: 1.8rem;
+        .hidden {
+            display: none !important;
+        }
+
+        .error-msg {
+            color: #f5576c;
+            text-align: center;
+            padding: 20px;
+            background: rgba(245, 87, 108, 0.1);
+            border-radius: 30px;
+            border: 1px solid rgba(245, 87, 108, 0.2);
+        }
+
+        @media (max-width: 550px) {
+            .container {
+                padding: 20px 16px;
             }
             .options-grid {
                 grid-template-columns: 1fr;
-            }
-            .stats-bar {
-                flex-direction: column;
-                align-items: stretch;
-                text-align: center;
-            }
-            .stats-bar .stat {
-                justify-content: center;
-            }
-            .audio-visual {
-                width: 150px;
-                height: 150px;
-            }
-            .audio-visual .anime-cover {
-                width: 120px;
-                height: 120px;
-            }
-            .audio-visual .play-icon {
-                width: 50px;
-                height: 50px;
-                font-size: 1.2rem;
-            }
-            .navbar .container {
-                flex-direction: column;
-                align-items: stretch;
-                gap: 8px;
-            }
-            .logo {
-                justify-content: center;
-            }
-            .nav-stats {
-                justify-content: center;
-                flex-wrap: wrap;
-            }
-        }
-
-        @media (max-width: 480px) {
-            .game-header h1 {
-                font-size: 1.4rem;
+                gap: 10px;
             }
             .option-btn {
-                font-size: 0.85rem;
-                padding: 12px 16px;
+                min-height: 50px;
+                padding: 14px;
             }
-            .audio-wrapper {
-                padding: 20px 16px;
+            .cover-image {
+                width: 140px;
+                height: 195px;
+            }
+            h1 {
+                font-size: 1.8rem;
+            }
+            .controls {
+                gap: 10px;
+                flex-wrap: wrap;
+            }
+            .controls button {
+                font-size: 1rem;
+                padding: 6px 14px;
+            }
+            .controls .play-btn {
+                min-width: 70px;
             }
         }
     </style>
 </head>
 <body>
 
-    <div class="bg-glow"></div>
+<div class="container" id="app">
+    <h1>🎵 Opening Quiz</h1>
+    <div class="subtitle">Ascolta l'opening e indovina l'anime!</div>
 
-    <!-- ============================================================
-    NAVBAR
-    ============================================================ -->
-    <nav class="navbar">
-        <div class="container">
-            <a href="../index.html" class="logo">
-                <div class="logo-icon"><i class="fas fa-mask"></i></div>
-                <span class="logo-text">AniQuiz</span>
-            </a>
-            <div class="nav-stats">
-                <a href="../index.html" class="back-btn">
-                    <i class="fas fa-arrow-left"></i> Torna indietro
-                </a>
-                <span><i class="fas fa-music"></i> Opening Quiz</span>
-            </div>
-        </div>
-    </nav>
-
-    <!-- ============================================================
-    GAME
-    ============================================================ -->
-    <div class="game-container">
-        
-        <!-- Header -->
-        <div class="game-header">
-            <h1>🎵 Indovina l'Opening</h1>
-            <p>🎧 Ascolta la sigla e indovina l'anime!</p>
-            <div class="audio-badge">
-                <i class="fas fa-youtube"></i> YouTube API
-            </div>
-        </div>
-
-        <!-- Stats -->
-        <div class="stats-bar" id="statsBar">
-            <div class="stat">
-                <i class="fas fa-question-circle"></i>
-                Domanda: <span class="value" id="currentQuestion">0</span>/<span id="totalQuestions">10</span>
-            </div>
-            <div class="stat">
-                <i class="fas fa-check-circle" style="color: var(--accent-green);"></i>
-                Corrette: <span class="value" id="correctCount">0</span>
-            </div>
-            <div class="stat">
-                <i class="fas fa-times-circle" style="color: var(--accent-red);"></i>
-                Sbagliate: <span class="value" id="wrongCount">0</span>
-            </div>
-        </div>
-
-        <!-- Progress -->
-        <div class="progress-bar">
-            <div class="fill" id="progressFill"></div>
-        </div>
-
-        <!-- Loading -->
-        <div class="loading" id="loading">
-            <div class="spinner"></div>
-            <p>Caricamento in corso...</p>
-            <p class="loading-sub" id="loadingSub">Caricamento anime da AniList...</p>
-        </div>
-
-        <!-- Game Area -->
-        <div id="gameArea" style="display: none;">
-            
-            <!-- Audio Player -->
-            <div class="audio-wrapper">
-                <div class="audio-visual" id="audioVisual">
-                    <img 
-                        class="anime-cover" 
-                        id="animeCover" 
-                        src="" 
-                        alt="Copertina anime"
-                        onerror="this.style.display='none'"
-                    />
-                    <div class="play-icon" id="playBtn" onclick="togglePlay()">
-                        <i class="fas fa-play"></i>
-                    </div>
-                </div>
-
-                <!-- Waveform -->
-                <div class="waveform" id="waveform">
-                    <div class="bar"></div>
-                    <div class="bar"></div>
-                    <div class="bar"></div>
-                    <div class="bar"></div>
-                    <div class="bar"></div>
-                    <div class="bar"></div>
-                    <div class="bar"></div>
-                    <div class="bar"></div>
-                    <div class="bar"></div>
-                    <div class="bar"></div>
-                    <div class="bar"></div>
-                    <div class="bar"></div>
-                </div>
-
-                <div class="timer">
-                    ⏱️ <span class="time" id="timerDisplay">0:00</span>
-                </div>
-
-                <div class="audio-controls">
-                    <button class="primary" onclick="togglePlay()">
-                        <i class="fas fa-play" id="playIcon"></i> <span id="playText">Play</span>
-                    </button>
-                    <button onclick="resetAudio()">
-                        <i class="fas fa-undo"></i> Ripeti
-                    </button>
-                </div>
-            </div>
-
-            <!-- Options -->
-            <div class="options-grid" id="optionsGrid"></div>
-
-            <!-- Feedback -->
-            <div class="feedback" id="feedback">
-                <h3 id="feedbackTitle">✅ Corretto!</h3>
-                <p id="feedbackText">Dettaglio</p>
-            </div>
-
-            <!-- Next Button -->
-            <button class="next-btn" id="nextBtn" onclick="nextQuestion()">
-                <i class="fas fa-arrow-right"></i> Prossima domanda
-            </button>
-
-        </div>
-
-        <!-- Result -->
-        <div class="result-screen" id="resultScreen">
-            <div class="big-icon">🏆</div>
-            <h2>Quiz completato!</h2>
-            <div class="score" id="finalScore">0/10</div>
-            <p id="resultMessage">Ottimo lavoro!</p>
-            <button class="restart-btn" onclick="restartGame()">
-                <i class="fas fa-redo"></i> Ricomincia
-            </button>
-        </div>
-
+    <div class="status-bar">
+        <span class="question-counter" id="questionCounter">Domanda 1 / 10</span>
+        <span class="score" id="scoreDisplay">🏆 0</span>
     </div>
 
-    <!-- ============================================================
-    SCRIPT
-    ============================================================ -->
-    <script>
-        // ============================================================
-        // 🔥 YOUTUBE API KEY
-        // ============================================================
-        const YOUTUBE_API_KEY = 'AIzaSyCeM7KVc9lZsdd8HM5b-PAfhx0usN8Aubo';
+    <div class="player-wrapper">
+        <div class="audio-visual" id="audioVisual">🔊</div>
+        <div class="now-playing" id="nowPlaying">🎶 Ascolta l'opening...</div>
+        <div id="youtube-player-container"></div>
 
-        // ============================================================
-        // ANIQUIZ CORE - Carica anime da AniList
-        // ============================================================
-        (function() {
-            'use strict';
+        <!-- Controlli -->
+        <div class="controls">
+            <button id="seekBackBtn" title="Indietro 10s">⏪ -10</button>
+            <button id="playPauseBtn" class="play-btn" disabled>▶️ Riproduci</button>
+            <button id="seekForwardBtn" title="Avanti 10s">+10 ⏩</button>
+        </div>
+    </div>
 
-            const PER_PAGE = 10;
-            window.allAnime = [];
-            window.isDataLoaded = false;
-            window.isLoading = false;
+    <img id="coverImage" class="cover-image" src="" alt="Copertina anime" style="display: none;">
 
-            function shuffleArray(arr) {
-                for (let i = arr.length - 1; i > 0; i--) {
-                    const j = Math.floor(Math.random() * (i + 1));
-                    [arr[i], arr[j]] = [arr[j], arr[i]];
-                }
-                return arr;
-            }
+    <div id="optionsContainer" class="options-grid"></div>
 
-            window.getTitle = function(media) {
-                return media.title.english || media.title.romaji || media.title.native || 'Sconosciuto';
-            };
+    <div id="feedback" class="feedback"></div>
 
-            function buildMultiQuery() {
-                const sorts = [
-                    { sort: 'POPULARITY_DESC', page: 1 },
-                    { sort: 'TRENDING_DESC', page: 1 },
-                    { sort: 'SCORE_DESC', page: 1 }
-                ];
+    <button id="nextBtn" class="next-btn" disabled>➡ Prossima domanda</button>
+    <div id="loader" class="loader hidden"></div>
+    <div id="errorMsg" class="error-msg hidden"></div>
+</div>
 
-                let query = 'query {';
-                sorts.forEach((s, index) => {
-                    const alias = `cat${index + 1}`;
-                    query += `
-                        ${alias}: Page(page: ${s.page}, perPage: ${PER_PAGE}) {
-                            media(type: ANIME, sort: ${s.sort}, isAdult: false, status_not: NOT_YET_RELEASED) {
-                                id
-                                title { romaji english native }
-                                coverImage { large }
-                            }
+<!-- YouTube IFrame API -->
+<script src="https://www.youtube.com/iframe_api"></script>
+
+<script>
+    // ---------- CONFIG ----------
+    const YOUTUBE_API_KEY = 'AIzaSyCXsFDpO4dYRiwlTPA4s5rbaIpCG4_7EB4';
+    const ANILIST_ENDPOINT = 'https://graphql.anilist.co';
+    const MAX_QUESTIONS = 10;
+    const OPTIONS_COUNT = 4;
+
+    // ---------- STATO ----------
+    let animeList = [];
+    let currentQuestion = 0;
+    let score = 0;
+    let correctAnime = null;
+    let currentOptions = [];
+    let isAnswered = false;
+    let isPlaying = false;
+    let questionsQueue = [];
+    let isLoading = false;
+
+    // YouTube player
+    let ytPlayer = null;
+    let currentVideoId = null;
+    let playerReady = false;
+    let isPaused = false;
+
+    // DOM refs
+    const playerContainer = document.getElementById('youtube-player-container');
+    const audioVisual = document.getElementById('audioVisual');
+    const nowPlaying = document.getElementById('nowPlaying');
+    const coverImage = document.getElementById('coverImage');
+    const optionsContainer = document.getElementById('optionsContainer');
+    const feedbackDiv = document.getElementById('feedback');
+    const nextBtn = document.getElementById('nextBtn');
+    const loader = document.getElementById('loader');
+    const errorMsg = document.getElementById('errorMsg');
+    const scoreDisplay = document.getElementById('scoreDisplay');
+    const questionCounter = document.getElementById('questionCounter');
+    const playPauseBtn = document.getElementById('playPauseBtn');
+    const seekBackBtn = document.getElementById('seekBackBtn');
+    const seekForwardBtn = document.getElementById('seekForwardBtn');
+
+    // ---------- FUNZIONI DI UTILITÀ ----------
+    function shuffleArray(arr) {
+        for (let i = arr.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [arr[i], arr[j]] = [arr[j], arr[i]];
+        }
+        return arr;
+    }
+
+    function getAnimeTitle(anime) {
+        return anime.title.romaji || anime.title.english || anime.title.native || 'Anime sconosciuto';
+    }
+
+    function sleep(ms) {
+        return new Promise(resolve => setTimeout(resolve, ms));
+    }
+
+    // ---------- API ANILIST ----------
+    async function fetchAnimeList() {
+        const query = `
+            query ($page: Int, $perPage: Int) {
+                Page(page: $page, perPage: $perPage) {
+                    media(sort: POPULARITY_DESC, type: ANIME, isAdult: false) {
+                        id
+                        title {
+                            romaji
+                            english
+                            native
                         }
-                    `;
-                });
-                query += '}';
-                return query;
-            }
-
-            async function fetchWithTimeout(url, options, timeout = 8000) {
-                const controller = new AbortController();
-                const timeoutId = setTimeout(() => controller.abort(), timeout);
-                try {
-                    const response = await fetch(url, { ...options, signal: controller.signal });
-                    clearTimeout(timeoutId);
-                    return response;
-                } catch (err) {
-                    clearTimeout(timeoutId);
-                    throw err;
-                }
-            }
-
-            async function fetchMixedAnime() {
-                const query = buildMultiQuery();
-                try {
-                    const response = await fetchWithTimeout('https://graphql.anilist.co', {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json',
-                            'Accept': 'application/json',
-                        },
-                        body: JSON.stringify({ query })
-                    }, 8000);
-
-                    if (!response.ok) throw new Error(`HTTP ${response.status}`);
-                    
-                    const data = await response.json();
-                    if (data.errors) throw new Error(data.errors[0].message);
-                    
-                    const allAnimeResults = [];
-                    const categories = ['cat1', 'cat2', 'cat3'];
-                    
-                    categories.forEach((cat) => {
-                        const categoryData = data.data[cat]?.media || [];
-                        allAnimeResults.push(...categoryData);
-                    });
-
-                    const uniqueMap = new Map();
-                    for (const anime of allAnimeResults) {
-                        if (!uniqueMap.has(anime.id)) {
-                            uniqueMap.set(anime.id, anime);
+                        coverImage {
+                            large
                         }
-                    }
-                    
-                    const result = Array.from(uniqueMap.values());
-                    if (result.length < 10) throw new Error('Pochi anime');
-                    
-                    return shuffleArray(result);
-
-                } catch (err) {
-                    console.warn('⚠️ AniList fallito, uso backup:', err.message);
-                    return null;
-                }
-            }
-
-            // 🔥 BACKUP DI 40 ANIME FAMOSI
-            const BACKUP_ANIME = [
-                { id: 1, title: { english: 'Attack on Titan' }, coverImage: { large: 'https://anilist.co/img/header/16498.jpg' } },
-                { id: 2, title: { english: 'Demon Slayer' }, coverImage: { large: 'https://anilist.co/img/header/101922.jpg' } },
-                { id: 3, title: { english: 'Naruto' }, coverImage: { large: 'https://anilist.co/img/header/20.jpg' } },
-                { id: 4, title: { english: 'One Piece' }, coverImage: { large: 'https://anilist.co/img/header/21.jpg' } },
-                { id: 5, title: { english: 'Dragon Ball Z' }, coverImage: { large: 'https://anilist.co/img/header/813.jpg' } },
-                { id: 6, title: { english: 'Death Note' }, coverImage: { large: 'https://anilist.co/img/header/1535.jpg' } },
-                { id: 7, title: { english: 'Fullmetal Alchemist: Brotherhood' }, coverImage: { large: 'https://anilist.co/img/header/5114.jpg' } },
-                { id: 8, title: { english: 'Tokyo Ghoul' }, coverImage: { large: 'https://anilist.co/img/header/20605.jpg' } },
-                { id: 9, title: { english: 'My Hero Academia' }, coverImage: { large: 'https://anilist.co/img/header/21459.jpg' } },
-                { id: 10, title: { english: 'Jujutsu Kaisen' }, coverImage: { large: 'https://anilist.co/img/header/113415.jpg' } },
-                { id: 11, title: { english: 'Cowboy Bebop' }, coverImage: { large: 'https://anilist.co/img/header/23.jpg' } },
-                { id: 12, title: { english: 'Sword Art Online' }, coverImage: { large: 'https://anilist.co/img/header/11757.jpg' } },
-                { id: 13, title: { english: 'Bleach' }, coverImage: { large: 'https://anilist.co/img/header/22.jpg' } },
-                { id: 14, title: { english: 'Spy x Family' }, coverImage: { large: 'https://anilist.co/img/header/130970.jpg' } },
-                { id: 15, title: { english: 'Chainsaw Man' }, coverImage: { large: 'https://anilist.co/img/header/127244.jpg' } },
-                { id: 16, title: { english: 'Hunter x Hunter' }, coverImage: { large: 'https://anilist.co/img/header/11061.jpg' } },
-                { id: 17, title: { english: 'Re:Zero' }, coverImage: { large: 'https://anilist.co/img/header/31240.jpg' } },
-                { id: 18, title: { english: 'One Punch Man' }, coverImage: { large: 'https://anilist.co/img/header/30276.jpg' } },
-                { id: 19, title: { english: 'Mob Psycho 100' }, coverImage: { large: 'https://anilist.co/img/header/100424.jpg' } },
-                { id: 20, title: { english: 'Vinland Saga' }, coverImage: { large: 'https://anilist.co/img/header/37521.jpg' } },
-                { id: 21, title: { english: 'Steins;Gate' }, coverImage: { large: 'https://anilist.co/img/header/9253.jpg' } },
-                { id: 22, title: { english: 'Code Geass' }, coverImage: { large: 'https://anilist.co/img/header/1575.jpg' } },
-                { id: 23, title: { english: 'Gintama' }, coverImage: { large: 'https://anilist.co/img/header/918.jpg' } },
-                { id: 24, title: { english: 'Fate/Zero' }, coverImage: { large: 'https://anilist.co/img/header/10087.jpg' } },
-                { id: 25, title: { english: 'Kaguya-sama: Love is War' }, coverImage: { large: 'https://anilist.co/img/header/101896.jpg' } },
-                { id: 26, title: { english: 'Dr. Stone' }, coverImage: { large: 'https://anilist.co/img/header/38691.jpg' } },
-                { id: 27, title: { english: 'Fire Force' }, coverImage: { large: 'https://anilist.co/img/header/38671.jpg' } },
-                { id: 28, title: { english: 'Black Clover' }, coverImage: { large: 'https://anilist.co/img/header/34572.jpg' } },
-                { id: 29, title: { english: 'Neon Genesis Evangelion' }, coverImage: { large: 'https://anilist.co/img/header/30.jpg' } },
-                { id: 30, title: { english: 'Gurren Lagann' }, coverImage: { large: 'https://anilist.co/img/header/2338.jpg' } }
-            ];
-
-            window.loadAnimeData = async function() {
-                if (window.isLoading) return;
-                if (window.isDataLoaded && window.allAnime.length > 0) {
-                    return window.allAnime;
-                }
-                
-                window.isLoading = true;
-                const loadingSub = document.getElementById('loadingSub');
-                const loadingError = document.getElementById('loadingError');
-
-                try {
-                    if (loadingSub) loadingSub.textContent = 'Caricamento da AniList...';
-                    if (loadingError) loadingError.textContent = '';
-
-                    let data = await fetchMixedAnime();
-                    
-                    if (!data || data.length < 10) {
-                        if (loadingSub) loadingSub.textContent = 'AniList non risponde, uso database locale...';
-                        if (loadingError) loadingError.textContent = '⚠️ Usando anime di backup';
-                        
-                        data = BACKUP_ANIME.map(a => ({
-                            id: a.id,
-                            title: a.title,
-                            coverImage: a.coverImage
-                        }));
-                        
-                        await new Promise(r => setTimeout(r, 500));
-                    }
-
-                    window.allAnime = data;
-                    window.isDataLoaded = true;
-                    window.isLoading = false;
-                    
-                    if (loadingError) loadingError.textContent = '';
-                    
-                    return data;
-
-                } catch (err) {
-                    console.error(err);
-                    window.isLoading = false;
-                    
-                    if (loadingSub) loadingSub.textContent = 'Errore, uso database di backup...';
-                    if (loadingError) loadingError.textContent = '⚠️ Usando anime di backup';
-                    
-                    window.allAnime = BACKUP_ANIME.map(a => ({
-                        id: a.id,
-                        title: a.title,
-                        coverImage: a.coverImage
-                    }));
-                    window.isDataLoaded = true;
-                    
-                    await new Promise(r => setTimeout(r, 500));
-                    return window.allAnime;
-                }
-            };
-
-        })();
-
-        // ============================================================
-        // 🔥 RICERCA SU YOUTUBE CON API (VERSIONE MIGLIORATA)
-        // ============================================================
-        async function searchYouTubeOpening(animeName) {
-            // 🔥 PULISCI IL NOME DELL'ANIME PER LA RICERCA
-            const cleanName = animeName
-                .replace(/:.+$/, '') // Rimuove sottotitoli tipo ": Brotherhood"
-                .replace(/\([^)]*\)/g, '') // Rimuove parentesi
-                .trim();
-            
-            // 🔥 PIÙ VARIANTI DI RICERCA
-            const searchQueries = [
-                `${cleanName} opening`,
-                `${cleanName} op`,
-                `${cleanName} opening 1`,
-                `${cleanName} opening full`,
-                `${cleanName} opening tv size`,
-                `${cleanName} intro`,
-                `${cleanName} opening song`,
-                `${cleanName} op 1`,
-                `${cleanName} opening theme`,
-                `${cleanName} opening full song`
-            ];
-
-            for (const query of searchQueries) {
-                try {
-                    const url = `https://www.googleapis.com/youtube/v3/search?part=snippet&maxResults=3&q=${encodeURIComponent(query)}&key=${YOUTUBE_API_KEY}&type=video&videoCategoryId=10`;
-                    
-                    console.log(`🔍 Cerco: "${query}"`);
-                    const response = await fetch(url);
-                    const data = await response.json();
-                    
-                    if (data.error) {
-                        console.error('Errore API YouTube:', data.error);
-                        continue;
-                    }
-                    
-                    if (data.items && data.items.length > 0) {
-                        // 🔥 CERCA UN VIDEO CHE SEMBRA UNA OPENING
-                        for (const video of data.items) {
-                            const title = video.snippet.title.toLowerCase();
-                            const videoId = video.id.videoId;
-                            
-                            // 🔥 FILTRA I VIDEO: devono contenere "opening" o "op" nel titolo
-                            if (title.includes('opening') || title.includes('op ') || title.includes('tv size') || title.includes('tv-size')) {
-                                console.log(`✅ Trovato: "${video.snippet.title}" (${videoId})`);
-                                return {
-                                    videoId: videoId,
-                                    title: video.snippet.title,
-                                    duration: 30
-                                };
-                            }
-                        }
-                        
-                        // Se nessun video sembra una opening, prendi il primo
-                        const video = data.items[0];
-                        console.log(`✅ Trovato (fallback): "${video.snippet.title}" (${video.id.videoId})`);
-                        return {
-                            videoId: video.id.videoId,
-                            title: video.snippet.title,
-                            duration: 30
-                        };
-                    }
-                } catch (error) {
-                    console.error('Errore ricerca:', error);
-                    continue;
-                }
-            }
-            
-            console.log(`❌ Nessun risultato per: ${animeName}`);
-            return null;
-        }
-
-        // ============================================================
-        // GAME LOGIC
-        // ============================================================
-        let questions = [];
-        let currentIndex = 0;
-        let correctCount = 0;
-        let wrongCount = 0;
-        let isAnswered = false;
-        let totalQuestions = 10;
-        let player = null;
-        let isPlaying = false;
-        let timerInterval = null;
-        let currentQuestionData = null;
-
-        function shuffleArrayLocal(arr) {
-            for (let i = arr.length - 1; i > 0; i--) {
-                const j = Math.floor(Math.random() * (i + 1));
-                [arr[i], arr[j]] = [arr[j], arr[i]];
-            }
-            return arr;
-        }
-
-        function delay(ms) {
-            return new Promise(resolve => setTimeout(resolve, ms));
-        }
-
-        async function generateQuestionsFromAnime(animeList) {
-            const questions = [];
-            const shuffled = shuffleArrayLocal([...animeList]);
-            
-            let loadingSub = document.getElementById('loadingSub');
-            
-            // 🔥 PRENDO FINO A 50 ANIME PER TROVARNE 10
-            const maxAttempts = Math.min(shuffled.length, 50);
-            
-            for (let i = 0; i < maxAttempts && questions.length < totalQuestions; i++) {
-                const anime = shuffled[i];
-                const title = window.getTitle(anime);
-                
-                if (loadingSub) {
-                    loadingSub.textContent = `🔍 Cercando su YouTube: ${title} (${questions.length + 1}/${totalQuestions})`;
-                }
-
-                const searchResult = await searchYouTubeOpening(title);
-                await delay(300);
-                
-                if (!searchResult || !searchResult.videoId) {
-                    continue;
-                }
-
-                const videoId = searchResult.videoId;
-
-                const others = animeList.filter(a => a.id !== anime.id);
-                const shuffledOthers = shuffleArrayLocal([...others]);
-                
-                let distractors = [];
-                for (const other of shuffledOthers) {
-                    if (distractors.length >= 3) break;
-                    
-                    const otherTitle = window.getTitle(other);
-                    const otherSearch = await searchYouTubeOpening(otherTitle);
-                    await delay(300);
-                    
-                    if (otherSearch && otherSearch.videoId && otherSearch.videoId !== videoId) {
-                        distractors.push({
-                            text: otherTitle,
-                            isCorrect: false,
-                            videoId: otherSearch.videoId
-                        });
+                        format
+                        episodes
+                        status
+                        genres
                     }
                 }
-
-                if (distractors.length < 3) {
-                    const fallbackTitles = [
-                        'Naruto', 'One Piece', 'Dragon Ball Z', 'Bleach', 
-                        'Death Note', 'Attack on Titan', 'Demon Slayer',
-                        'My Hero Academia', 'Jujutsu Kaisen', 'Tokyo Ghoul',
-                        'Fullmetal Alchemist', 'Cowboy Bebop', 'Sword Art Online'
-                    ];
-                    for (const fb of fallbackTitles) {
-                        if (fb !== title && !distractors.some(d => d.text === fb)) {
-                            const fbSearch = await searchYouTubeOpening(fb);
-                            await delay(300);
-                            if (fbSearch && fbSearch.videoId && fbSearch.videoId !== videoId) {
-                                distractors.push({
-                                    text: fb,
-                                    isCorrect: false,
-                                    videoId: fbSearch.videoId
-                                });
-                            }
-                        }
-                        if (distractors.length >= 3) break;
-                    }
-                }
-
-                if (distractors.length < 3) {
-                    continue;
-                }
-
-                const options = shuffleArrayLocal([
-                    { text: title, isCorrect: true, videoId: videoId },
-                    ...distractors
-                ]);
-
-                questions.push({
-                    anime: title,
-                    videoId: videoId,
-                    cover: anime.coverImage?.large || null,
-                    options: options,
-                    start: 0,
-                    duration: 30
-                });
-                
-                console.log(`✅ Aggiunta domanda ${questions.length}: ${title}`);
             }
+        `;
+        const variables = { page: 1, perPage: 60 };
 
-            return questions;
-        }
-
-        // ============================================================
-        // YOUTUBE PLAYER
-        // ============================================================
-        function loadYouTubeAPI() {
-            if (window.YT) {
-                initPlayer();
-                return;
-            }
-
-            const tag = document.createElement('script');
-            tag.src = 'https://www.youtube.com/iframe_api';
-            document.head.appendChild(tag);
-
-            window.onYouTubeIframeAPIReady = () => {
-                initPlayer();
-            };
-        }
-
-        function initPlayer() {
-            if (currentIndex >= questions.length) {
-                showResult();
-                return;
-            }
-
-            const q = questions[currentIndex];
-            if (!q || !q.videoId) {
-                nextQuestion();
-                return;
-            }
-
-            if (player) {
-                try { player.destroy(); } catch(e) {}
-                player = null;
-            }
-
-            player = new YT.Player('youtubePlayer', {
-                height: '0',
-                width: '0',
-                videoId: q.videoId,
-                playerVars: {
-                    autoplay: 0,
-                    controls: 0,
-                    modestbranding: 1,
-                    rel: 0,
-                    showinfo: 0,
-                    start: q.start || 0,
-                    end: (q.start || 0) + (q.duration || 30)
+        try {
+            const response = await fetch(ANILIST_ENDPOINT, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/json',
                 },
-                events: {
-                    onReady: onPlayerReady,
-                    onStateChange: onPlayerStateChange,
-                    onError: onPlayerError
-                }
+                body: JSON.stringify({ query, variables })
             });
-        }
-
-        function onPlayerReady(event) {
-            document.getElementById('loading').style.display = 'none';
-            document.getElementById('gameArea').style.display = 'block';
-            loadQuestionUI();
-            updateTimer();
-        }
-
-        function onPlayerStateChange(event) {
-            if (event.data === YT.PlayerState.ENDED) {
-                isPlaying = false;
-                document.getElementById('playIcon').className = 'fas fa-play';
-                document.getElementById('playText').textContent = 'Play';
-                document.getElementById('audioVisual').classList.remove('playing');
-                document.getElementById('waveform').classList.remove('playing');
-                clearInterval(timerInterval);
+            const json = await response.json();
+            if (json.errors) {
+                throw new Error(json.errors[0].message);
             }
+            return json.data.Page.media;
+        } catch (e) {
+            console.error('Errore Anilist:', e);
+            throw new Error('Impossibile caricare gli anime da Anilist.');
         }
+    }
 
-        function onPlayerError(event) {
-            console.error('Errore YouTube:', event.data);
-            setTimeout(() => {
-                nextQuestion();
-            }, 1000);
-        }
-
-        function togglePlay() {
-            if (!player) return;
-
-            if (isPlaying) {
-                player.pauseVideo();
-                isPlaying = false;
-                document.getElementById('playIcon').className = 'fas fa-play';
-                document.getElementById('playText').textContent = 'Play';
-                document.getElementById('audioVisual').classList.remove('playing');
-                document.getElementById('waveform').classList.remove('playing');
-                clearInterval(timerInterval);
-            } else {
-                player.playVideo();
-                isPlaying = true;
-                document.getElementById('playIcon').className = 'fas fa-pause';
-                document.getElementById('playText').textContent = 'Pausa';
-                document.getElementById('audioVisual').classList.add('playing');
-                document.getElementById('waveform').classList.add('playing');
-                updateTimer();
-            }
-        }
-
-        function resetAudio() {
-            if (!player) return;
-            const q = questions[currentIndex];
-            if (q) {
-                player.seekTo(q.start || 0);
-            }
-            player.pauseVideo();
-            isPlaying = false;
-            document.getElementById('playIcon').className = 'fas fa-play';
-            document.getElementById('playText').textContent = 'Play';
-            document.getElementById('audioVisual').classList.remove('playing');
-            document.getElementById('waveform').classList.remove('playing');
-            clearInterval(timerInterval);
-            updateTimer();
-        }
-
-        function updateTimer() {
-            clearInterval(timerInterval);
-            timerInterval = setInterval(() => {
-                if (player && player.getCurrentTime) {
-                    const current = player.getCurrentTime() || 0;
-                    const q = questions[currentIndex];
-                    const elapsed = current - (q?.start || 0);
-                    const minutes = Math.floor(elapsed / 60);
-                    const seconds = Math.floor(elapsed % 60);
-                    document.getElementById('timerDisplay').textContent = 
-                        `${minutes}:${seconds.toString().padStart(2, '0')}`;
-                }
-            }, 100);
-        }
-
-        function loadQuestionUI() {
-            if (currentIndex >= questions.length) {
-                showResult();
-                return;
-            }
-
-            const q = questions[currentIndex];
-            currentQuestionData = q;
-            isAnswered = false;
-            
-            document.getElementById('currentQuestion').textContent = currentIndex + 1;
-            document.getElementById('totalQuestions').textContent = questions.length;
-            document.getElementById('correctCount').textContent = correctCount;
-            document.getElementById('wrongCount').textContent = wrongCount;
-            document.getElementById('progressFill').style.width = ((currentIndex) / questions.length * 100) + '%';
-
-            const cover = document.getElementById('animeCover');
-            if (q.cover) {
-                cover.src = q.cover;
-                cover.style.display = 'block';
-            } else {
-                cover.style.display = 'none';
-            }
-
-            const grid = document.getElementById('optionsGrid');
-            grid.innerHTML = '';
-            const letters = ['A', 'B', 'C', 'D'];
-            
-            q.options.forEach((opt, i) => {
-                const btn = document.createElement('button');
-                btn.className = 'option-btn';
-                btn.innerHTML = `<span class="letter">${letters[i]}</span>${opt.text}`;
-                btn.dataset.correct = opt.isCorrect;
-                btn.onclick = () => selectOption(btn, opt.isCorrect);
-                grid.appendChild(btn);
-            });
-
-            document.getElementById('feedback').className = 'feedback';
-            document.getElementById('nextBtn').className = 'next-btn';
-            
-            resetAudio();
-        }
-
-        function selectOption(btn, isCorrect) {
-            if (isAnswered) return;
-            isAnswered = true;
-
-            if (player && isPlaying) {
-                player.pauseVideo();
-                isPlaying = false;
-                document.getElementById('playIcon').className = 'fas fa-play';
-                document.getElementById('playText').textContent = 'Play';
-                document.getElementById('audioVisual').classList.remove('playing');
-                document.getElementById('waveform').classList.remove('playing');
-                clearInterval(timerInterval);
-            }
-
-            const allBtns = document.querySelectorAll('.option-btn');
-            allBtns.forEach(b => b.classList.add('disabled'));
-
-            const feedback = document.getElementById('feedback');
-            const feedbackTitle = document.getElementById('feedbackTitle');
-            const feedbackText = document.getElementById('feedbackText');
-
-            if (isCorrect) {
-                btn.classList.add('correct');
-                correctCount++;
-                feedback.className = 'feedback show correct';
-                feedbackTitle.textContent = '🎵 Perfetto!';
-                feedbackText.textContent = `Hai riconosciuto "${currentQuestionData.anime}" dalla sigla!`;
-            } else {
-                btn.classList.add('wrong');
-                wrongCount++;
-                feedback.className = 'feedback show wrong';
-                feedbackTitle.textContent = '❌ Sbagliato!';
-                const correctAnswer = currentQuestionData.options.find(o => o.isCorrect);
-                feedbackText.textContent = `Era "${correctAnswer.text}"!`;
-                
-                allBtns.forEach(b => {
-                    if (b.dataset.correct === 'true') {
-                        b.classList.add('correct');
-                    }
-                });
-            }
-
-            document.getElementById('correctCount').textContent = correctCount;
-            document.getElementById('wrongCount').textContent = wrongCount;
-
-            const nextBtn = document.getElementById('nextBtn');
-            if (currentIndex < questions.length - 1) {
-                nextBtn.textContent = 'Prossima domanda →';
-            } else {
-                nextBtn.textContent = 'Vedi risultati 🏆';
-            }
-            nextBtn.className = 'next-btn show';
-        }
-
-        function nextQuestion() {
-            if (player) {
-                try { player.destroy(); } catch(e) {}
-                player = null;
-            }
-            currentIndex++;
-            
-            if (currentIndex >= questions.length) {
-                showResult();
-                return;
-            }
-            
-            document.getElementById('loading').style.display = 'block';
-            document.getElementById('gameArea').style.display = 'none';
-            document.getElementById('loadingSub').textContent = `Caricando: ${questions[currentIndex]?.anime || '...'}`;
-            
-            setTimeout(() => {
-                initPlayer();
-            }, 500);
-        }
-
-        function showResult() {
-            document.getElementById('gameArea').style.display = 'none';
-            document.getElementById('resultScreen').className = 'result-screen show';
-            document.getElementById('progressFill').style.width = '100%';
-            
-            document.getElementById('finalScore').textContent = `${correctCount}/${questions.length}`;
-            
-            let message = '';
-            const pct = correctCount / questions.length;
-            if (pct === 1) message = '🔥 Perfetto! Hai l\'orecchio di un vero otaku!';
-            else if (pct >= 0.8) message = '🌟 Ottimo! Riconosci le opening come un pro!';
-            else if (pct >= 0.6) message = '👏 Buon lavoro! Continua ad allenare l\'orecchio!';
-            else if (pct >= 0.4) message = '📺 Non male, ma ascolta più sigle!';
-            else message = '🎧 Allenati con più opening e riprova!';
-            
-            document.getElementById('resultMessage').textContent = message;
-        }
-
-        function restartGame() {
-            currentIndex = 0;
-            correctCount = 0;
-            wrongCount = 0;
-            document.getElementById('resultScreen').className = 'result-screen';
-            document.getElementById('gameArea').style.display = 'none';
-            document.getElementById('loading').style.display = 'block';
-            document.getElementById('loadingSub').textContent = 'Ricarico le opening da YouTube...';
-            initGame();
-        }
-
-        // ============================================================
-        // INIT GAME
-        // ============================================================
-        async function initGame() {
+    // ---------- API YOUTUBE ----------
+    async function searchYouTubeOpening(anime) {
+        const title = getAnimeTitle(anime);
+        const queries = [
+            `${title} opening`,
+            `${title} OP`,
+            `${title} opening full`,
+        ];
+        for (const query of queries) {
+            const url = `https://www.googleapis.com/youtube/v3/search?part=snippet&q=${encodeURIComponent(query)}&type=video&maxResults=3&key=${YOUTUBE_API_KEY}`;
             try {
-                const loadingSub = document.getElementById('loadingSub');
-                const loadingError = document.getElementById('loadingError');
-                
-                if (loadingSub) loadingSub.textContent = 'Caricamento anime da AniList...';
-                if (loadingError) loadingError.textContent = '';
-
-                const animeList = await window.loadAnimeData();
-                
-                if (!animeList || animeList.length < 10) {
-                    throw new Error('Non abbastanza anime');
+                const response = await fetch(url);
+                const data = await response.json();
+                if (data.items && data.items.length > 0) {
+                    const item = data.items[0];
+                    if (item.id && item.id.videoId) {
+                        return item.id.videoId;
+                    }
                 }
+            } catch (e) {
+                console.warn(`Ricerca fallita per "${query}"`, e);
+            }
+            await sleep(200);
+        }
+        return null;
+    }
 
-                if (loadingSub) loadingSub.textContent = 'Ricerca opening su YouTube...';
-
-                const generatedQuestions = await generateQuestionsFromAnime(animeList);
-                
-                if (generatedQuestions.length < 3) {
-                    throw new Error('Poche opening trovate su YouTube');
+    // ---------- CARICAMENTO DOMANDE ----------
+    async function prepareQuestions() {
+        if (animeList.length === 0) {
+            try {
+                animeList = await fetchAnimeList();
+                if (!animeList || animeList.length === 0) {
+                    throw new Error('Nessun anime trovato.');
                 }
-
-                questions = generatedQuestions;
-                
-                if (loadingError) loadingError.textContent = '';
-                document.getElementById('loading').style.display = 'block';
-                document.getElementById('gameArea').style.display = 'none';
-                if (loadingSub) loadingSub.textContent = `Caricando: ${questions[0]?.anime || '...'}`;
-                
-                loadYouTubeAPI();
-
-            } catch (err) {
-                console.error('Errore init:', err);
-                document.getElementById('loading').innerHTML = `
-                    <div style="color: var(--accent-red); font-size: 2rem; margin-bottom: 16px;">❌</div>
-                    <p style="color: var(--text-primary); font-weight: 600;">Errore nel caricamento</p>
-                    <p style="color: var(--text-secondary); font-size: 0.9rem; margin-top: 8px;">${err.message}</p>
-                    <button onclick="restartGame()" style="
-                        margin-top: 20px;
-                        padding: 12px 32px;
-                        background: var(--accent-purple);
-                        border: none;
-                        border-radius: var(--radius-sm);
-                        color: #fff;
-                        font-family: 'Inter', sans-serif;
-                        font-weight: 600;
-                        cursor: pointer;
-                    ">Riprova</button>
-                `;
+                shuffleArray(animeList);
+            } catch (e) {
+                showError(e.message);
+                return;
             }
         }
 
-        document.addEventListener('DOMContentLoaded', () => {
-            initGame();
+        questionsQueue = [];
+        let attempts = 0;
+        const maxAttempts = animeList.length * 3;
+        let usedAnimeIds = new Set();
+
+        while (questionsQueue.length < MAX_QUESTIONS && attempts < maxAttempts) {
+            attempts++;
+            const candidate = animeList[Math.floor(Math.random() * animeList.length)];
+            if (usedAnimeIds.has(candidate.id)) continue;
+            usedAnimeIds.add(candidate.id);
+
+            const videoId = await searchYouTubeOpening(candidate);
+            if (!videoId) {
+                usedAnimeIds.delete(candidate.id);
+                continue;
+            }
+
+            const distractors = [];
+            const available = animeList.filter(a => a.id !== candidate.id && !usedAnimeIds.has(a.id));
+            shuffleArray(available);
+            for (let i = 0; i < 3 && i < available.length; i++) {
+                distractors.push(available[i]);
+            }
+            if (distractors.length < 3) {
+                usedAnimeIds.delete(candidate.id);
+                continue;
+            }
+
+            const options = [candidate, ...distractors];
+            shuffleArray(options);
+
+            questionsQueue.push({
+                anime: candidate,
+                videoId: videoId,
+                options: options,
+            });
+        }
+
+        if (questionsQueue.length === 0) {
+            throw new Error('Impossibile preparare abbastanza domande. Riprova più tardi.');
+        }
+
+        currentQuestion = 0;
+        score = 0;
+        updateScoreAndCounter();
+        loadQuestion();
+    }
+
+    // ---------- CARICARE UNA DOMANDA ----------
+    function loadQuestion() {
+        if (currentQuestion >= questionsQueue.length) {
+            feedbackDiv.innerHTML = `🎉 Complimenti! Hai completato il quiz. Punteggio: ${score}/${MAX_QUESTIONS}`;
+            optionsContainer.innerHTML = '';
+            nextBtn.disabled = true;
+            audioVisual.className = 'audio-visual';
+            nowPlaying.textContent = '🏁 Quiz finito!';
+            coverImage.style.display = 'none';
+            playPauseBtn.disabled = true;
+            seekBackBtn.disabled = true;
+            seekForwardBtn.disabled = true;
+            if (ytPlayer) {
+                ytPlayer.stopVideo();
+            }
+            return;
+        }
+
+        const q = questionsQueue[currentQuestion];
+        correctAnime = q.anime;
+        currentOptions = q.options;
+        currentVideoId = q.videoId;
+        isAnswered = false;
+        isPaused = false;
+
+        updateScoreAndCounter();
+        feedbackDiv.innerHTML = '';
+        nextBtn.disabled = true;
+        coverImage.style.display = 'none';
+
+        // Disabilita controlli finché il player non è pronto
+        playPauseBtn.disabled = true;
+        seekBackBtn.disabled = true;
+        seekForwardBtn.disabled = true;
+        playPauseBtn.textContent = '⏳ Caricamento...';
+
+        // Carica il video nel player YouTube
+        if (ytPlayer && playerReady) {
+            ytPlayer.loadVideoById(q.videoId);
+            ytPlayer.playVideo();
+            audioVisual.className = 'audio-visual playing';
+            audioVisual.textContent = '🔊';
+            nowPlaying.textContent = '🎵 Ascolta l\'opening...';
+            isPlaying = true;
+            playPauseBtn.textContent = '⏸️ Pausa';
+            playPauseBtn.disabled = false;
+            seekBackBtn.disabled = false;
+            seekForwardBtn.disabled = false;
+        } else {
+            // Se player non è ancora pronto, verrà gestito da onPlayerReady
+            nowPlaying.textContent = '🎶 Caricamento...';
+        }
+
+        renderOptions(q.options);
+    }
+
+    // ---------- PLAYER YOUTUBE ----------
+    function onYouTubeIframeAPIReady() {
+        ytPlayer = new YT.Player('youtube-player-container', {
+            height: '0',
+            width: '0',
+            playerVars: {
+                controls: 0,
+                disablekb: 1,
+                modestbranding: 1,
+                rel: 0,
+                showinfo: 0,
+                loop: 1,
+                playlist: '', // verrà impostato dopo
+                autoplay: 1,
+                mute: 0,
+            },
+            events: {
+                onReady: onPlayerReady,
+                onStateChange: onPlayerStateChange,
+                onError: onPlayerError,
+            }
+        });
+    }
+
+    function onPlayerReady(event) {
+        playerReady = true;
+        // Se c'è un video in attesa, caricalo
+        if (currentVideoId) {
+            ytPlayer.loadVideoById(currentVideoId);
+            ytPlayer.playVideo();
+            audioVisual.className = 'audio-visual playing';
+            audioVisual.textContent = '🔊';
+            nowPlaying.textContent = '🎵 Ascolta l\'opening...';
+            isPlaying = true;
+            playPauseBtn.textContent = '⏸️ Pausa';
+            playPauseBtn.disabled = false;
+            seekBackBtn.disabled = false;
+            seekForwardBtn.disabled = false;
+        }
+    }
+
+    function onPlayerStateChange(event) {
+        const state = event.data;
+        if (state === YT.PlayerState.PLAYING) {
+            isPlaying = true;
+            isPaused = false;
+            audioVisual.className = 'audio-visual playing';
+            audioVisual.textContent = '🔊';
+            playPauseBtn.textContent = '⏸️ Pausa';
+            playPauseBtn.disabled = false;
+            seekBackBtn.disabled = false;
+            seekForwardBtn.disabled = false;
+        } else if (state === YT.PlayerState.PAUSED) {
+            isPlaying = false;
+            isPaused = true;
+            audioVisual.className = 'audio-visual';
+            audioVisual.textContent = '⏸️';
+            playPauseBtn.textContent = '▶️ Riproduci';
+        } else if (state === YT.PlayerState.ENDED) {
+            // Lo facciamo ripartire da capo? Oppure lo lasciamo fermo.
+            // Per il quiz, meglio tenerlo in pausa a fine.
+            isPlaying = false;
+            isPaused = true;
+            audioVisual.className = 'audio-visual';
+            audioVisual.textContent = '⏹️';
+            playPauseBtn.textContent = '▶️ Riproduci';
+        } else if (state === YT.PlayerState.UNSTARTED || state === YT.PlayerState.BUFFERING) {
+            // Non facciamo nulla
+        }
+    }
+
+    function onPlayerError(event) {
+        console.error('Errore YouTube:', event.data);
+        audioVisual.className = 'audio-visual';
+        audioVisual.textContent = '⚠️';
+        nowPlaying.textContent = '❌ Errore di riproduzione';
+        feedbackDiv.innerHTML = '❌ Impossibile riprodurre l\'audio. Riprova.';
+        playPauseBtn.disabled = true;
+        seekBackBtn.disabled = true;
+        seekForwardBtn.disabled = true;
+        // Permetti di andare avanti dopo un po'
+        setTimeout(() => {
+            if (!isAnswered) {
+                nextBtn.disabled = false;
+            }
+        }, 2000);
+    }
+
+    // ---------- CONTROLLI ----------
+    function togglePlayPause() {
+        if (!ytPlayer || !playerReady) return;
+        if (isPaused || !isPlaying) {
+            ytPlayer.playVideo();
+        } else {
+            ytPlayer.pauseVideo();
+        }
+    }
+
+    function seekBy(seconds) {
+        if (!ytPlayer || !playerReady) return;
+        const currentTime = ytPlayer.getCurrentTime();
+        const newTime = Math.max(0, currentTime + seconds);
+        ytPlayer.seekTo(newTime, true);
+    }
+
+    // ---------- RENDER OPZIONI ----------
+    function renderOptions(options) {
+        optionsContainer.innerHTML = '';
+        options.forEach((anime, index) => {
+            const btn = document.createElement('button');
+            btn.className = 'option-btn';
+            btn.textContent = getAnimeTitle(anime);
+            btn.dataset.index = index;
+            btn.addEventListener('click', () => handleOptionClick(index));
+            optionsContainer.appendChild(btn);
+        });
+    }
+
+    // ---------- GESTIONE CLICK OPZIONE ----------
+    function handleOptionClick(index) {
+        if (isAnswered || isLoading) return;
+        isAnswered = true;
+
+        const selectedAnime = currentOptions[index];
+        const isCorrect = selectedAnime.id === correctAnime.id;
+
+        const buttons = document.querySelectorAll('.option-btn');
+        buttons.forEach((btn, i) => {
+            btn.disabled = true;
+            const anime = currentOptions[i];
+            if (anime.id === correctAnime.id) {
+                btn.classList.add('correct');
+            } else if (i === index && !isCorrect) {
+                btn.classList.add('wrong');
+            }
         });
 
-        // Player YouTube nascosto
-        document.body.insertAdjacentHTML('beforeend', `
-            <div id="youtubePlayer" style="position: absolute; width: 0; height: 0; opacity: 0; pointer-events: none;"></div>
-        `);
-    </script>
+        if (isCorrect) {
+            score++;
+            feedbackDiv.innerHTML = '✅ Corretto! +1 punto';
+            feedbackDiv.style.color = '#2ecc71';
+        } else {
+            feedbackDiv.innerHTML = `❌ Sbagliato! Era "${getAnimeTitle(correctAnime)}"`;
+            feedbackDiv.style.color = '#e74c3c';
+        }
+
+        updateScoreAndCounter();
+
+        if (correctAnime.coverImage && correctAnime.coverImage.large) {
+            coverImage.src = correctAnime.coverImage.large;
+            coverImage.style.display = 'block';
+        }
+
+        nextBtn.disabled = false;
+    }
+
+    // ---------- PROSSIMA DOMANDA ----------
+    function goToNextQuestion() {
+        if (isLoading) return;
+        currentQuestion++;
+        if (currentQuestion < questionsQueue.length) {
+            loadQuestion();
+        } else {
+            loadQuestion(); // gestisce fine
+        }
+    }
+
+    // ---------- UI HELPERS ----------
+    function updateScoreAndCounter() {
+        scoreDisplay.textContent = `🏆 ${score}`;
+        const total = questionsQueue.length || MAX_QUESTIONS;
+        questionCounter.textContent = `Domanda ${Math.min(currentQuestion + 1, total)} / ${total}`;
+    }
+
+    function showError(msg) {
+        errorMsg.textContent = msg;
+        errorMsg.classList.remove('hidden');
+        loader.classList.add('hidden');
+        nextBtn.disabled = true;
+        playPauseBtn.disabled = true;
+        seekBackBtn.disabled = true;
+        seekForwardBtn.disabled = true;
+    }
+
+    function hideError() {
+        errorMsg.classList.add('hidden');
+    }
+
+    // ---------- AVVIA IL GIOCO ----------
+    async function initGame() {
+        hideError();
+        loader.classList.remove('hidden');
+        nextBtn.disabled = true;
+        optionsContainer.innerHTML = '';
+        feedbackDiv.innerHTML = '';
+        playPauseBtn.disabled = true;
+        seekBackBtn.disabled = true;
+        seekForwardBtn.disabled = true;
+
+        try {
+            await prepareQuestions();
+            loader.classList.add('hidden');
+            if (questionsQueue.length > 0) {
+                loadQuestion();
+            } else {
+                showError('Nessuna domanda disponibile. Riprova più tardi.');
+            }
+        } catch (e) {
+            loader.classList.add('hidden');
+            showError(e.message || 'Errore durante il caricamento.');
+        }
+    }
+
+    // ---------- EVENTI ----------
+    nextBtn.addEventListener('click', goToNextQuestion);
+    playPauseBtn.addEventListener('click', togglePlayPause);
+    seekBackBtn.addEventListener('click', () => seekBy(-10));
+    seekForwardBtn.addEventListener('click', () => seekBy(10));
+
+    // ---------- AVVIO ----------
+    window.onYouTubeIframeAPIReady = onYouTubeIframeAPIReady;
+    window.addEventListener('load', () => {
+        // L'API YouTube si caricherà asincronamente; il gioco parte quando il player è pronto?
+        // Iniziamo il caricamento dei dati, ma il player potrebbe non essere ancora pronto.
+        // Per sicurezza, avviamo dopo un breve ritardo per dare tempo all'API.
+        setTimeout(() => {
+            if (typeof YT !== 'undefined' && YT.loaded) {
+                initGame();
+            } else {
+                // Se l'API non è ancora caricata, aspettiamo l'evento onYouTubeIframeAPIReady
+                // che chiamerà onYouTubeIframeAPIReady e poi initGame? 
+                // Meglio: avviare initGame quando il player è pronto, ma per ora lo facciamo subito
+                // e se il player non è pronto, le funzioni lo gestiranno.
+                initGame();
+            }
+        }, 500);
+    });
+
+    // Se per qualche motivo l'API non si carica, proviamo comunque
+    window.addEventListener('load', function() {
+        // Fallback: se dopo 3 secondi l'API non è pronta, iniziamo comunque
+        setTimeout(() => {
+            if (!ytPlayer) {
+                // Prova a creare il player manualmente
+                if (typeof YT !== 'undefined' && YT.Player) {
+                    onYouTubeIframeAPIReady();
+                }
+            }
+        }, 3000);
+    });
+</script>
 
 </body>
 </html>
