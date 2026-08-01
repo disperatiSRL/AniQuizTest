@@ -274,17 +274,21 @@
             margin-bottom: 4px;
         }
 
+        /* 🔥 NASCONDO TUTTE LE INFO DURANTE IL GIOCO */
         .duel-card .card-sub {
-            font-size: 0.8rem;
-            color: var(--text-secondary);
+            display: none;
         }
-
-        /* 🔥 NASCONDO IL VALORE NUMERICO DURANTE IL GIOCO */
         .duel-card .card-value {
             display: none;
         }
 
-        /* 🔥 LO MOSTRO SOLO DOPO LA RISPOSTA */
+        /* 🔥 LE MOSTRO SOLO DOPO LA RISPOSTA */
+        .duel-card.reveal .card-sub {
+            display: block;
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+            margin-top: 4px;
+        }
         .duel-card.reveal .card-value {
             display: block;
             font-size: 1.5rem;
@@ -870,6 +874,7 @@
             const rightCard = document.getElementById('cardRight');
             const questionText = document.getElementById('questionText');
 
+            // 🔥 MOSTRA SOLO IL NOME DURANTE IL DUEL
             document.getElementById('leftTitle').textContent = q.left.name;
             document.getElementById('leftSub').textContent = `${q.left.year} · ♥ ${q.left.score} · 📺 ${q.left.episodes}`;
             document.getElementById('leftValue').textContent = q.left[questionTypes.find(t => t.key === q.type.key).key];
@@ -882,7 +887,7 @@
 
             questionText.innerHTML = `Quale anime è <span class="highlight">${q.type.label}</span>?`;
 
-            // 🔥 NASCONDO I VALORI NUMERICI ALL'INIZIO
+            // 🔥 NASCONDO LE INFO (SUB E VALUE) ALL'INIZIO
             leftCard.classList.remove('reveal');
             rightCard.classList.remove('reveal');
             leftCard.className = 'duel-card';
@@ -930,7 +935,7 @@
             leftCard.classList.add('disabled');
             rightCard.classList.add('disabled');
 
-            // 🔥 MOSTRO I VALORI NUMERICI DOPO LA RISPOSTA
+            // 🔥 MOSTRA TUTTE LE INFO DOPO LA RISPOSTA
             leftCard.classList.add('reveal');
             rightCard.classList.add('reveal');
 
@@ -987,7 +992,7 @@
             leftCard.classList.add('disabled');
             rightCard.classList.add('disabled');
 
-            // 🔥 MOSTRO I VALORI NUMERICI DOPO IL TIMEOUT
+            // 🔥 MOSTRA TUTTE LE INFO DOPO IL TIMEOUT
             leftCard.classList.add('reveal');
             rightCard.classList.add('reveal');
 
