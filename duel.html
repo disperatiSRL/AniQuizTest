@@ -1,0 +1,1090 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>ANICORE: DUEL</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --bg-primary: #0a0a0f;
+            --bg-secondary: #12121a;
+            --bg-card: #1a1a2e;
+            --bg-card-hover: #22223a;
+            --text-primary: #ffffff;
+            --text-secondary: #8a8aa0;
+            --accent-pink: #ff6b9d;
+            --accent-purple: #a855f7;
+            --accent-blue: #4cc9f0;
+            --accent-green: #4ade80;
+            --accent-red: #f87171;
+            --accent-orange: #f59e0b;
+            --radius: 16px;
+            --radius-sm: 10px;
+            --transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            min-height: 100vh;
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        .bg-glow {
+            position: fixed;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            z-index: 0;
+            pointer-events: none;
+            background:
+                radial-gradient(ellipse at 20% 50%, rgba(168, 85, 247, 0.06) 0%, transparent 60%),
+                radial-gradient(ellipse at 80% 20%, rgba(255, 107, 157, 0.04) 0%, transparent 50%);
+        }
+
+        .navbar {
+            background: rgba(10, 10, 15, 0.85);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+            padding: 16px 0;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .navbar .container {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 1.6rem;
+            font-weight: 900;
+            text-decoration: none;
+            color: inherit;
+        }
+
+        .logo-icon {
+            width: 42px;
+            height: 42px;
+            background: linear-gradient(135deg, var(--accent-pink), var(--accent-purple));
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            color: #fff;
+            box-shadow: 0 0 30px rgba(168, 85, 247, 0.2);
+        }
+
+        .logo-text {
+            background: linear-gradient(135deg, var(--accent-pink), var(--accent-purple), var(--accent-blue));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .nav-stats {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            color: var(--text-secondary);
+            font-size: 0.85rem;
+        }
+
+        .nav-stats span {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .nav-stats i {
+            color: var(--accent-purple);
+        }
+
+        .back-btn {
+            color: var(--text-secondary);
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.9rem;
+            transition: var(--transition);
+        }
+
+        .back-btn:hover {
+            color: var(--text-primary);
+        }
+
+        .game-container {
+            padding: 30px 0;
+            position: relative;
+            z-index: 1;
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        .game-header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .game-header h1 {
+            font-size: 3rem;
+            font-weight: 900;
+            background: linear-gradient(135deg, #f59e0b, #ef4444, var(--accent-purple));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 8px;
+            letter-spacing: 4px;
+        }
+
+        .game-header .subtitle {
+            color: var(--text-secondary);
+            font-size: 1rem;
+            font-weight: 400;
+        }
+
+        .game-header .subtitle i {
+            color: var(--accent-purple);
+            margin: 0 4px;
+        }
+
+        .stats-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: var(--bg-card);
+            border-radius: var(--radius);
+            padding: 16px 24px;
+            margin-bottom: 24px;
+            border: 1px solid rgba(255, 255, 255, 0.04);
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+
+        .stats-bar .stat {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+        }
+
+        .stats-bar .stat i {
+            color: var(--accent-purple);
+        }
+
+        .stats-bar .stat .value {
+            color: var(--text-primary);
+            font-weight: 700;
+            font-size: 1.1rem;
+        }
+
+        .stats-bar .stat .value.rank {
+            background: linear-gradient(135deg, var(--accent-orange), var(--accent-red));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            font-size: 1.2rem;
+        }
+
+        .duel-area {
+            background: var(--bg-card);
+            border-radius: var(--radius);
+            padding: 30px;
+            border: 1px solid rgba(255, 255, 255, 0.04);
+            text-align: center;
+            min-height: 300px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .duel-area .question-type {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+            margin-bottom: 16px;
+            font-weight: 600;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+        }
+
+        .duel-area .question-type .highlight {
+            color: var(--accent-orange);
+        }
+
+        .duel-cards {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 24px;
+            width: 100%;
+            max-width: 700px;
+            margin: 0 auto;
+        }
+
+        .duel-card {
+            background: var(--bg-secondary);
+            border: 2px solid rgba(255, 255, 255, 0.04);
+            border-radius: var(--radius);
+            padding: 24px;
+            cursor: pointer;
+            transition: var(--transition);
+            text-align: center;
+            min-height: 150px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .duel-card:hover:not(.disabled) {
+            transform: translateY(-4px);
+            border-color: rgba(168, 85, 247, 0.2);
+            box-shadow: 0 8px 30px rgba(168, 85, 247, 0.1);
+        }
+
+        .duel-card .card-title {
+            font-size: 1.2rem;
+            font-weight: 700;
+            margin-bottom: 4px;
+        }
+
+        .duel-card .card-sub {
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+        }
+
+        .duel-card .card-value {
+            font-size: 1.5rem;
+            font-weight: 900;
+            color: var(--accent-purple);
+            margin-top: 8px;
+        }
+
+        .duel-card.correct {
+            border-color: var(--accent-green);
+            background: rgba(74, 222, 128, 0.05);
+        }
+
+        .duel-card.wrong {
+            border-color: var(--accent-red);
+            background: rgba(248, 113, 113, 0.05);
+            animation: shake 0.5s ease;
+        }
+
+        .duel-card.disabled {
+            cursor: not-allowed;
+            opacity: 0.5;
+        }
+
+        .duel-card .card-icon {
+            font-size: 2rem;
+            margin-bottom: 8px;
+        }
+
+        @keyframes shake {
+            0%,
+            100% {
+                transform: translateX(0);
+            }
+            25% {
+                transform: translateX(-10px);
+            }
+            75% {
+                transform: translateX(10px);
+            }
+        }
+
+        .timer-bar {
+            width: 100%;
+            max-width: 700px;
+            height: 6px;
+            background: var(--bg-secondary);
+            border-radius: 4px;
+            margin: 16px auto 0;
+            overflow: hidden;
+        }
+
+        .timer-bar .fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--accent-green), var(--accent-orange), var(--accent-red));
+            transition: width 0.1s linear;
+            width: 100%;
+            border-radius: 4px;
+        }
+
+        .timer-bar .fill.danger {
+            background: var(--accent-red);
+        }
+
+        .timer-text {
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            margin-top: 8px;
+        }
+
+        .timer-text .time {
+            font-weight: 700;
+            color: var(--text-primary);
+        }
+
+        .game-controls {
+            display: flex;
+            justify-content: center;
+            gap: 12px;
+            flex-wrap: wrap;
+            margin-top: 24px;
+        }
+
+        .game-controls button {
+            padding: 12px 32px;
+            border: none;
+            border-radius: var(--radius-sm);
+            font-family: 'Inter', sans-serif;
+            font-weight: 700;
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .game-controls button.primary {
+            background: linear-gradient(135deg, var(--accent-purple), #7c3aed);
+            color: #fff;
+        }
+
+        .game-controls button.primary:hover {
+            transform: scale(1.05);
+            box-shadow: 0 0 30px rgba(168, 85, 247, 0.3);
+        }
+
+        .game-controls button.secondary {
+            background: var(--bg-card);
+            color: var(--text-primary);
+            border: 1px solid rgba(255, 255, 255, 0.06);
+        }
+
+        .game-controls button.secondary:hover {
+            background: var(--bg-card-hover);
+        }
+
+        .result-screen {
+            text-align: center;
+            padding: 40px 20px;
+            display: none;
+        }
+
+        .result-screen.show {
+            display: block;
+            animation: fadeSlideIn 0.5s ease;
+        }
+
+        .result-screen .big-icon {
+            font-size: 4rem;
+            margin-bottom: 16px;
+        }
+
+        .result-screen h2 {
+            font-size: 2rem;
+            margin-bottom: 8px;
+        }
+
+        .result-screen .final-rank {
+            font-size: 2.5rem;
+            font-weight: 900;
+            background: linear-gradient(135deg, var(--accent-orange), var(--accent-red));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin: 12px 0;
+        }
+
+        .result-screen p {
+            color: var(--text-secondary);
+            font-size: 1.1rem;
+            margin: 12px 0;
+        }
+
+        .result-screen .score-detail {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--text-primary);
+        }
+
+        .result-screen .restart-btn {
+            margin-top: 20px;
+            padding: 14px 40px;
+            background: linear-gradient(135deg, var(--accent-purple), #7c3aed);
+            border: none;
+            border-radius: var(--radius-sm);
+            color: #fff;
+            font-family: 'Inter', sans-serif;
+            font-weight: 700;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .result-screen .restart-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 0 40px rgba(168, 85, 247, 0.3);
+        }
+
+        @keyframes fadeSlideIn {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .loading {
+            text-align: center;
+            padding: 60px 20px;
+        }
+
+        .loading .spinner {
+            width: 48px;
+            height: 48px;
+            border: 4px solid var(--bg-card);
+            border-top-color: var(--accent-purple);
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+            margin: 0 auto 16px;
+        }
+
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        @media (max-width: 768px) {
+            .game-header h1 {
+                font-size: 2rem;
+            }
+            .duel-cards {
+                grid-template-columns: 1fr;
+                gap: 16px;
+            }
+            .duel-card {
+                min-height: 100px;
+                padding: 16px;
+            }
+            .duel-card .card-title {
+                font-size: 1rem;
+            }
+            .stats-bar {
+                flex-direction: column;
+                align-items: stretch;
+                text-align: center;
+            }
+            .stats-bar .stat {
+                justify-content: center;
+            }
+            .navbar .container {
+                flex-direction: column;
+                align-items: stretch;
+                gap: 8px;
+            }
+            .logo {
+                justify-content: center;
+            }
+            .nav-stats {
+                justify-content: center;
+                flex-wrap: wrap;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .game-header h1 {
+                font-size: 1.6rem;
+            }
+            .duel-card {
+                padding: 12px;
+                min-height: 80px;
+            }
+            .duel-card .card-title {
+                font-size: 0.9rem;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="bg-glow"></div>
+
+    <nav class="navbar">
+        <div class="container">
+            <a href="../index.html" class="logo">
+                <div class="logo-icon"><i class="fas fa-mask"></i></div>
+                <span class="logo-text">AniQuiz</span>
+            </a>
+            <div class="nav-stats">
+                <a href="../index.html" class="back-btn">
+                    <i class="fas fa-arrow-left"></i> Torna indietro
+                </a>
+                <span><i class="fas fa-gamepad"></i> DUEL</span>
+            </div>
+        </div>
+    </nav>
+
+    <div class="game-container">
+
+        <div class="game-header">
+            <h1>⚔️ ANICORE: DUEL</h1>
+            <p class="subtitle">
+                <i class="fas fa-bolt"></i> 5 secondi · <i class="fas fa-brain"></i> Conoscenza · <i class="fas fa-crown"></i> Rango
+            </p>
+        </div>
+
+        <div class="stats-bar" id="statsBar">
+            <div class="stat">
+                <i class="fas fa-star"></i>
+                Punteggio: <span class="value" id="scoreDisplay">0</span>
+            </div>
+            <div class="stat">
+                <i class="fas fa-heart"></i>
+                Vite: <span class="value" id="livesDisplay">❤️❤️❤️</span>
+            </div>
+            <div class="stat">
+                <i class="fas fa-bolt"></i>
+                Streak: <span class="value" id="streakDisplay">0</span>
+            </div>
+            <div class="stat">
+                <i class="fas fa-trophy"></i>
+                Rango: <span class="value rank" id="rankDisplay">⚪ Genin</span>
+            </div>
+        </div>
+
+        <div class="loading" id="loading">
+            <div class="spinner"></div>
+            <p>Caricamento ANICORE: DUEL...</p>
+        </div>
+
+        <div id="gameArea" style="display: none;">
+            <div class="duel-area" id="duelArea">
+                <div class="question-type" id="questionType">
+                    <i class="fas fa-question-circle"></i>
+                    <span id="questionText">Quale anime è più <span class="highlight">vecchio</span>?</span>
+                </div>
+
+                <div class="duel-cards" id="duelCards">
+                    <div class="duel-card" id="cardLeft" onclick="selectCard('left')">
+                        <div class="card-icon" id="leftIcon">❓</div>
+                        <div class="card-title" id="leftTitle">?</div>
+                        <div class="card-sub" id="leftSub">?</div>
+                        <div class="card-value" id="leftValue">?</div>
+                    </div>
+                    <div class="duel-card" id="cardRight" onclick="selectCard('right')">
+                        <div class="card-icon" id="rightIcon">❓</div>
+                        <div class="card-title" id="rightTitle">?</div>
+                        <div class="card-sub" id="rightSub">?</div>
+                        <div class="card-value" id="rightValue">?</div>
+                    </div>
+                </div>
+
+                <div class="timer-bar">
+                    <div class="fill" id="timerFill"></div>
+                </div>
+                <div class="timer-text">
+                    ⏱️ <span class="time" id="timerDisplay">5</span> secondi rimasti
+                </div>
+            </div>
+
+            <div class="game-controls">
+                <button class="primary" onclick="startGame()">
+                    <i class="fas fa-play"></i> Nuova partita
+                </button>
+                <button class="secondary" onclick="resetGame()">
+                    <i class="fas fa-redo"></i> Reset
+                </button>
+            </div>
+        </div>
+
+        <div class="result-screen" id="resultScreen">
+            <div class="big-icon">🏆</div>
+            <h2>Duello terminato!</h2>
+            <div class="final-rank" id="finalRank">⚪ Genin</div>
+            <p class="score-detail" id="finalScore">Punteggio: 0</p>
+            <p id="resultMessage">Continua ad allenarti!</p>
+            <button class="restart-btn" onclick="startGame()">
+                <i class="fas fa-play"></i> Gioca ancora
+            </button>
+        </div>
+
+    </div>
+
+    <script>
+        // ============================================================
+        // 🔥 ANICORE: DUEL - 150 ANIME
+        // ============================================================
+
+        const ANIME_DB = [
+            // ===== 1990-1999 =====
+            { name: "Dragon Ball Z", year: 1989, score: 8.0, episodes: 291 },
+            { name: "Sailor Moon", year: 1992, score: 7.8, episodes: 200 },
+            { name: "Yu Yu Hakusho", year: 1992, score: 8.5, episodes: 112 },
+            { name: "Slam Dunk", year: 1993, score: 8.8, episodes: 101 },
+            { name: "Gundam Wing", year: 1995, score: 7.9, episodes: 49 },
+            { name: "Neon Genesis Evangelion", year: 1995, score: 8.7, episodes: 26 },
+            { name: "Rurouni Kenshin", year: 1996, score: 8.4, episodes: 94 },
+            { name: "Cowboy Bebop", year: 1998, score: 9.0, episodes: 26 },
+            { name: "Trigun", year: 1998, score: 8.2, episodes: 26 },
+            { name: "His and Her Circumstances", year: 1998, score: 7.6, episodes: 26 },
+            { name: "Great Teacher Onizuka", year: 1999, score: 8.8, episodes: 43 },
+            { name: "Hunter x Hunter (1999)", year: 1999, score: 8.5, episodes: 62 },
+            { name: "One Piece", year: 1999, score: 8.9, episodes: 1100 },
+            { name: "Cardcaptor Sakura", year: 1998, score: 8.3, episodes: 70 },
+            { name: "Serial Experiments Lain", year: 1998, score: 8.0, episodes: 13 },
+            { name: "Berserk", year: 1997, score: 8.6, episodes: 25 },
+            { name: "Revolutionary Girl Utena", year: 1997, score: 8.1, episodes: 39 },
+            { name: "Perfect Blue", year: 1997, score: 8.6, episodes: 1 },
+
+            // ===== 2000-2009 =====
+            { name: "Naruto", year: 2002, score: 8.3, episodes: 220 },
+            { name: "Fullmetal Alchemist", year: 2003, score: 8.5, episodes: 51 },
+            { name: "Bleach", year: 2004, score: 8.1, episodes: 366 },
+            { name: "Samurai Champloo", year: 2004, score: 8.6, episodes: 26 },
+            { name: "Death Note", year: 2006, score: 9.0, episodes: 37 },
+            { name: "Code Geass", year: 2006, score: 8.8, episodes: 50 },
+            { name: "Gintama", year: 2006, score: 9.0, episodes: 367 },
+            { name: "Haruhi Suzumiya", year: 2006, score: 8.1, episodes: 28 },
+            { name: "Fate/Stay Night", year: 2006, score: 7.8, episodes: 24 },
+            { name: "Gurren Lagann", year: 2007, score: 8.7, episodes: 27 },
+            { name: "Mononoke", year: 2007, score: 8.4, episodes: 12 },
+            { name: "Kuroshitsuji", year: 2008, score: 7.8, episodes: 24 },
+            { name: "Spice and Wolf", year: 2008, score: 8.1, episodes: 13 },
+            { name: "Soul Eater", year: 2008, score: 8.0, episodes: 51 },
+            { name: "K-On!", year: 2009, score: 7.9, episodes: 12 },
+            { name: "Fullmetal Alchemist: Brotherhood", year: 2009, score: 9.1, episodes: 64 },
+            { name: "Bakemonogatari", year: 2009, score: 8.5, episodes: 15 },
+            { name: "Fairy Tail", year: 2009, score: 7.9, episodes: 328 },
+            { name: "Eden of the East", year: 2009, score: 7.8, episodes: 11 },
+            { name: "Durarara!!", year: 2010, score: 8.2, episodes: 24 },
+
+            // ===== 2010-2014 =====
+            { name: "The World God Only Knows", year: 2010, score: 8.0, episodes: 12 },
+            { name: "Angel Beats!", year: 2010, score: 8.3, episodes: 13 },
+            { name: "Mirai Nikki", year: 2011, score: 7.7, episodes: 26 },
+            { name: "Steins;Gate", year: 2011, score: 9.0, episodes: 24 },
+            { name: "Hunter x Hunter (2011)", year: 2011, score: 9.1, episodes: 148 },
+            { name: "Fate/Zero", year: 2011, score: 8.8, episodes: 25 },
+            { name: "Puella Magi Madoka Magica", year: 2011, score: 8.6, episodes: 12 },
+            { name: "Sword Art Online", year: 2012, score: 7.7, episodes: 25 },
+            { name: "Psycho-Pass", year: 2012, score: 8.4, episodes: 22 },
+            { name: "Kuroko no Basket", year: 2012, score: 8.1, episodes: 25 },
+            { name: "Attack on Titan", year: 2013, score: 8.7, episodes: 25 },
+            { name: "Kill la Kill", year: 2013, score: 8.1, episodes: 24 },
+            { name: "A Certain Scientific Railgun S", year: 2013, score: 8.1, episodes: 24 },
+            { name: "No Game No Life", year: 2014, score: 8.2, episodes: 12 },
+            { name: "Tokyo Ghoul", year: 2014, score: 8.0, episodes: 12 },
+            { name: "Parasyte", year: 2014, score: 8.5, episodes: 24 },
+            { name: "Your Lie in April", year: 2014, score: 8.8, episodes: 22 },
+            { name: "Haikyu!!", year: 2014, score: 8.8, episodes: 25 },
+
+            // ===== 2015-2019 =====
+            { name: "Food Wars", year: 2015, score: 8.2, episodes: 24 },
+            { name: "One Punch Man", year: 2015, score: 8.7, episodes: 12 },
+            { name: "My Hero Academia", year: 2016, score: 8.6, episodes: 25 },
+            { name: "Re:Zero", year: 2016, score: 8.3, episodes: 25 },
+            { name: "Mob Psycho 100", year: 2016, score: 8.6, episodes: 12 },
+            { name: "Konosuba", year: 2016, score: 8.3, episodes: 10 },
+            { name: "Assassination Classroom", year: 2015, score: 8.3, episodes: 22 },
+            { name: "A Silent Voice", year: 2016, score: 9.0, episodes: 1 },
+            { name: "Your Name", year: 2016, score: 9.0, episodes: 1 },
+            { name: "Violet Evergarden", year: 2018, score: 8.8, episodes: 13 },
+            { name: "Devilman Crybaby", year: 2018, score: 8.1, episodes: 10 },
+            { name: "Aggretsuko", year: 2018, score: 7.7, episodes: 10 },
+            { name: "Promised Neverland", year: 2019, score: 8.6, episodes: 12 },
+            { name: "Demon Slayer", year: 2019, score: 8.8, episodes: 26 },
+            { name: "Dr. Stone", year: 2019, score: 8.2, episodes: 24 },
+            { name: "Vinland Saga", year: 2019, score: 8.7, episodes: 24 },
+            { name: "Kaguya-sama: Love Is War", year: 2019, score: 8.5, episodes: 12 },
+            { name: "Fire Force", year: 2019, score: 7.9, episodes: 24 },
+            { name: "Dororo", year: 2019, score: 8.1, episodes: 24 },
+            { name: "Beastars", year: 2019, score: 7.9, episodes: 12 },
+
+            // ===== 2020-2024 =====
+            { name: "Jujutsu Kaisen", year: 2020, score: 8.7, episodes: 24 },
+            { name: "Chainsaw Man", year: 2022, score: 8.7, episodes: 12 },
+            { name: "Spy x Family", year: 2022, score: 8.5, episodes: 12 },
+            { name: "Attack on Titan: Final Season", year: 2020, score: 8.9, episodes: 28 },
+            { name: "Mushoku Tensei", year: 2021, score: 8.5, episodes: 23 },
+            { name: "Oshi no Ko", year: 2023, score: 8.7, episodes: 11 },
+            { name: "Frieren: Beyond Journey's End", year: 2023, score: 9.0, episodes: 28 },
+            { name: "Solo Leveling", year: 2024, score: 8.6, episodes: 12 },
+            { name: "Kaiju No. 8", year: 2024, score: 8.1, episodes: 12 },
+            { name: "Dandadan", year: 2024, score: 8.8, episodes: 12 },
+            { name: "The Apothecary Diaries", year: 2023, score: 8.3, episodes: 24 },
+            { name: "Bocchi the Rock!", year: 2022, score: 8.6, episodes: 12 },
+            { name: "Cyberpunk Edgerunners", year: 2022, score: 8.6, episodes: 10 },
+            { name: "Chainsaw Man", year: 2022, score: 8.7, episodes: 12 },
+            { name: "Zom 100", year: 2023, score: 8.0, episodes: 12 },
+            { name: "Undead Unluck", year: 2023, score: 7.8, episodes: 24 },
+            { name: "Mashle", year: 2023, score: 8.0, episodes: 12 },
+            { name: "Wistoria: Wand and Sword", year: 2024, score: 7.5, episodes: 12 },
+            { name: "The Elusive Samurai", year: 2024, score: 8.0, episodes: 12 },
+            { name: "Wind Breaker", year: 2024, score: 8.2, episodes: 13 },
+
+            // ===== EXTRA (riempimento per varietà) =====
+            { name: "Bakuman", year: 2010, score: 8.4, episodes: 25 },
+            { name: "Guilty Crown", year: 2011, score: 7.3, episodes: 22 },
+            { name: "Anohana", year: 2011, score: 8.6, episodes: 11 },
+            { name: "Shinsekai Yori", year: 2012, score: 8.5, episodes: 25 },
+            { name: "Tengen Toppa Gurren Lagann", year: 2007, score: 8.7, episodes: 27 },
+            { name: "Kuroshitsuji", year: 2008, score: 7.8, episodes: 24 },
+            { name: "Baka and Test", year: 2010, score: 7.6, episodes: 13 },
+            { name: "D-Frag!", year: 2014, score: 7.4, episodes: 12 },
+            { name: "Monthly Girls' Nozaki-kun", year: 2014, score: 8.1, episodes: 12 },
+            { name: "The Devil is a Part-Timer!", year: 2013, score: 7.9, episodes: 13 },
+            { name: "Blood Lad", year: 2013, score: 7.4, episodes: 10 },
+            { name: "Hataraku Saibou", year: 2018, score: 7.8, episodes: 13 },
+            { name: "Love is War", year: 2019, score: 8.5, episodes: 12 },
+            { name: "Kaguya-sama: Love Is War 2", year: 2020, score: 8.6, episodes: 12 },
+            { name: "Great Pretender", year: 2020, score: 8.1, episodes: 23 },
+            { name: "Dorohedoro", year: 2020, score: 8.1, episodes: 12 },
+            { name: "Akudama Drive", year: 2020, score: 7.6, episodes: 12 },
+            { name: "Wonder Egg Priority", year: 2021, score: 7.3, episodes: 12 },
+            { name: "Ranking of Kings", year: 2021, score: 8.4, episodes: 23 },
+            { name: "Odd Taxi", year: 2021, score: 8.8, episodes: 13 },
+            { name: "To Your Eternity", year: 2021, score: 8.3, episodes: 20 },
+            { name: "Horimiya", year: 2021, score: 8.2, episodes: 13 },
+            { name: "Sk8 the Infinity", year: 2021, score: 7.8, episodes: 12 },
+            { name: "Mieruko-chan", year: 2021, score: 7.4, episodes: 12 },
+            { name: "Blue Lock", year: 2022, score: 8.4, episodes: 24 },
+            { name: "Chainsaw Man", year: 2022, score: 8.7, episodes: 12 },
+            { name: "Spy x Family 2", year: 2022, score: 8.5, episodes: 12 },
+            { name: "Bocchi the Rock!", year: 2022, score: 8.6, episodes: 12 },
+            { name: "Lycoris Recoil", year: 2022, score: 8.1, episodes: 13 },
+            { name: "Cyberpunk Edgerunners", year: 2022, score: 8.6, episodes: 10 },
+            { name: "Chainsaw Man", year: 2022, score: 8.7, episodes: 12 },
+            { name: "Heavenly Delusion", year: 2023, score: 8.2, episodes: 13 },
+            { name: "Oshi no Ko", year: 2023, score: 8.7, episodes: 11 },
+            { name: "Jujutsu Kaisen 2", year: 2023, score: 8.8, episodes: 23 },
+            { name: "Frieren: Beyond Journey's End", year: 2023, score: 9.0, episodes: 28 },
+            { name: "The Dangers in My Heart", year: 2023, score: 8.0, episodes: 12 },
+            { name: "Mashle", year: 2023, score: 8.0, episodes: 12 },
+            { name: "Undead Unluck", year: 2023, score: 7.8, episodes: 24 },
+            { name: "Solo Leveling", year: 2024, score: 8.6, episodes: 12 },
+            { name: "Kaiju No. 8", year: 2024, score: 8.1, episodes: 12 },
+            { name: "Dandadan", year: 2024, score: 8.8, episodes: 12 },
+            { name: "Wind Breaker", year: 2024, score: 8.2, episodes: 13 },
+            { name: "The Elusive Samurai", year: 2024, score: 8.0, episodes: 12 },
+            { name: "Wistoria: Wand and Sword", year: 2024, score: 7.5, episodes: 12 },
+            { name: "A Sign of Affection", year: 2024, score: 7.4, episodes: 12 },
+            { name: "Metallic Rouge", year: 2024, score: 6.6, episodes: 13 }
+        ];
+
+        // ============================================================
+        // GAME LOGIC
+        // ============================================================
+
+        let currentAnime = [];
+        let currentQuestion = null;
+        let selectedPair = null;
+        let score = 0;
+        let lives = 3;
+        let streak = 0;
+        let timer = 5;
+        let timerInterval = null;
+        let isPlaying = false;
+        let isAnswered = false;
+        let totalRounds = 0;
+        let correctAnswers = 0;
+
+        const questionTypes = [
+            { label: 'più vecchio', key: 'year', compare: 'min' },
+            { label: 'più votato', key: 'score', compare: 'max' },
+            { label: 'con più episodi', key: 'episodes', compare: 'max' }
+        ];
+
+        function shuffleArray(arr) {
+            for (let i = arr.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [arr[i], arr[j]] = [arr[j], arr[i]];
+            }
+            return arr;
+        }
+
+        function getRandomAnime() {
+            return ANIME_DB[Math.floor(Math.random() * ANIME_DB.length)];
+        }
+
+        function getRank(score, correct, total) {
+            const ratio = total > 0 ? correct / total : 0;
+            if (ratio >= 0.9 && score >= 80) return { name: "🔥 Leggenda", emoji: "🔥" };
+            if (ratio >= 0.7 && score >= 50) return { name: "🌟 Kage", emoji: "🌟" };
+            if (ratio >= 0.5 && score >= 30) return { name: "⚡ Jonin", emoji: "⚡" };
+            if (ratio >= 0.3 && score >= 15) return { name: "🍃 Chunin", emoji: "🍃" };
+            return { name: "⚪ Genin", emoji: "⚪" };
+        }
+
+        function generateQuestion() {
+            const type = questionTypes[Math.floor(Math.random() * questionTypes.length)];
+            let a = getRandomAnime();
+            let b = getRandomAnime();
+            let attempts = 0;
+            while (a.name === b.name && attempts < 30) {
+                b = getRandomAnime();
+                attempts++;
+            }
+
+            const isMax = type.compare === 'max';
+            const aVal = a[type.key];
+            const bVal = b[type.key];
+            const correct = (isMax ? aVal > bVal : aVal < bVal) ? 'left' : 'right';
+
+            return {
+                type: type,
+                left: a,
+                right: b,
+                correct: correct
+            };
+        }
+
+        function renderQuestion(q) {
+            const leftCard = document.getElementById('cardLeft');
+            const rightCard = document.getElementById('cardRight');
+            const questionText = document.getElementById('questionText');
+
+            document.getElementById('leftTitle').textContent = q.left.name;
+            document.getElementById('leftSub').textContent = `${q.left.year} · ♥ ${q.left.score} · 📺 ${q.left.episodes}`;
+            document.getElementById('leftValue').textContent = q.left[questionTypes.find(t => t.key === q.type.key).key];
+            document.getElementById('leftIcon').textContent = '🤺';
+
+            document.getElementById('rightTitle').textContent = q.right.name;
+            document.getElementById('rightSub').textContent = `${q.right.year} · ♥ ${q.right.score} · 📺 ${q.right.episodes}`;
+            document.getElementById('rightValue').textContent = q.right[questionTypes.find(t => t.key === q.type.key).key];
+            document.getElementById('rightIcon').textContent = '⚔️';
+
+            questionText.innerHTML = `Quale anime è <span class="highlight">${q.type.label}</span>?`;
+
+            leftCard.className = 'duel-card';
+            rightCard.className = 'duel-card';
+            leftCard.classList.remove('correct', 'wrong', 'disabled');
+            rightCard.classList.remove('correct', 'wrong', 'disabled');
+
+            isAnswered = false;
+            timer = 5;
+            document.getElementById('timerDisplay').textContent = timer;
+            document.getElementById('timerFill').style.width = '100%';
+            document.getElementById('timerFill').classList.remove('danger');
+
+            clearInterval(timerInterval);
+            timerInterval = setInterval(() => {
+                timer -= 0.1;
+                const pct = (timer / 5) * 100;
+                document.getElementById('timerFill').style.width = `${Math.max(0, pct)}%`;
+                document.getElementById('timerDisplay').textContent = Math.ceil(timer);
+
+                if (timer <= 1) {
+                    document.getElementById('timerFill').classList.add('danger');
+                }
+
+                if (timer <= 0) {
+                    clearInterval(timerInterval);
+                    if (!isAnswered) {
+                        isAnswered = true;
+                        handleTimeout();
+                    }
+                }
+            }, 100);
+        }
+
+        function selectCard(side) {
+            if (isAnswered || !isPlaying) return;
+            isAnswered = true;
+            clearInterval(timerInterval);
+
+            const q = currentQuestion;
+            const isCorrect = side === q.correct;
+
+            const leftCard = document.getElementById('cardLeft');
+            const rightCard = document.getElementById('cardRight');
+            leftCard.classList.add('disabled');
+            rightCard.classList.add('disabled');
+
+            if (isCorrect) {
+                if (side === 'left') leftCard.classList.add('correct');
+                else rightCard.classList.add('correct');
+                score += 10 + Math.floor(streak / 2);
+                streak++;
+                correctAnswers++;
+                document.getElementById('scoreDisplay').textContent = score;
+                document.getElementById('streakDisplay').textContent = streak;
+
+                if (streak >= 5) {
+                    document.getElementById('streakDisplay').style.color = 'var(--accent-orange)';
+                }
+
+                // Bonus per risposta veloce
+                if (timer > 3) {
+                    score += 5;
+                    document.getElementById('scoreDisplay').textContent = score;
+                }
+            } else {
+                if (side === 'left') leftCard.classList.add('wrong');
+                else rightCard.classList.add('wrong');
+                lives--;
+                streak = 0;
+                document.getElementById('streakDisplay').textContent = streak;
+                document.getElementById('streakDisplay').style.color = 'var(--text-secondary)';
+
+                // Mostra la risposta corretta
+                if (q.correct === 'left') leftCard.classList.add('correct');
+                else rightCard.classList.add('correct');
+
+                updateLives();
+
+                if (lives <= 0) {
+                    endGame();
+                    return;
+                }
+            }
+
+            totalRounds++;
+            updateRank();
+
+            setTimeout(() => {
+                if (lives > 0) {
+                    nextRound();
+                }
+            }, 1200);
+        }
+
+        function handleTimeout() {
+            const q = currentQuestion;
+            const leftCard = document.getElementById('cardLeft');
+            const rightCard = document.getElementById('cardRight');
+            leftCard.classList.add('disabled');
+            rightCard.classList.add('disabled');
+
+            if (q.correct === 'left') {
+                leftCard.classList.add('correct');
+                rightCard.classList.add('wrong');
+            } else {
+                rightCard.classList.add('correct');
+                leftCard.classList.add('wrong');
+            }
+
+            lives--;
+            streak = 0;
+            document.getElementById('streakDisplay').textContent = streak;
+            document.getElementById('streakDisplay').style.color = 'var(--text-secondary)';
+            updateLives();
+
+            if (lives <= 0) {
+                setTimeout(() => endGame(), 1000);
+                return;
+            }
+
+            setTimeout(() => {
+                if (lives > 0) {
+                    nextRound();
+                }
+            }, 1200);
+        }
+
+        function nextRound() {
+            currentQuestion = generateQuestion();
+            renderQuestion(currentQuestion);
+        }
+
+        function updateLives() {
+            const livesDisplay = document.getElementById('livesDisplay');
+            const hearts = '❤️'.repeat(Math.max(0, lives)) + '🖤'.repeat(Math.max(0, 3 - lives));
+            livesDisplay.textContent = hearts;
+        }
+
+        function updateRank() {
+            const rank = getRank(score, correctAnswers, totalRounds);
+            document.getElementById('rankDisplay').textContent = `${rank.emoji} ${rank.name}`;
+        }
+
+        function endGame() {
+            isPlaying = false;
+            clearInterval(timerInterval);
+            document.getElementById('gameArea').style.display = 'none';
+            const rank = getRank(score, correctAnswers, totalRounds);
+            document.getElementById('finalRank').textContent = `${rank.emoji} ${rank.name}`;
+            document.getElementById('finalScore').textContent = `Punteggio: ${score}`;
+
+            let message = '';
+            if (rank.name.includes('Leggenda')) message = '🔥 Sei un vero sensei! Nessuno può fermarti!';
+            else if (rank.name.includes('Kage')) message = '🌟 Un ninja d\'élite! Sei sulla vetta!';
+            else if (rank.name.includes('Jonin')) message = '⚡ Ottimo lavoro! Continua così!';
+            else if (rank.name.includes('Chunin')) message = '🍃 Buon inizio! Non fermarti!';
+            else message = '⚪ Non mollare! Ogni grande ninja inizia da Genin!';
+
+            document.getElementById('resultMessage').textContent = message;
+            document.getElementById('resultScreen').classList.add('show');
+        }
+
+        function startGame() {
+            document.getElementById('resultScreen').classList.remove('show');
+            document.getElementById('gameArea').style.display = 'block';
+            document.getElementById('loading').style.display = 'none';
+
+            score = 0;
+            lives = 3;
+            streak = 0;
+            totalRounds = 0;
+            correctAnswers = 0;
+            isPlaying = true;
+            isAnswered = false;
+
+            document.getElementById('scoreDisplay').textContent = '0';
+            document.getElementById('streakDisplay').textContent = '0';
+            document.getElementById('streakDisplay').style.color = 'var(--text-secondary)';
+            updateLives();
+            updateRank();
+
+            currentQuestion = generateQuestion();
+            renderQuestion(currentQuestion);
+        }
+
+        function resetGame() {
+            clearInterval(timerInterval);
+            isPlaying = false;
+            startGame();
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            document.getElementById('loading').style.display = 'none';
+            document.getElementById('gameArea').style.display = 'block';
+            startGame();
+        });
+    </script>
+
+</body>
+</html>
