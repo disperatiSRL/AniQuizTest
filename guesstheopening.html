@@ -366,6 +366,17 @@
             box-shadow: 0 0 30px rgba(168, 85, 247, 0.3);
         }
 
+        .audio-controls button.skip-btn {
+            background: linear-gradient(135deg, var(--accent-orange), #ea580c);
+            border: none;
+            color: #fff;
+        }
+
+        .audio-controls button.skip-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 0 30px rgba(245, 158, 11, 0.3);
+        }
+
         .timer {
             font-size: 0.9rem;
             color: var(--text-secondary);
@@ -453,6 +464,10 @@
 
         .feedback.wrong {
             border-left-color: var(--accent-red);
+        }
+
+        .feedback.error {
+            border-left-color: var(--accent-orange);
         }
 
         .feedback h3 {
@@ -754,6 +769,9 @@
                     <button onclick="resetAudio()">
                         <i class="fas fa-undo"></i> Ripeti
                     </button>
+                    <button class="skip-btn" onclick="skipQuestion()">
+                        <i class="fas fa-forward"></i> Salta
+                    </button>
                 </div>
             </div>
 
@@ -784,7 +802,7 @@
 
     <script>
         // ============================================================
-        // 🔥 YOUTUBE API KEY (NUOVA)
+        // 🔥 YOUTUBE API KEY
         // ============================================================
         const YOUTUBE_API_KEY = 'AIzaSyCXsFDpO4dYRiwlTPA4s5rbaIpCG4_7EB4';
 
@@ -944,10 +962,9 @@
         })();
 
         // ============================================================
-        // 🔥 RICERCA VERA SU YOUTUBE CON API (NUOVA CHIAVE)
+        // 🔥 RICERCA VERA SU YOUTUBE CON API
         // ============================================================
         async function searchYouTubeOpening(animeName) {
-            // 🔥 PULISCI IL NOME
             const cleanName = animeName
                 .replace(/:.+$/, '')
                 .replace(/\([^)]*\)/g, '')
@@ -1021,6 +1038,7 @@
         let isPlaying = false;
         let timerInterval = null;
         let currentQuestionData = null;
+        let isGameOver = false;
 
         function shuffleArrayLocal(arr) {
             for (let i = arr.length - 1; i > 0; i--) {
@@ -1112,9 +1130,13 @@
         }
 
         function initPlayer() {
+            if (isGameOver) return;
             if (currentIndex >= questions.length) { showResult(); return; }
             const q = questions[currentIndex];
-            if (!q || !q.videoId) { nextQuestion(); return; }
+            if (!q || !q.videoId) { 
+                showError("Impossibile caricare l'audio. Prova a saltare la domanda.");
+                return; 
+            }
             if (player) { try { player.destroy(); } catch (e) {} player = null; }
             player = new YT.Player('youtubePlayer', {
                 height: '0',
@@ -1157,7 +1179,19 @@
 
         function onPlayerError(event) {
             console.error('Errore YouTube:', event.data);
-            setTimeout(() => { nextQuestion(); }, 1000);
+            showError("Impossibile riprodurre l'audio. Usa il pulsante Salta.");
+        }
+
+        function showError(message) {
+            const feedback = document.getElementById('feedback');
+            feedback.className = 'feedback show error';
+            document.getElementById('feedbackTitle').textContent = '⚠️ Errore';
+            document.getElementById('feedbackText').textContent = message;
+            
+            const nextBtn = document.getElementById('nextBtn');
+            nextBtn.textContent = 'Salta →';
+            nextBtn.className = 'next-btn show';
+            nextBtn.onclick = () => { skipQuestion(); };
         }
 
         function togglePlay() {
@@ -1210,7 +1244,26 @@
             }, 100);
         }
 
+        function skipQuestion() {
+            if (player) { try { player.destroy(); } catch (e) {} player = null; }
+            isAnswered = true;
+            const feedback = document.getElementById('feedback');
+            feedback.className = 'feedback show error';
+            document.getElementById('feedbackTitle').textContent = '⏭️ Saltato';
+            document.getElementById('feedbackText').textContent = 'Hai saltato questa domanda.';
+            
+            const nextBtn = document.getElementById('nextBtn');
+            if (currentIndex < questions.length - 1) {
+                nextBtn.textContent = 'Prossima domanda →';
+            } else {
+                nextBtn.textContent = 'Vedi risultati 🏆';
+            }
+            nextBtn.className = 'next-btn show';
+            nextBtn.onclick = () => { nextQuestion(); };
+        }
+
         function loadQuestionUI() {
+            if (isGameOver) return;
             if (currentIndex >= questions.length) { showResult(); return; }
             const q = questions[currentIndex];
             currentQuestionData = q;
@@ -1287,6 +1340,7 @@
                 nextBtn.textContent = 'Vedi risultati 🏆';
             }
             nextBtn.className = 'next-btn show';
+            nextBtn.onclick = () => { nextQuestion(); };
         }
 
         function nextQuestion() {
@@ -1300,6 +1354,7 @@
         }
 
         function showResult() {
+            isGameOver = true;
             document.getElementById('gameArea').style.display = 'none';
             document.getElementById('resultScreen').className = 'result-screen show';
             document.getElementById('progressFill').style.width = '100%';
@@ -1315,6 +1370,7 @@
         }
 
         function restartGame() {
+            isGameOver = false;
             currentIndex = 0;
             correctCount = 0;
             wrongCount = 0;
