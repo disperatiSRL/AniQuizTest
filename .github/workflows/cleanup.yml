@@ -1,0 +1,22 @@
+name: Cleanup old workflow runs
+
+on:
+  schedule:
+    - cron: '0 0 * * *'   # Ogni giorno a mezzanotte
+  workflow_dispatch:       # Esecuzione manuale
+
+jobs:
+  cleanup:
+    runs-on: ubuntu-latest
+    permissions:
+      actions: write      # Necessario per cancellare i workflow
+      contents: read
+      
+    steps:
+      - name: Delete all workflow runs except the latest one
+        uses: Mattraks/delete-workflow-runs@v2
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          repository: ${{ github.repository }}
+          retain_days: 0              # Non conservare in base ai giorni
+          keep_minimum_runs: 1        # 👈 Mantieni SOLO l'ultimo run
