@@ -279,7 +279,14 @@
             color: var(--text-secondary);
         }
 
+        /* 🔥 NASCONDO IL VALORE NUMERICO DURANTE IL GIOCO */
         .duel-card .card-value {
+            display: none;
+        }
+
+        /* 🔥 LO MOSTRO SOLO DOPO LA RISPOSTA */
+        .duel-card.reveal .card-value {
+            display: block;
             font-size: 1.5rem;
             font-weight: 900;
             color: var(--accent-purple);
@@ -748,7 +755,6 @@
             { name: "The Apothecary Diaries", year: 2023, score: 8.3, episodes: 24 },
             { name: "Bocchi the Rock!", year: 2022, score: 8.6, episodes: 12 },
             { name: "Cyberpunk Edgerunners", year: 2022, score: 8.6, episodes: 10 },
-            { name: "Chainsaw Man", year: 2022, score: 8.7, episodes: 12 },
             { name: "Zom 100", year: 2023, score: 8.0, episodes: 12 },
             { name: "Undead Unluck", year: 2023, score: 7.8, episodes: 24 },
             { name: "Mashle", year: 2023, score: 8.0, episodes: 12 },
@@ -756,7 +762,7 @@
             { name: "The Elusive Samurai", year: 2024, score: 8.0, episodes: 12 },
             { name: "Wind Breaker", year: 2024, score: 8.2, episodes: 13 },
 
-            // ===== EXTRA (riempimento per varietà) =====
+            // ===== EXTRA =====
             { name: "Bakuman", year: 2010, score: 8.4, episodes: 25 },
             { name: "Guilty Crown", year: 2011, score: 7.3, episodes: 22 },
             { name: "Anohana", year: 2011, score: 8.6, episodes: 11 },
@@ -782,25 +788,12 @@
             { name: "Sk8 the Infinity", year: 2021, score: 7.8, episodes: 12 },
             { name: "Mieruko-chan", year: 2021, score: 7.4, episodes: 12 },
             { name: "Blue Lock", year: 2022, score: 8.4, episodes: 24 },
-            { name: "Chainsaw Man", year: 2022, score: 8.7, episodes: 12 },
             { name: "Spy x Family 2", year: 2022, score: 8.5, episodes: 12 },
-            { name: "Bocchi the Rock!", year: 2022, score: 8.6, episodes: 12 },
             { name: "Lycoris Recoil", year: 2022, score: 8.1, episodes: 13 },
-            { name: "Cyberpunk Edgerunners", year: 2022, score: 8.6, episodes: 10 },
-            { name: "Chainsaw Man", year: 2022, score: 8.7, episodes: 12 },
             { name: "Heavenly Delusion", year: 2023, score: 8.2, episodes: 13 },
             { name: "Oshi no Ko", year: 2023, score: 8.7, episodes: 11 },
             { name: "Jujutsu Kaisen 2", year: 2023, score: 8.8, episodes: 23 },
-            { name: "Frieren: Beyond Journey's End", year: 2023, score: 9.0, episodes: 28 },
             { name: "The Dangers in My Heart", year: 2023, score: 8.0, episodes: 12 },
-            { name: "Mashle", year: 2023, score: 8.0, episodes: 12 },
-            { name: "Undead Unluck", year: 2023, score: 7.8, episodes: 24 },
-            { name: "Solo Leveling", year: 2024, score: 8.6, episodes: 12 },
-            { name: "Kaiju No. 8", year: 2024, score: 8.1, episodes: 12 },
-            { name: "Dandadan", year: 2024, score: 8.8, episodes: 12 },
-            { name: "Wind Breaker", year: 2024, score: 8.2, episodes: 13 },
-            { name: "The Elusive Samurai", year: 2024, score: 8.0, episodes: 12 },
-            { name: "Wistoria: Wand and Sword", year: 2024, score: 7.5, episodes: 12 },
             { name: "A Sign of Affection", year: 2024, score: 7.4, episodes: 12 },
             { name: "Metallic Rouge", year: 2024, score: 6.6, episodes: 13 }
         ];
@@ -889,6 +882,9 @@
 
             questionText.innerHTML = `Quale anime è <span class="highlight">${q.type.label}</span>?`;
 
+            // 🔥 NASCONDO I VALORI NUMERICI ALL'INIZIO
+            leftCard.classList.remove('reveal');
+            rightCard.classList.remove('reveal');
             leftCard.className = 'duel-card';
             rightCard.className = 'duel-card';
             leftCard.classList.remove('correct', 'wrong', 'disabled');
@@ -934,6 +930,10 @@
             leftCard.classList.add('disabled');
             rightCard.classList.add('disabled');
 
+            // 🔥 MOSTRO I VALORI NUMERICI DOPO LA RISPOSTA
+            leftCard.classList.add('reveal');
+            rightCard.classList.add('reveal');
+
             if (isCorrect) {
                 if (side === 'left') leftCard.classList.add('correct');
                 else rightCard.classList.add('correct');
@@ -947,7 +947,6 @@
                     document.getElementById('streakDisplay').style.color = 'var(--accent-orange)';
                 }
 
-                // Bonus per risposta veloce
                 if (timer > 3) {
                     score += 5;
                     document.getElementById('scoreDisplay').textContent = score;
@@ -960,7 +959,6 @@
                 document.getElementById('streakDisplay').textContent = streak;
                 document.getElementById('streakDisplay').style.color = 'var(--text-secondary)';
 
-                // Mostra la risposta corretta
                 if (q.correct === 'left') leftCard.classList.add('correct');
                 else rightCard.classList.add('correct');
 
@@ -988,6 +986,10 @@
             const rightCard = document.getElementById('cardRight');
             leftCard.classList.add('disabled');
             rightCard.classList.add('disabled');
+
+            // 🔥 MOSTRO I VALORI NUMERICI DOPO IL TIMEOUT
+            leftCard.classList.add('reveal');
+            rightCard.classList.add('reveal');
 
             if (q.correct === 'left') {
                 leftCard.classList.add('correct');
