@@ -242,6 +242,7 @@
             border: none;
         }
 
+        /* 🔥 OVERLAY CHE OSCURA IL TITOLO DEL TRAILER */
         .trailer-overlay {
             position: absolute;
             top: 0;
@@ -251,23 +252,42 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            background: rgba(0,0,0,0.7);
+            background: rgba(0,0,0,0.85);
             z-index: 10;
             border-radius: var(--radius-sm);
-            font-size: 1.5rem;
-            font-weight: 700;
             flex-direction: column;
             gap: 12px;
+            transition: opacity 0.5s ease;
+        }
+
+        /* 🔥 BARRA NERA PER OSCURARE IL TITOLO (PARTE IN BASSO DEL VIDEO) */
+        .title-bar {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 80px;
+            background: rgba(0,0,0,0.95);
+            z-index: 5;
+            border-radius: 0 0 var(--radius-sm) var(--radius-sm);
         }
 
         .trailer-overlay .timer {
             font-size: 4rem;
             color: var(--accent-orange);
+            font-weight: 900;
         }
 
         .trailer-overlay .label {
             color: var(--text-secondary);
             font-size: 1rem;
+        }
+
+        .trailer-overlay .sub-label {
+            color: var(--text-secondary);
+            font-size: 0.8rem;
+            opacity: 0.6;
+            margin-top: 8px;
         }
 
         .options-grid {
@@ -521,6 +541,9 @@
                 justify-content: center;
                 flex-wrap: wrap;
             }
+            .title-bar {
+                height: 60px;
+            }
         }
 
         @media (max-width: 480px) {
@@ -533,6 +556,9 @@
             }
             .trailer-overlay .timer {
                 font-size: 3rem;
+            }
+            .title-bar {
+                height: 50px;
             }
         }
     </style>
@@ -601,10 +627,13 @@
             <div class="trailer-wrapper">
                 <div class="trailer-container" id="trailerContainer">
                     <iframe id="trailerFrame" src="" allowfullscreen></iframe>
+                    <!-- 🔥 BARRA NERA PER OSCURARE IL TITOLO -->
+                    <div class="title-bar" id="titleBar"></div>
                     <div class="trailer-overlay" id="trailerOverlay">
                         <div class="label">🎬 Trailer in arrivo...</div>
                         <div class="timer" id="countdownTimer">10</div>
                         <div class="label">secondi</div>
+                        <div class="sub-label">Il titolo è oscurato per non spoilare</div>
                     </div>
                 </div>
             </div>
@@ -640,7 +669,7 @@
         // ============================================================
         (function() {
             'use strict';
-            const PER_PAGE = 20;
+            const PER_PAGE = 30;
             window.allAnime = [];
             window.isDataLoaded = false;
             window.isLoading = false;
@@ -689,7 +718,6 @@
                     if (data.errors) throw new Error(data.errors[0].message);
                     
                     const results = data.data.Page.media || [];
-                    // Filtra solo quelli con trailer
                     const withTrailer = results.filter(anime => anime.trailer && anime.trailer.id);
                     console.log(`✅ Trovati ${withTrailer.length} anime con trailer`);
                     return shuffleArray(withTrailer);
@@ -763,7 +791,6 @@
                 const anime = selected[i];
                 const title = window.getTitle(anime);
                 
-                // Crea distrattori
                 const others = animeList.filter(a => a.id !== anime.id);
                 const shuffledOthers = shuffleArrayLocal([...others]).slice(0, 3);
                 const options = shuffleArrayLocal([
@@ -801,41 +828,43 @@
             document.getElementById('scoreDisplay').textContent = score;
             document.getElementById('progressFill').style.width = ((currentIndex) / questions.length * 100) + '%';
 
-            // Mostra il trailer
             const iframe = document.getElementById('trailerFrame');
             const overlay = document.getElementById('trailerOverlay');
             const timerDisplay = document.getElementById('countdownTimer');
+            const titleBar = document.getElementById('titleBar');
 
-            // Costruisci URL del trailer
+            // 🔥 MOSTRA LA BARRA PER OSCURARE IL TITOLO
+            titleBar.style.display = 'block';
+
+            // 🔥 COSTRUISCI URL DEL TRAILER CON START A 5 SECONDI
             let trailerUrl = '';
             if (q.trailerSite === 'youtube') {
-                trailerUrl = `https://www.youtube.com/embed/${q.trailerId}?autoplay=1&mute=1&rel=0&modestbranding=1`;
+                trailerUrl = `https://www.youtube.com/embed/${q.trailerId}?autoplay=1&mute=1&rel=0&modestbranding=1&start=5`;
             } else if (q.trailerSite === 'dailymotion') {
-                trailerUrl = `https://www.dailymotion.com/embed/video/${q.trailerId}?autoplay=1`;
+                trailerUrl = `https://www.dailymotion.com/embed/video/${q.trailerId}?autoplay=1&start=5`;
             } else {
-                trailerUrl = `https://www.youtube.com/embed/${q.trailerId}?autoplay=1&mute=1&rel=0&modestbranding=1`;
+                trailerUrl = `https://www.youtube.com/embed/${q.trailerId}?autoplay=1&mute=1&rel=0&modestbranding=1&start=5`;
             }
 
             iframe.src = trailerUrl;
             overlay.style.display = 'flex';
             timerDisplay.textContent = countdown;
 
-            // Nascondi opzioni
             document.getElementById('optionsGrid').style.display = 'none';
             document.getElementById('feedback').className = 'feedback';
             document.getElementById('nextBtn').className = 'next-btn';
 
-            // Avvia il countdown
             clearInterval(timerInterval);
             timerInterval = setInterval(() => {
                 countdown--;
                 timerDisplay.textContent = countdown;
                 if (countdown <= 0) {
                     clearInterval(timerInterval);
+                    // 🔥 NASCONDI OVERLAY E TITLE BAR
                     overlay.style.display = 'none';
+                    titleBar.style.display = 'none';
                     document.getElementById('optionsGrid').style.display = 'grid';
                     showOptions(q);
-                    // Ferma il trailer dopo 10 secondi
                     iframe.src = iframe.src.replace('autoplay=1', 'autoplay=0');
                 }
             }, 1000);
