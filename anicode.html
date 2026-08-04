@@ -4,12 +4,17 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>ANICODE - Codenames Anime</title>
-    
+
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
-    
+
     <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; }
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
         :root {
             --bg-primary: #0a0a0f;
             --bg-card: #1a1a2e;
@@ -25,25 +30,151 @@
             --radius-sm: 8px;
             --transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         }
-        body { font-family: 'Inter', sans-serif; background: var(--bg-primary); color: var(--text-primary); min-height: 100vh; }
-        .container { max-width: 1200px; margin: 0 auto; padding: 20px; }
-        
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
         /* NAVBAR */
         .navbar {
             background: rgba(10, 10, 15, 0.85);
             backdrop-filter: blur(20px);
-            border-bottom: 1px solid rgba(255,255,255,0.04);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.04);
             padding: 16px 0;
             position: sticky;
             top: 0;
             z-index: 100;
         }
-        .navbar .container { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 12px; }
-        .logo { display: flex; align-items: center; gap: 12px; font-size: 1.6rem; font-weight: 900; text-decoration: none; color: inherit; }
-        .logo-icon { width: 42px; height: 42px; background: linear-gradient(135deg, #ff6b9d, #a855f7); border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 1.2rem; color: #fff; }
-        .logo-text { background: linear-gradient(135deg, #ff6b9d, #a855f7, #4cc9f0); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
-        .back-btn { color: var(--text-secondary); text-decoration: none; display: flex; align-items: center; gap: 8px; font-size: 0.9rem; transition: var(--transition); }
-        .back-btn:hover { color: var(--text-primary); }
+
+        .navbar .container {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 1.6rem;
+            font-weight: 900;
+            text-decoration: none;
+            color: inherit;
+        }
+
+        .logo-icon {
+            width: 42px;
+            height: 42px;
+            background: linear-gradient(135deg, #ff6b9d, #a855f7);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            color: #fff;
+        }
+
+        .logo-text {
+            background: linear-gradient(135deg, #ff6b9d, #a855f7, #4cc9f0);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .back-btn {
+            color: var(--text-secondary);
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.9rem;
+            transition: var(--transition);
+        }
+
+        .back-btn:hover {
+            color: var(--text-primary);
+        }
+
+        /* MODE SELECTOR */
+        .mode-selector {
+            text-align: center;
+            padding: 40px 20px;
+            background: var(--bg-card);
+            border-radius: var(--radius);
+            border: 1px solid rgba(255, 255, 255, 0.04);
+            margin-bottom: 24px;
+        }
+
+        .mode-selector h2 {
+            font-size: 2rem;
+            margin-bottom: 8px;
+        }
+
+        .mode-selector p {
+            color: var(--text-secondary);
+            margin-bottom: 24px;
+        }
+
+        .mode-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+
+        .mode-btn {
+            background: var(--bg-primary);
+            border: 2px solid rgba(255, 255, 255, 0.04);
+            border-radius: var(--radius);
+            padding: 24px 32px;
+            color: var(--text-primary);
+            cursor: pointer;
+            transition: var(--transition);
+            min-width: 200px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .mode-btn:hover {
+            border-color: var(--accent-purple);
+            transform: translateY(-4px);
+            box-shadow: 0 8px 40px rgba(168, 85, 247, 0.15);
+        }
+
+        .mode-btn .icon {
+            font-size: 3rem;
+        }
+
+        .mode-btn .label {
+            font-size: 1.2rem;
+            font-weight: 700;
+        }
+
+        .mode-btn .desc {
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+        }
+
+        .mode-btn.duet {
+            border-color: rgba(74, 222, 128, 0.2);
+        }
+
+        .mode-btn.duet:hover {
+            border-color: var(--accent-green);
+            box-shadow: 0 8px 40px rgba(74, 222, 128, 0.15);
+        }
 
         /* CONNECTION PANEL */
         .connection-panel {
@@ -51,22 +182,28 @@
             border-radius: var(--radius);
             padding: 24px;
             margin-bottom: 24px;
-            border: 1px solid rgba(255,255,255,0.04);
-            display: flex;
+            border: 1px solid rgba(255, 255, 255, 0.04);
+            display: none;
             flex-wrap: wrap;
             align-items: center;
             gap: 12px;
         }
+
+        .connection-panel.active {
+            display: flex;
+        }
+
         .connection-panel input {
             padding: 10px 14px;
             border-radius: var(--radius-sm);
-            border: 1px solid rgba(255,255,255,0.06);
+            border: 1px solid rgba(255, 255, 255, 0.06);
             background: var(--bg-primary);
             color: var(--text-primary);
             font-size: 0.9rem;
             flex: 1;
             min-width: 150px;
         }
+
         .connection-panel button {
             padding: 10px 20px;
             border: none;
@@ -77,15 +214,47 @@
             cursor: pointer;
             transition: var(--transition);
         }
-        .btn-primary { background: linear-gradient(135deg, var(--accent-purple), #7c3aed); color: #fff; }
-        .btn-primary:hover { transform: scale(1.05); box-shadow: 0 0 30px rgba(168,85,247,0.3); }
-        .btn-danger { background: var(--accent-red); color: #fff; }
-        .btn-danger:hover { transform: scale(1.05); }
-        .btn-success { background: var(--accent-green); color: #fff; }
-        .btn-success:hover { transform: scale(1.05); }
-        .status { font-size: 0.85rem; color: var(--text-secondary); }
-        .status.connected { color: var(--accent-green); }
-        .status.disconnected { color: var(--accent-red); }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--accent-purple), #7c3aed);
+            color: #fff;
+        }
+
+        .btn-primary:hover {
+            transform: scale(1.05);
+            box-shadow: 0 0 30px rgba(168, 85, 247, 0.3);
+        }
+
+        .btn-danger {
+            background: var(--accent-red);
+            color: #fff;
+        }
+
+        .btn-danger:hover {
+            transform: scale(1.05);
+        }
+
+        .btn-success {
+            background: var(--accent-green);
+            color: #fff;
+        }
+
+        .btn-success:hover {
+            transform: scale(1.05);
+        }
+
+        .status {
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+        }
+
+        .status.connected {
+            color: var(--accent-green);
+        }
+
+        .status.disconnected {
+            color: var(--accent-red);
+        }
 
         /* PLAYERS */
         .players-list {
@@ -94,15 +263,75 @@
             gap: 8px;
             margin-bottom: 16px;
         }
+
         .player-badge {
             background: var(--bg-card);
             padding: 6px 14px;
             border-radius: 20px;
             font-size: 0.8rem;
-            border: 1px solid rgba(255,255,255,0.04);
+            border: 1px solid rgba(255, 255, 255, 0.04);
         }
-        .player-badge.master { border-color: var(--accent-purple); color: var(--accent-purple); }
-        .player-badge.ready { border-color: var(--accent-green); }
+
+        .player-badge.master {
+            border-color: var(--accent-purple);
+            color: var(--accent-purple);
+        }
+
+        .player-badge.ready {
+            border-color: var(--accent-green);
+        }
+
+        /* DUET STATS */
+        .duet-stats {
+            display: none;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 12px;
+            margin-bottom: 16px;
+        }
+
+        .duet-stats.active {
+            display: grid;
+        }
+
+        .duet-stats .stat {
+            background: var(--bg-card);
+            padding: 12px 16px;
+            border-radius: var(--radius-sm);
+            text-align: center;
+            border: 1px solid rgba(255, 255, 255, 0.04);
+        }
+
+        .duet-stats .stat .num {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--accent-purple);
+        }
+
+        .duet-stats .stat .label {
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+        }
+
+        /* DUET KEY INFO */
+        .duet-key-info {
+            display: none;
+            background: var(--bg-card);
+            padding: 12px 16px;
+            border-radius: var(--radius-sm);
+            margin-bottom: 16px;
+            text-align: center;
+            border: 1px solid rgba(74, 222, 128, 0.15);
+            font-size: 0.9rem;
+        }
+
+        .duet-key-info.active {
+            display: block;
+        }
+
+        .duet-key-info .highlight-green {
+            color: var(--accent-green);
+            font-weight: 700;
+        }
 
         /* GRID */
         .grid-container {
@@ -112,9 +341,10 @@
             max-width: 700px;
             margin: 0 auto 24px;
         }
+
         .grid-card {
             background: var(--bg-card);
-            border: 2px solid rgba(255,255,255,0.04);
+            border: 2px solid rgba(255, 255, 255, 0.04);
             border-radius: var(--radius-sm);
             padding: 16px 8px;
             text-align: center;
@@ -128,25 +358,76 @@
             font-weight: 600;
             position: relative;
         }
+
         .grid-card:hover:not(.revealed):not(.disabled) {
             transform: translateY(-2px);
-            border-color: rgba(168,85,247,0.3);
-            box-shadow: 0 8px 30px rgba(168,85,247,0.1);
+            border-color: rgba(168, 85, 247, 0.3);
+            box-shadow: 0 8px 30px rgba(168, 85, 247, 0.1);
         }
-        .grid-card.revealed { opacity: 0.7; cursor: default; border-color: rgba(255,255,255,0.1); }
-        .grid-card.revealed.team-red { border-color: var(--accent-red); background: rgba(248,113,113,0.1); }
-        .grid-card.revealed.team-blue { border-color: var(--accent-blue); background: rgba(76,201,240,0.1); }
-        .grid-card.revealed.assassin { border-color: #000; background: rgba(0,0,0,0.5); }
-        .grid-card.disabled { cursor: not-allowed; opacity: 0.5; }
+
+        .grid-card.revealed {
+            opacity: 0.7;
+            cursor: default;
+            border-color: rgba(255, 255, 255, 0.1);
+        }
+
+        .grid-card.revealed.team-red {
+            border-color: var(--accent-red);
+            background: rgba(248, 113, 113, 0.1);
+        }
+
+        .grid-card.revealed.team-blue {
+            border-color: var(--accent-blue);
+            background: rgba(76, 201, 240, 0.1);
+        }
+
+        .grid-card.revealed.agent {
+            border-color: var(--accent-green);
+            background: rgba(74, 222, 128, 0.1);
+        }
+
+        .grid-card.revealed.assassin {
+            border-color: #000;
+            background: rgba(0, 0, 0, 0.5);
+        }
+
+        .grid-card.revealed.innocent {
+            border-color: var(--text-secondary);
+            background: rgba(255, 255, 255, 0.03);
+        }
+
+        .grid-card.disabled {
+            cursor: not-allowed;
+            opacity: 0.5;
+        }
+
+        .grid-card .word {
+            font-size: 0.85rem;
+            font-weight: 600;
+        }
+
+        .grid-card .category-tag {
+            font-size: 0.6rem;
+            color: var(--text-secondary);
+            position: absolute;
+            bottom: 4px;
+            right: 6px;
+            opacity: 0.5;
+        }
 
         /* CONTROLS */
         .controls {
-            display: flex;
+            display: none;
             justify-content: center;
             gap: 12px;
             flex-wrap: wrap;
             margin: 16px 0;
         }
+
+        .controls.active {
+            display: flex;
+        }
+
         .controls button {
             padding: 10px 24px;
             border: none;
@@ -157,7 +438,10 @@
             cursor: pointer;
             transition: var(--transition);
         }
-        .controls button:hover { transform: scale(1.05); }
+
+        .controls button:hover {
+            transform: scale(1.05);
+        }
 
         .turn-indicator {
             text-align: center;
@@ -166,27 +450,39 @@
             padding: 12px;
             background: var(--bg-card);
             border-radius: var(--radius-sm);
-            border: 1px solid rgba(255,255,255,0.04);
+            border: 1px solid rgba(255, 255, 255, 0.04);
         }
-        .turn-indicator .highlight { color: var(--accent-purple); font-weight: 700; }
+
+        .turn-indicator .highlight {
+            color: var(--accent-purple);
+            font-weight: 700;
+        }
 
         .clue-input {
-            display: flex;
+            display: none;
             gap: 8px;
             justify-content: center;
             flex-wrap: wrap;
             margin: 12px 0;
         }
+
+        .clue-input.active {
+            display: flex;
+        }
+
         .clue-input input {
             padding: 8px 14px;
             border-radius: var(--radius-sm);
-            border: 1px solid rgba(255,255,255,0.06);
+            border: 1px solid rgba(255, 255, 255, 0.06);
             background: var(--bg-primary);
             color: var(--text-primary);
             font-size: 0.9rem;
             width: 200px;
         }
-        .clue-input input[type="number"] { width: 80px; }
+
+        .clue-input input[type="number"] {
+            width: 80px;
+        }
 
         /* RESULT */
         .result-screen {
@@ -194,24 +490,76 @@
             padding: 40px 20px;
             display: none;
         }
-        .result-screen.show { display: block; animation: fadeSlideIn 0.5s ease; }
-        @keyframes fadeSlideIn {
-            from { opacity: 0; transform: translateY(-20px); }
-            to { opacity: 1; transform: translateY(0); }
+
+        .result-screen.show {
+            display: block;
+            animation: fadeSlideIn 0.5s ease;
         }
-        .result-screen .big-icon { font-size: 4rem; margin-bottom: 16px; }
-        .result-screen h2 { font-size: 2rem; margin-bottom: 8px; }
+
+        @keyframes fadeSlideIn {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .result-screen .big-icon {
+            font-size: 4rem;
+            margin-bottom: 16px;
+        }
+
+        .result-screen h2 {
+            font-size: 2rem;
+            margin-bottom: 8px;
+        }
 
         /* RESPONSIVE */
         @media (max-width: 768px) {
-            .grid-container { grid-template-columns: repeat(5, 1fr); gap: 6px; max-width: 100%; }
-            .grid-card { min-height: 60px; font-size: 0.7rem; padding: 8px 4px; }
-            .connection-panel { flex-direction: column; }
-            .connection-panel input { width: 100%; }
+            .grid-container {
+                grid-template-columns: repeat(5, 1fr);
+                gap: 6px;
+                max-width: 100%;
+            }
+
+            .grid-card {
+                min-height: 60px;
+                font-size: 0.7rem;
+                padding: 8px 4px;
+            }
+
+            .connection-panel {
+                flex-direction: column;
+            }
+
+            .connection-panel input {
+                width: 100%;
+            }
+
+            .mode-buttons {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .mode-btn {
+                width: 100%;
+                max-width: 300px;
+            }
         }
+
         @media (max-width: 480px) {
-            .grid-container { gap: 4px; }
-            .grid-card { min-height: 50px; font-size: 0.6rem; padding: 4px 2px; }
+            .grid-container {
+                gap: 4px;
+            }
+
+            .grid-card {
+                min-height: 50px;
+                font-size: 0.6rem;
+                padding: 4px 2px;
+            }
         }
     </style>
 </head>
@@ -239,7 +587,25 @@
             Il gioco di codici con gli anime
         </p>
 
-        <!-- CONNESSIONE -->
+        <!-- MODE SELECTOR -->
+        <div class="mode-selector" id="modeSelector">
+            <h2>🎯 Scegli la modalità</h2>
+            <p>Seleziona come vuoi giocare</p>
+            <div class="mode-buttons">
+                <button class="mode-btn" onclick="selectMode('standard')">
+                    <span class="icon">⚔️</span>
+                    <span class="label">Standard</span>
+                    <span class="desc">2 squadre, competitivo</span>
+                </button>
+                <button class="mode-btn duet" onclick="selectMode('duet')">
+                    <span class="icon">🤝</span>
+                    <span class="label">Duet</span>
+                    <span class="desc">2 giocatori, cooperativo</span>
+                </button>
+            </div>
+        </div>
+
+        <!-- CONNECTION PANEL -->
         <div class="connection-panel" id="connectionPanel">
             <input type="text" id="playerNameInput" placeholder="Il tuo nome" value="BroAnime">
             <input type="text" id="roomInput" placeholder="Nome stanza" value="anicode">
@@ -248,33 +614,62 @@
             <span class="status disconnected" id="statusText">⚪ Disconnesso</span>
         </div>
 
-        <!-- GIOCATORI -->
+        <!-- PLAYERS -->
         <div id="playersContainer">
             <div class="players-list" id="playersList"></div>
         </div>
 
-        <!-- TURNO -->
+        <!-- DUET STATS -->
+        <div class="duet-stats" id="duetStats">
+            <div class="stat">
+                <div class="num" id="agentsFound">0</div>
+                <div class="label">🎯 Agenti trovati</div>
+            </div>
+            <div class="stat">
+                <div class="num" id="totalAgents">15</div>
+                <div class="label">📦 Totale agenti</div>
+            </div>
+            <div class="stat">
+                <div class="num" id="turnsLeft">9</div>
+                <div class="label">⏳ Turni rimasti</div>
+            </div>
+            <div class="stat">
+                <div class="num" id="assassinsHit" style="color: var(--accent-red);">0</div>
+                <div class="label">💀 Assassini colpiti</div>
+            </div>
+        </div>
+
+        <!-- DUET KEY INFO -->
+        <div class="duet-key-info" id="duetKeyInfo">
+            🔑 <strong>La tua chiave:</strong> Le celle <span class="highlight-green">verdi</span> sono i tuoi agenti da trovare!
+            <br>
+            <span style="font-size:0.8rem; color:var(--text-secondary);">
+                Il tuo compagno vede una chiave diversa. Lavorate insieme!
+            </span>
+        </div>
+
+        <!-- TURN INDICATOR -->
         <div class="turn-indicator" id="turnIndicator">
             💬 Aspetta che il master dia un indizio...
         </div>
 
-        <!-- INDIZIO -->
-        <div class="clue-input" id="clueInput" style="display:none;">
+        <!-- CLUE INPUT -->
+        <div class="clue-input" id="clueInput">
             <input type="text" id="clueWord" placeholder="Parola indizio...">
             <input type="number" id="clueNumber" placeholder="#">
             <button class="btn-primary" id="clueBtn">📢 Dai indizio</button>
         </div>
 
-        <!-- GRIGLIA -->
+        <!-- GRID -->
         <div class="grid-container" id="gridContainer"></div>
 
-        <!-- CONTROLLI -->
-        <div class="controls">
+        <!-- CONTROLS -->
+        <div class="controls" id="controls">
             <button class="btn-success" id="readyBtn" style="display:none;">✅ Pronto</button>
             <button class="btn-primary" id="newGameBtn">🔄 Nuova partita</button>
         </div>
 
-        <!-- RISULTATO -->
+        <!-- RESULT -->
         <div class="result-screen" id="resultScreen">
             <div class="big-icon">🏆</div>
             <h2 id="resultTitle">Partita finita!</h2>
@@ -283,9 +678,6 @@
         </div>
     </div>
 
-    <!-- ============================================================ -->
-    <!-- MULTIPLAYER CLIENT -->
-    <!-- ============================================================ -->
     <script>
         // ============================================================
         // 🔥 CONFIGURAZIONE
@@ -325,7 +717,6 @@
             // PERSONAGGI
             { word: 'Goku', category: 'character' },
             { word: 'Luffy', category: 'character' },
-            { word: 'Naruto', category: 'character' },
             { word: 'Saitama', category: 'character' },
             { word: 'Eren', category: 'character' },
             { word: 'Light Yagami', category: 'character' },
@@ -374,16 +765,20 @@
         // ============================================================
         // 🔥 STATO DEL GIOCO
         // ============================================================
+        let gameMode = null; // 'standard' o 'duet'
         let gameState = {
             grid: [],
-            teamRed: [],
-            teamBlue: [],
-            assassin: null,
             revealed: [],
             currentTurn: 'red',
             gameOver: false,
             master: null,
-            players: {}
+            players: {},
+            // Duet specific
+            agentsFound: 0,
+            assassinsHit: 0,
+            totalAgents: 15,
+            maxTurns: 9,
+            currentTurnCount: 0,
         };
 
         let isConnected = false;
@@ -393,7 +788,7 @@
         let isReady = false;
 
         // ============================================================
-        // 🔥 MULTIPLAYER CLIENT (IN LINEA SENZA IMPORT)
+        // 🔥 MULTIPLAYER CLIENT (IN LINEA)
         // ============================================================
         const Multiplayer = {
             ws: null,
@@ -545,31 +940,8 @@
         };
 
         // ============================================================
-        // 🔥 GAME LOGIC
+        // 🔥 UTILITY
         // ============================================================
-        function generateGrid() {
-            const shuffled = shuffleArray([...ANIME_WORDS]);
-            const selected = shuffled.slice(0, 25);
-            
-            // Assegna 9 rosse, 8 blu, 1 assassino, 7 neutre
-            const colors = [];
-            for (let i = 0; i < 9; i++) colors.push('red');
-            for (let i = 0; i < 8; i++) colors.push('blue');
-            colors.push('assassin');
-            for (let i = 0; i < 7; i++) colors.push('neutral');
-            
-            const shuffledColors = shuffleArray(colors);
-            
-            const grid = selected.map((item, index) => ({
-                word: item.word,
-                category: item.category,
-                color: shuffledColors[index] || 'neutral',
-                revealed: false
-            }));
-            
-            return grid;
-        }
-
         function shuffleArray(arr) {
             for (let i = arr.length - 1; i > 0; i--) {
                 const j = Math.floor(Math.random() * (i + 1));
@@ -578,109 +950,252 @@
             return arr;
         }
 
+        // ============================================================
+        // 🔥 GAME LOGIC - STANDARD
+        // ============================================================
+        function generateStandardGrid() {
+            const shuffled = shuffleArray([...ANIME_WORDS]);
+            const selected = shuffled.slice(0, 25);
+
+            const colors = [];
+            for (let i = 0; i < 9; i++) colors.push('red');
+            for (let i = 0; i < 8; i++) colors.push('blue');
+            colors.push('assassin');
+            for (let i = 0; i < 7; i++) colors.push('neutral');
+
+            const shuffledColors = shuffleArray(colors);
+
+            return selected.map((item, index) => ({
+                word: item.word,
+                category: item.category,
+                color: shuffledColors[index] || 'neutral',
+                revealed: false
+            }));
+        }
+
+        // ============================================================
+        // 🔥 GAME LOGIC - DUET
+        // ============================================================
+        function generateDuetGrid() {
+            const shuffled = shuffleArray([...ANIME_WORDS]);
+            const selected = shuffled.slice(0, 25);
+
+            const colors = [];
+            for (let i = 0; i < 15; i++) colors.push('agent');
+            for (let i = 0; i < 3; i++) colors.push('assassin');
+            for (let i = 0; i < 7; i++) colors.push('innocent');
+
+            const shuffledColors = shuffleArray(colors);
+
+            return selected.map((item, index) => ({
+                word: item.word,
+                category: item.category,
+                color: shuffledColors[index],
+                revealed: false
+            }));
+        }
+
+        // ============================================================
+        // 🔥 INIZIO GIOCO
+        // ============================================================
         function initGame() {
-            const grid = generateGrid();
+            let grid;
+            if (gameMode === 'duet') {
+                grid = generateDuetGrid();
+                gameState.totalAgents = 15;
+                gameState.maxTurns = 9;
+                gameState.currentTurnCount = 0;
+                gameState.agentsFound = 0;
+                gameState.assassinsHit = 0;
+
+                // Mostra UI duet
+                document.getElementById('duetStats').classList.add('active');
+                document.getElementById('duetKeyInfo').classList.add('active');
+                updateDuetUI();
+            } else {
+                grid = generateStandardGrid();
+                // Nascondi UI duet
+                document.getElementById('duetStats').classList.remove('active');
+                document.getElementById('duetKeyInfo').classList.remove('active');
+            }
+
             gameState.grid = grid;
             gameState.revealed = [];
             gameState.currentTurn = 'red';
             gameState.gameOver = false;
-            gameState.master = null;
-            
-            // Trova il master (il primo giocatore nella lista)
+
+            // Trova il master (il primo giocatore)
             const players = Object.values(gameState.players);
             if (players.length > 0) {
                 gameState.master = players[0].id;
             }
-            
+
             renderGrid();
             updateTurnIndicator();
             document.getElementById('resultScreen').classList.remove('show');
-            
+
             // Sincronizza lo stato
             syncState();
         }
 
         function syncState() {
             const stateToSend = {
-                grid: gameState.grid.map(c => ({ word: c.word, color: c.color, revealed: c.revealed })),
+                mode: gameMode,
+                grid: gameState.grid.map(c => ({
+                    word: c.word,
+                    color: c.color,
+                    revealed: c.revealed
+                })),
                 currentTurn: gameState.currentTurn,
                 gameOver: gameState.gameOver,
-                master: gameState.master
+                master: gameState.master,
+                // Duet specific
+                agentsFound: gameState.agentsFound,
+                assassinsHit: gameState.assassinsHit,
+                currentTurnCount: gameState.currentTurnCount,
             };
             Multiplayer.sendState(stateToSend);
         }
 
+        // ============================================================
+        // 🔥 RENDER
+        // ============================================================
         function renderGrid() {
             const container = document.getElementById('gridContainer');
             container.innerHTML = '';
-            
+
             gameState.grid.forEach((cell, index) => {
                 const div = document.createElement('div');
                 div.className = 'grid-card';
-                div.textContent = cell.word;
+                div.innerHTML = `
+                    <span class="word">${cell.word}</span>
+                    <span class="category-tag">${cell.category}</span>
+                `;
                 div.dataset.index = index;
-                
+
                 if (cell.revealed) {
                     div.classList.add('revealed');
-                    if (cell.color === 'red') div.classList.add('team-red');
-                    else if (cell.color === 'blue') div.classList.add('team-blue');
-                    else if (cell.color === 'assassin') div.classList.add('assassin');
+                    if (gameMode === 'duet') {
+                        if (cell.color === 'agent') div.classList.add('agent');
+                        else if (cell.color === 'assassin') div.classList.add('assassin');
+                        else if (cell.color === 'innocent') div.classList.add('innocent');
+                    } else {
+                        if (cell.color === 'red') div.classList.add('team-red');
+                        else if (cell.color === 'blue') div.classList.add('team-blue');
+                        else if (cell.color === 'assassin') div.classList.add('assassin');
+                    }
                 }
-                
-                // Solo il master vede i colori
-                if (isMaster && !cell.revealed) {
-                    div.style.borderColor = cell.color === 'red' ? 'var(--accent-red)' :
-                                          cell.color === 'blue' ? 'var(--accent-blue)' :
-                                          cell.color === 'assassin' ? '#000' : 'rgba(255,255,255,0.1)';
-                    div.style.borderWidth = '2px';
-                    div.style.borderStyle = 'dashed';
+
+                // Solo il master vede i colori (standard) o in duet tutti vedono
+                if ((isMaster && gameMode === 'standard' && !cell.revealed) ||
+                    (gameMode === 'duet' && !cell.revealed && cell.color === 'agent')) {
+                    if (gameMode === 'duet') {
+                        // In duet mostro solo i colori verdi all'agente
+                        if (cell.color === 'agent') {
+                            div.style.borderColor = 'var(--accent-green)';
+                            div.style.borderWidth = '2px';
+                            div.style.borderStyle = 'dashed';
+                        }
+                    } else {
+                        div.style.borderColor = cell.color === 'red' ? 'var(--accent-red)' :
+                            cell.color === 'blue' ? 'var(--accent-blue)' :
+                            cell.color === 'assassin' ? '#000' : 'rgba(255,255,255,0.1)';
+                        div.style.borderWidth = '2px';
+                        div.style.borderStyle = 'dashed';
+                    }
                 }
-                
+
                 div.addEventListener('click', () => onCardClick(index));
                 container.appendChild(div);
             });
         }
 
+        function updateTurnIndicator() {
+            const indicator = document.getElementById('turnIndicator');
+            if (gameMode === 'duet') {
+                const turnsLeft = gameState.maxTurns - gameState.currentTurnCount;
+                indicator.innerHTML = `
+                    🤝 Turno di <span class="highlight">${gameState.currentTurn === 'red' ? 'Rosso' : 'Blu'}</span> · 
+                    ⏳ ${turnsLeft} turni rimasti
+                    ${gameState.agentsFound}/${gameState.totalAgents} agenti trovati
+                `;
+            } else {
+                const turn = gameState.currentTurn === 'red' ? '🔴 Rossa' : '🔵 Blu';
+                indicator.innerHTML = `🎯 Turno della squadra <span class="highlight">${turn}</span>`;
+            }
+        }
+
+        function updateDuetUI() {
+            document.getElementById('agentsFound').textContent = gameState.agentsFound;
+            document.getElementById('totalAgents').textContent = gameState.totalAgents;
+            document.getElementById('turnsLeft').textContent = gameState.maxTurns - gameState.currentTurnCount;
+            document.getElementById('assassinsHit').textContent = gameState.assassinsHit;
+        }
+
+        // ============================================================
+        // 🔥 AZIONI
+        // ============================================================
         function onCardClick(index) {
             if (gameState.gameOver) return;
             if (gameState.grid[index].revealed) return;
-            if (!isMaster) {
-                // Solo il master può rivelare le carte
+
+            // In modalità standard, solo il master può rivelare
+            if (gameMode === 'standard' && !isMaster) {
+                // Se non sei master, non puoi rivelare
                 return;
             }
-            
+
             const cell = gameState.grid[index];
             cell.revealed = true;
             gameState.revealed.push(index);
-            
-            // Controlla se è assassin
-            if (cell.color === 'assassin') {
-                gameState.gameOver = true;
-                const winner = gameState.currentTurn === 'red' ? 'Blu' : 'Rossa';
-                showResult(`💀 Assassin!`, `La squadra ${winner} ha vinto!`);
+
+            if (gameMode === 'duet') {
+                // Logica Duet
+                if (cell.color === 'agent') {
+                    gameState.agentsFound++;
+                    if (gameState.agentsFound >= gameState.totalAgents) {
+                        gameState.gameOver = true;
+                        showResult('🎉 Vittoria!', 'Avete trovato tutti gli agenti!');
+                    }
+                } else if (cell.color === 'assassin') {
+                    gameState.assassinsHit++;
+                    if (gameState.assassinsHit >= 3) {
+                        gameState.gameOver = true;
+                        showResult('💀 Sconfitta!', 'Avete colpito tutti gli assassini!');
+                    }
+                }
+
+                // Passa il turno
+                gameState.currentTurnCount++;
+                if (gameState.currentTurnCount >= gameState.maxTurns) {
+                    gameState.gameOver = true;
+                    showResult('⏰ Tempo scaduto!', 'Avete finito i turni!');
+                }
+
+                updateDuetUI();
+            } else {
+                // Logica Standard
+                if (cell.color === 'assassin') {
+                    gameState.gameOver = true;
+                    const winner = gameState.currentTurn === 'red' ? 'Blu' : 'Rossa';
+                    showResult('💀 Assassin!', `La squadra ${winner} ha vinto!`);
+                }
+
+                const currentColor = gameState.currentTurn;
+                const remaining = gameState.grid.filter(c => !c.revealed && c.color === currentColor);
+                if (remaining.length === 0) {
+                    gameState.gameOver = true;
+                    const teamName = currentColor === 'red' ? 'Rossa' : 'Blu';
+                    showResult(`🏆 Vittoria!`, `La squadra ${teamName} ha vinto!`);
+                }
+
+                // Passa il turno
+                gameState.currentTurn = gameState.currentTurn === 'red' ? 'blue' : 'red';
             }
-            
-            // Controlla se la squadra ha finito le carte
-            const currentColor = gameState.currentTurn;
-            const remaining = gameState.grid.filter(c => !c.revealed && c.color === currentColor);
-            if (remaining.length === 0) {
-                gameState.gameOver = true;
-                const teamName = currentColor === 'red' ? 'Rossa' : 'Blu';
-                showResult(`🏆 Vittoria!`, `La squadra ${teamName} ha vinto!`);
-            }
-            
-            // Passa il turno
-            gameState.currentTurn = gameState.currentTurn === 'red' ? 'blue' : 'red';
-            
+
             renderGrid();
             updateTurnIndicator();
             syncState();
-        }
-
-        function updateTurnIndicator() {
-            const indicator = document.getElementById('turnIndicator');
-            const turn = gameState.currentTurn === 'red' ? '🔴 Rossa' : '🔵 Blu';
-            indicator.innerHTML = `🎯 Turno della squadra <span class="highlight">${turn}</span>`;
         }
 
         function showResult(title, message) {
@@ -690,7 +1205,7 @@
         }
 
         function startNewGame() {
-            if (isMaster) {
+            if (isMaster || gameMode === 'duet') {
                 initGame();
             } else {
                 alert('Solo il master può iniziare una nuova partita!');
@@ -700,18 +1215,39 @@
         // ============================================================
         // 🔥 UI EVENTS
         // ============================================================
+        let selectedMode = null;
+
+        function selectMode(mode) {
+            selectedMode = mode;
+            gameMode = mode;
+            document.getElementById('modeSelector').style.display = 'none';
+            document.getElementById('connectionPanel').classList.add('active');
+            document.getElementById('controls').classList.add('active');
+            document.getElementById('clueInput').classList.add('active');
+
+            // Mostra/nascondi UI specifica
+            if (mode === 'duet') {
+                document.getElementById('duetStats').classList.add('active');
+                document.getElementById('duetKeyInfo').classList.add('active');
+                // In duet, tutti possono rivelare le carte verdi
+            } else {
+                document.getElementById('duetStats').classList.remove('active');
+                document.getElementById('duetKeyInfo').classList.remove('active');
+            }
+        }
+
         document.addEventListener('DOMContentLoaded', () => {
             // Connessione
             document.getElementById('connectBtn').addEventListener('click', () => {
                 const name = document.getElementById('playerNameInput').value || 'Anonimo';
                 const room = document.getElementById('roomInput').value || 'anicode';
-                
+
                 Multiplayer.connect(SERVER_URL, {
                     playerName: name,
                     room: room
                 });
             });
-            
+
             document.getElementById('disconnectBtn').addEventListener('click', () => {
                 Multiplayer.leave();
                 document.getElementById('connectBtn').style.display = 'inline-block';
@@ -719,16 +1255,16 @@
                 document.getElementById('statusText').textContent = '⚪ Disconnesso';
                 document.getElementById('statusText').className = 'status disconnected';
             });
-            
+
             document.getElementById('readyBtn').addEventListener('click', () => {
                 isReady = !isReady;
                 Multiplayer.setReady(isReady);
                 document.getElementById('readyBtn').textContent = isReady ? '✅ Pronto' : '⏳ Non pronto';
                 document.getElementById('readyBtn').style.background = isReady ? 'var(--accent-green)' : 'var(--bg-card)';
             });
-            
+
             document.getElementById('newGameBtn').addEventListener('click', startNewGame);
-            
+
             document.getElementById('clueBtn').addEventListener('click', () => {
                 const word = document.getElementById('clueWord').value;
                 const number = parseInt(document.getElementById('clueNumber').value) || 0;
@@ -738,7 +1274,7 @@
                     document.getElementById('clueNumber').value = '';
                 }
             });
-            
+
             // Events Multiplayer
             Multiplayer.on('connected', (data) => {
                 isConnected = true;
@@ -748,51 +1284,73 @@
                 document.getElementById('disconnectBtn').style.display = 'inline-block';
                 document.getElementById('statusText').textContent = `✅ Connesso come ${data.playerName} in ${data.room}`;
                 document.getElementById('statusText').className = 'status connected';
-                
-                // Aggiorna i giocatori
+
                 const players = Object.values(data.players);
                 gameState.players = data.players;
                 updatePlayersList(players);
-                
-                // Se sono il primo, divento master
-                if (players.length === 1) {
-                    isMaster = true;
-                    document.getElementById('clueInput').style.display = 'flex';
-                    document.getElementById('readyBtn').style.display = 'none';
-                    initGame();
+
+                // In modalità standard, il primo è master
+                if (gameMode === 'standard') {
+                    if (players.length === 1) {
+                        isMaster = true;
+                        document.getElementById('readyBtn').style.display = 'none';
+                        initGame();
+                    } else {
+                        isMaster = false;
+                        document.getElementById('readyBtn').style.display = 'inline-block';
+                    }
                 } else {
-                    isMaster = false;
-                    document.getElementById('clueInput').style.display = 'none';
-                    document.getElementById('readyBtn').style.display = 'inline-block';
+                    // In duet, tutti possono vedere e giocare
+                    isMaster = true; // In duet, tutti sono "master"
+                    document.getElementById('readyBtn').style.display = 'none';
+                    if (players.length >= 2) {
+                        // In duet, parte quando ci sono 2 giocatori
+                        if (!gameState.gameOver) {
+                            initGame();
+                        }
+                    }
                 }
             });
-            
+
             Multiplayer.on('players', (players) => {
                 gameState.players = players;
                 updatePlayersList(Object.values(players));
+
+                // In duet, se ci sono 2 giocatori e il gioco non è iniziato
+                if (gameMode === 'duet' && Object.keys(players).length >= 2 && !gameState.gameOver) {
+                    if (gameState.grid.length === 0) {
+                        initGame();
+                    }
+                }
             });
-            
+
             Multiplayer.on('playerJoined', (player) => {
                 gameState.players[player.id] = player;
                 updatePlayersList(Object.values(gameState.players));
             });
-            
+
             Multiplayer.on('playerLeft', (playerId) => {
                 delete gameState.players[playerId];
                 updatePlayersList(Object.values(gameState.players));
             });
-            
+
             Multiplayer.on('state', (state) => {
                 if (state.grid) {
                     gameState.grid = state.grid;
                     gameState.currentTurn = state.currentTurn || 'red';
                     gameState.gameOver = state.gameOver || false;
                     gameState.master = state.master || null;
+                    gameState.agentsFound = state.agentsFound || 0;
+                    gameState.assassinsHit = state.assassinsHit || 0;
+                    gameState.currentTurnCount = state.currentTurnCount || 0;
                     renderGrid();
                     updateTurnIndicator();
+                    if (gameMode === 'duet') {
+                        updateDuetUI();
+                    }
                 }
             });
-            
+
             Multiplayer.on('action', (playerId, action, data) => {
                 if (action === 'clue') {
                     document.getElementById('turnIndicator').innerHTML = `
@@ -801,11 +1359,11 @@
                     `;
                 }
             });
-            
+
             Multiplayer.on('error', (msg) => {
                 alert('❌ ' + msg);
             });
-            
+
             Multiplayer.on('disconnected', () => {
                 isConnected = false;
                 document.getElementById('connectBtn').style.display = 'inline-block';
